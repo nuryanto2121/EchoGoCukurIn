@@ -1,0 +1,396 @@
+definitions:
+  models.AddUser:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      handphone:
+        type: string
+      is_admin:
+        type: boolean
+      password:
+        type: string
+    type: object
+  models.LoginForm:
+    properties:
+      account:
+        type: string
+      pwd:
+        type: string
+    type: object
+  models.ParamDynamicList:
+    properties:
+      init_search:
+        type: string
+      line_no:
+        type: integer
+      menu_url:
+        type: string
+      page:
+        type: integer
+      param_view:
+        type: string
+      per_page:
+        type: integer
+      search:
+        type: string
+      sort_field:
+        type: string
+    type: object
+  models.ResetPasswd:
+    properties:
+      account:
+        type: string
+      confirm_pwd:
+        type: string
+      pwd:
+        type: string
+    type: object
+  models.ResponseModelList:
+    properties:
+      all_column:
+        type: string
+      data:
+        type: object
+      define_column:
+        type: string
+      define_size:
+        type: string
+      last_page:
+        type: integer
+      message:
+        type: string
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  tool.ResponseModel:
+    properties:
+      data:
+        type: object
+      message:
+        description: Code int         `json:"code"`
+        type: string
+    type: object
+info:
+  contact:
+    email: nuryantofattih@gmail.com
+    name: Nuryanto
+    url: https://www.linkedin.com/in/nuryanto-1b2721156/
+  description: Backend REST API for golang nuryanto2121
+  license: {}
+  title: Starter
+  version: "1.0"
+paths:
+  /barber/auth/change_password:
+    post:
+      parameters:
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.ResetPasswd'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      summary: Change Password
+      tags:
+      - Auth
+  /barber/auth/login:
+    post:
+      parameters:
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginForm'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      summary: Login
+      tags:
+      - Auth
+  /barber/dynamic:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Lastupdatestamp
+        in: query
+        name: lastupdatestamp
+        required: true
+        type: integer
+      - description: MenuUrl
+        in: query
+        name: menu_url
+        required: true
+        type: string
+      - description: LineNo
+        in: query
+        name: line_no
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Dynamic
+      tags:
+      - Dynamic
+    post:
+      parameters:
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/interface%7B%7D'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Add Dynamic
+      tags:
+      - Dynamic
+    put:
+      parameters:
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/interface%7B%7D'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit Dynamic
+      tags:
+      - Dynamic
+  /barber/dynamic/{id}:
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Lastupdatestamp
+        in: query
+        name: lastupdatestamp
+        required: true
+        type: integer
+      - description: MenuUrl
+        in: query
+        name: menu_url
+        required: true
+        type: string
+      - description: LineNo
+        in: query
+        name: line_no
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: GetById Dynamic
+      tags:
+      - Dynamic
+  /barber/dynamic/list:
+    post:
+      parameters:
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.ParamDynamicList'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseModelList'
+      security:
+      - ApiKeyAuth: []
+      summary: GetList Dynamic
+      tags:
+      - Dynamic
+  /barber/user:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete User
+      tags:
+      - User
+    get:
+      parameters:
+      - description: Page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: PerPage
+        in: query
+        name: perpage
+        required: true
+        type: integer
+      - description: Search
+        in: query
+        name: search
+        type: string
+      - description: InitSearch
+        in: query
+        name: initsearch
+        type: string
+      - description: SortField
+        in: query
+        name: sortfield
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseModelList'
+      security:
+      - ApiKeyAuth: []
+      summary: GetList User
+      tags:
+      - User
+    post:
+      parameters:
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddUser'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Add User
+      tags:
+      - User
+  /barber/user/{id}:
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: GetById
+      tags:
+      - User
+    put:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.AddUser'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Update User
+      tags:
+      - User
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
