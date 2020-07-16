@@ -3,10 +3,12 @@ package midd
 import (
 	"fmt"
 	"net/http"
+	sqlxposgresdb "nuryanto2121/dynamic_rest_api_go/pkg/postgresqlxdb"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 	tool "nuryanto2121/dynamic_rest_api_go/pkg/tools"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"nuryanto2121/dynamic_rest_api_go/redisdb"
+	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
@@ -23,6 +25,7 @@ func JWT(next echo.HandlerFunc) echo.HandlerFunc {
 		data = map[string]string{
 			"token": token,
 		}
+
 		if token == "" {
 			code = http.StatusNetworkAuthenticationRequired
 			msg = "Auth Token Required"
@@ -51,6 +54,7 @@ func JWT(next echo.HandlerFunc) echo.HandlerFunc {
 				e.Set("claims", claims)
 			}
 		}
+
 		if code != http.StatusOK {
 			resp := tool.ResponseModel{
 				Msg:  msg,
@@ -63,10 +67,47 @@ func JWT(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(e)
 	}
 }
+func Versioning(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(e echo.Context) error {
+		var (
+			OS    = e.Request().Header.Get("OS")
+			Versi = e.Request().Header.Get("Version")
+		)
+		Version, err := strconv.Atoi(Versi)
 
-func MiddlewareOne(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
-		fmt.Println("from middleware one")
-		return next(c)
+		if Version == 0 {
+			resp := tool.ResponseModel{
+				Msg:  "Please Set Header Version",
+				Data: nil,
+			}
+			return e.JSON(http.StatusBadRequest, resp)
+		}
+		dataVersion, err := sqlxposgresdb.GetVersion(OS)
+		if err != nil {
+			resp := tool.ResponseModel{
+				Msg:  fmt.Sprintf("%v", err),
+				Data: nil,
+			}
+			return e.JSON(http.StatusBadRequest, resp)
+		}
+
+		if dataVersion.Version > Version {
+			resp := tool.ResponseModel{
+				Msg:  "Please Update Your Apps",
+				Data: dataVersion.Version,
+			}
+			return e.JSON(http.StatusHTTPVersionNotSupported, resp)
+		}
+		if dataVersion.Version < Version {
+			resp := tool.ResponseModel{
+				Msg:  "Version Not Support",
+				Data: dataVersion.Version,
+			}
+			return e.JSON(http.StatusHTTPVersionNotSupported, resp)
+		}
+
+		//end
+
+		return next(e)
 	}
 }

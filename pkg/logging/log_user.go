@@ -22,7 +22,7 @@ func (l *Logger) Debug(v ...interface{}) {
 	log.Println(v...)
 	logger.Println(v...)
 	audit.Message = fmt.Sprintf("%v", v)
-	go audit.saveAudit()
+	audit.saveAudit()
 }
 
 // Info :
@@ -32,7 +32,7 @@ func (l *Logger) Info(v ...interface{}) {
 	log.Println(v...)
 	logger.Println(v...)
 	audit.Message = fmt.Sprintf("%v", v)
-	go audit.saveAudit()
+	audit.saveAudit()
 }
 
 // Query :
@@ -42,7 +42,7 @@ func (l *Logger) Query(v ...interface{}) {
 	log.Println(v...)
 	logger.Println(v...)
 	audit.Message = fmt.Sprintf("%v", v)
-	go audit.saveAudit()
+	audit.saveAudit()
 }
 
 // Warn :
@@ -52,7 +52,7 @@ func (l *Logger) Warn(v ...interface{}) {
 	log.Println(v...)
 	logger.Println(v...)
 	audit.Message = fmt.Sprintf("%v", v)
-	go audit.saveAudit()
+	audit.saveAudit()
 }
 
 // Error :
@@ -62,7 +62,7 @@ func (l *Logger) Error(v ...interface{}) {
 	log.Println(v...)
 	logger.Println(v...)
 	audit.Message = fmt.Sprintf("%v", v)
-	go audit.saveAudit()
+	audit.saveAudit()
 }
 
 // Fatal :

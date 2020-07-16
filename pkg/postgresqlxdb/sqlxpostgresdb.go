@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/url"
+	"nuryanto2121/dynamic_rest_api_go/models"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
+	queryversion "nuryanto2121/dynamic_rest_api_go/query/version"
 	"os"
 	"time"
 
@@ -56,4 +58,16 @@ func Setup() {
 	timeSpent := time.Since(time.Now())
 	log.Printf("Config database sqlx is ready in %v", timeSpent)
 
+}
+
+func GetVersion(OS string) (models.VersionApps, error) {
+	var (
+		result = models.VersionApps{}
+		err    error
+	)
+	err = DbCon.Get(&result, queryversion.QueryGetVersion, OS)
+	if err != nil {
+		return result, err
+	}
+	return result, nil
 }

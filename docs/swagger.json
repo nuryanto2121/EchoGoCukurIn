@@ -23,6 +23,20 @@
                 "summary": "Change Password",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "req param #changes are possible to adjust the form of the registration form from frontend",
                         "name": "req",
                         "in": "body",
@@ -53,6 +67,20 @@
                 ],
                 "summary": "Login",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "description": "req param #changes are possible to adjust the form of the registration form from frontend",
                         "name": "req",

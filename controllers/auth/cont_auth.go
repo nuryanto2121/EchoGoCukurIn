@@ -5,11 +5,16 @@ import (
 	"fmt"
 	"net/http"
 	iauth "nuryanto2121/dynamic_rest_api_go/interface/auth"
+	midd "nuryanto2121/dynamic_rest_api_go/middleware"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	app "nuryanto2121/dynamic_rest_api_go/pkg"
 	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	tool "nuryanto2121/dynamic_rest_api_go/pkg/tools"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+
+	_ "nuryanto2121/dynamic_rest_api_go/docs"
+
+	echoSwagger "github.com/swaggo/echo-swagger"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,16 +32,27 @@ func NewContAuth(e *echo.Echo, useAuth iauth.Usecase) {
 	}
 
 	// e.POST("/barber/auth/register", cont.Register)
-	e.POST("/barber/auth/login", cont.Login)
-	// e.POST("/barber/auth/forgot", cont.ForgotPassword)
-	e.POST("/barber/auth/change_password", cont.ChangePassword)
-	// e.POST("/barber/auth/verify", cont.Verify)
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/health_check", cont.Health)
+
+	r := e.Group("/barber/auth")
+	r.Use(midd.Versioning)
+	r.POST("/login", cont.Login)
+	// r.POST("/forgot", cont.ForgotPassword)
+	r.POST("/change_password", cont.ChangePassword)
+	// r.POST("/verify", cont.Verify)
+}
+
+func (u *ContAuth) Health(e echo.Context) error {
+	return e.JSON(http.StatusOK, "success")
 }
 
 // Register :
 // @Summary Login
 // @Tags Auth
 // @Produce json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
 // @Param req body models.LoginForm true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
 // @Router /barber/auth/login [post]
@@ -76,6 +92,8 @@ func (u *ContAuth) Login(e echo.Context) error {
 // @Summary Change Password
 // @Tags Auth
 // @Produce json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
 // @Param req body models.ResetPasswd true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
 // @Router /barber/auth/change_password [post]

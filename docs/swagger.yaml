@@ -87,6 +87,16 @@ paths:
   /barber/auth/change_password:
     post:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: 'req param #changes are possible to adjust the form of the registration
           form from frontend'
         in: body
@@ -108,6 +118,16 @@ paths:
   /barber/auth/login:
     post:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: 'req param #changes are possible to adjust the form of the registration
           form from frontend'
         in: body

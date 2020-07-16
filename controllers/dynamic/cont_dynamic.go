@@ -23,6 +23,7 @@ func NewContDynamic(e *echo.Echo, a idynamic.Usecase) {
 	}
 
 	r := e.Group("/barber/dynamic")
+	r.Use(midd.Versioning)
 	r.Use(midd.JWT)
 	r.POST("", controller.Save)
 	r.PUT("", controller.Update)

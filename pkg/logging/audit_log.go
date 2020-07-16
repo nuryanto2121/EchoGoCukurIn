@@ -2,6 +2,7 @@ package logging
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"nuryanto2121/dynamic_rest_api_go/pkg/monggodb"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
@@ -9,7 +10,7 @@ import (
 )
 
 type auditLog struct {
-	ID        int64     `bson:"_id"`
+	ID        int64     `bson:"id"`
 	CreatedAt time.Time `bson:"created_at"`
 	UpdatedAt time.Time `bson:"updated_at"`
 	Level     string    `json:"level"`
@@ -22,14 +23,12 @@ type auditLog struct {
 }
 
 func (a *auditLog) saveAudit() {
-	db, err := monggodb.Connect()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+
 	a.ID = util.GetTimeNow().Unix()
-	_, err = db.Collection("auditlogs").InsertOne(context.TODO(), a)
+	result, err := monggodb.MCon.Collection("auditlogs").InsertOne(context.TODO(), a)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	fmt.Println("Inserted a single document: ", result.InsertedID)
 
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
+	"nuryanto2121/dynamic_rest_api_go/pkg/monggodb"
 	sqlxposgresdb "nuryanto2121/dynamic_rest_api_go/pkg/postgresqlxdb"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 	"nuryanto2121/dynamic_rest_api_go/redisdb"
@@ -18,7 +19,9 @@ func init() {
 	// postgresdb.Setup()
 	redisdb.Setup()
 	sqlxposgresdb.Setup()
+	monggodb.Setup()
 	logging.Setup()
+
 }
 
 // @title Starter
@@ -34,6 +37,7 @@ func init() {
 // @name Authorization
 
 func main() {
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
