@@ -1,17 +1,12 @@
 package routes
 
 import (
-	"nuryanto2121/dynamic_rest_api_go/pkg/postgresdb"
 	sqlxposgresdb "nuryanto2121/dynamic_rest_api_go/pkg/postgresqlxdb"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 
 	_contDynamic "nuryanto2121/dynamic_rest_api_go/controllers/dynamic"
 	_repoDynamic "nuryanto2121/dynamic_rest_api_go/repository/option_template"
 	_useDynamic "nuryanto2121/dynamic_rest_api_go/usecase/dynamic"
-
-	_contUser "nuryanto2121/dynamic_rest_api_go/controllers/user"
-	_repoUser "nuryanto2121/dynamic_rest_api_go/repository/sys_user"
-	_useUser "nuryanto2121/dynamic_rest_api_go/usecase/sys_user"
 
 	_saauthcont "nuryanto2121/dynamic_rest_api_go/controllers/auth"
 	_repoAuth "nuryanto2121/dynamic_rest_api_go/repository/auth"
@@ -34,9 +29,9 @@ func (e *EchoRoutes) InitialRouter() {
 	useDynamic := _useDynamic.NewUserSysUser(repoDynamic, timeoutContext)
 	_contDynamic.NewContDynamic(e.E, useDynamic)
 
-	repoUser := _repoUser.NewRepoSysUser(postgresdb.Conn)
-	useUser := _useUser.NewUserSysUser(repoUser, timeoutContext)
-	_contUser.NewContUser(e.E, useUser)
+	// repoUser := _repoUser.NewRepoSysUser(postgresdb.Conn)
+	// useUser := _useUser.NewUserSysUser(repoUser, timeoutContext)
+	// _contUser.NewContUser(e.E, useUser)
 
 	//_saauthcont
 	repoAuth := _repoAuth.NewRepoOptionDB(sqlxposgresdb.DbCon)

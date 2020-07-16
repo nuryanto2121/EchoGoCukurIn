@@ -5,6 +5,7 @@ import (
 	"fmt"
 	idynamic "nuryanto2121/dynamic_rest_api_go/interface/dynamic"
 	"nuryanto2121/dynamic_rest_api_go/models"
+	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	tool "nuryanto2121/dynamic_rest_api_go/pkg/tools"
 	queryoption "nuryanto2121/dynamic_rest_api_go/query/option"
 
@@ -22,6 +23,8 @@ func NewRepoOptionDB(Conn *sqlx.DB) idynamic.Repository {
 
 func (m *repoOptionDB) GetOptionByUrl(ctx context.Context, Url string) (result []models.OptionDB, err error) {
 	// fmt.Printf(queryoption.QueryGetListOption)
+	var logger = logging.Logger{}
+	logger.Query(queryoption.QueryGetListOption, Url)
 	errs := m.DB.SelectContext(ctx, &result, queryoption.QueryGetListOption, Url)
 	if errs != nil {
 		return nil, errs
@@ -29,6 +32,8 @@ func (m *repoOptionDB) GetOptionByUrl(ctx context.Context, Url string) (result [
 	return result, nil
 }
 func (m *repoOptionDB) GetParamFunction(ctx context.Context, SpName string) (result []models.ParamFunction, err error) {
+	var logger = logging.Logger{}
+	logger.Query(queryoption.QueryGetListParamFunction, SpName)
 	err = m.DB.SelectContext(ctx, &result, queryoption.QueryGetListParamFunction, SpName)
 	if err != nil {
 		return nil, err
@@ -37,6 +42,8 @@ func (m *repoOptionDB) GetParamFunction(ctx context.Context, SpName string) (res
 }
 
 func (m *repoOptionDB) CRUD(ctx context.Context, sQuery string, data interface{}) (result interface{}, err error) {
+	var logger = logging.Logger{}
+	logger.Query(queryoption.QueryGetListParamFunction, data)
 	rows, err := m.DB.NamedQueryContext(ctx, sQuery, data)
 	if err != nil {
 		return nil, err
@@ -46,6 +53,8 @@ func (m *repoOptionDB) CRUD(ctx context.Context, sQuery string, data interface{}
 }
 func (m *repoOptionDB) GetDataList(ctx context.Context, sQuery string, Limit int, Offset int) (result interface{}, err error) {
 	// fmt.Printf(queryoption.QueryGetListOption)
+	var logger = logging.Logger{}
+	logger.Query(sQuery, Limit, Offset)
 	rows, err := m.DB.QueryxContext(ctx, sQuery, Limit, Offset)
 	if err != nil {
 		return nil, err

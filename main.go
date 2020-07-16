@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"nuryanto2121/dynamic_rest_api_go/pkg/postgresdb"
+	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	sqlxposgresdb "nuryanto2121/dynamic_rest_api_go/pkg/postgresqlxdb"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 	"nuryanto2121/dynamic_rest_api_go/redisdb"
@@ -15,9 +15,10 @@ import (
 
 func init() {
 	setting.Setup()
-	postgresdb.Setup()
+	// postgresdb.Setup()
 	redisdb.Setup()
 	sqlxposgresdb.Setup()
+	logging.Setup()
 }
 
 // @title Starter

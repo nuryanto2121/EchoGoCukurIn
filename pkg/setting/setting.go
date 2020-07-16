@@ -72,6 +72,14 @@ type RedisDB struct {
 	Password string `mapstructure:"password"`
 }
 
+type MongoDB struct {
+	Host     string `mapstructure:"host"`
+	Port     string `mapstructure:"port"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	Name     string `mapstructure:"name"`
+}
+
 // RedisDBSetting :
 // var RedisDBSetting = &RedisDB{}
 // AppSetting interface pointer
@@ -85,6 +93,7 @@ type FileConfig struct {
 	App            *App      `mapstructure:"app"`
 	Database       *Database `mapstructure:"database"`
 	RedisDBSetting *RedisDB  `mapstructure:"redisdb"`
+	MongoDBSetting *MongoDB  `mapstructure:"mongodb"`
 }
 
 // FileConfigSetting :

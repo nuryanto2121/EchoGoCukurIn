@@ -7,7 +7,9 @@ import (
 	iauth "nuryanto2121/dynamic_rest_api_go/interface/auth"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	app "nuryanto2121/dynamic_rest_api_go/pkg"
+	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	tool "nuryanto2121/dynamic_rest_api_go/pkg/tools"
+	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 
 	"github.com/labstack/echo/v4"
 )
@@ -45,8 +47,8 @@ func (u *ContAuth) Login(e echo.Context) error {
 	}
 
 	var (
-		// logger = logging.Logger{} // wajib
-		appE = tool.Res{R: e} // wajib
+		logger = logging.Logger{} // wajib
+		appE   = tool.Res{R: e}   // wajib
 		// client sa_models.SaClient
 
 		form = models.LoginForm{}
@@ -55,7 +57,7 @@ func (u *ContAuth) Login(e echo.Context) error {
 
 	// validasi and bind to struct
 	httpCode, errMsg := app.BindAndValid(e, &form)
-	// logger.Info(util.Stringify(form))
+	logger.Info(util.Stringify(form))
 	if httpCode != 200 {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
@@ -84,14 +86,14 @@ func (u *ContAuth) ChangePassword(e echo.Context) error {
 	}
 
 	var (
-		// logger = logging.Logger{} // wajib
-		appE = tool.Res{R: e} // wajib
+		logger = logging.Logger{} // wajib
+		appE   = tool.Res{R: e}   // wajib
 		// client sa_models.SaClient
 
 		form = models.ResetPasswd{}
 	)
 	httpCode, errMsg := app.BindAndValid(e, &form)
-	// logger.Info(util.Stringify(form))
+	logger.Info(util.Stringify(form))
 	if httpCode != 200 {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}

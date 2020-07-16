@@ -8,6 +8,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/jinzhu/gorm v1.9.14
+	github.com/jinzhu/now v1.0.1
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/labstack/gommon v0.3.0
@@ -18,5 +19,6 @@ require (
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/echo-swagger v1.0.0
 	github.com/swaggo/swag v1.6.3
+	go.mongodb.org/mongo-driver v1.3.5
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
 )
