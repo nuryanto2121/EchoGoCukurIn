@@ -12,6 +12,10 @@ import (
 	_repoAuth "nuryanto2121/dynamic_rest_api_go/repository/auth"
 	_authuse "nuryanto2121/dynamic_rest_api_go/usecase/auth"
 
+	_saFilecont "nuryanto2121/dynamic_rest_api_go/controllers/fileupload"
+	_repoFile "nuryanto2121/dynamic_rest_api_go/repository/ss_fileupload"
+	_useFile "nuryanto2121/dynamic_rest_api_go/usecase/ss_fileupload"
+
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -32,6 +36,10 @@ func (e *EchoRoutes) InitialRouter() {
 	// repoUser := _repoUser.NewRepoSysUser(postgresdb.Conn)
 	// useUser := _useUser.NewUserSysUser(repoUser, timeoutContext)
 	// _contUser.NewContUser(e.E, useUser)
+
+	repoFile := _repoFile.NewRepoFileUpload(sqlxposgresdb.DbCon)
+	useFile := _useFile.NewSaFileUpload(repoFile, timeoutContext)
+	_saFilecont.NewContFileUpload(e.E, useFile)
 
 	//_saauthcont
 	repoAuth := _repoAuth.NewRepoOptionDB(sqlxposgresdb.DbCon)

@@ -43,7 +43,7 @@ func (m *repoOptionDB) GetParamFunction(ctx context.Context, SpName string) (res
 
 func (m *repoOptionDB) CRUD(ctx context.Context, sQuery string, data interface{}) (result interface{}, err error) {
 	var logger = logging.Logger{}
-	logger.Query(queryoption.QueryGetListParamFunction, data)
+	logger.Query(sQuery, data)
 	rows, err := m.DB.NamedQueryContext(ctx, sQuery, data)
 	if err != nil {
 		return nil, err

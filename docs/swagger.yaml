@@ -109,6 +109,44 @@ info:
   title: Starter
   version: "1.0"
 paths:
+  /api/fileupload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload file
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: account image
+        in: formData
+        name: upload_file
+        required: true
+        type: file
+      - description: path images
+        in: formData
+        name: path
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: File Upload
+      tags:
+      - FileUpload
   /barber/auth/change_password:
     post:
       parameters:
@@ -267,6 +305,16 @@ paths:
   /barber/dynamic:
     delete:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: ID
         in: path
         name: id
@@ -301,6 +349,16 @@ paths:
       - Dynamic
     post:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: 'req param #changes are possible to adjust the form of the registration
           form from frontend'
         in: body
@@ -323,6 +381,16 @@ paths:
       - Dynamic
     put:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: 'req param #changes are possible to adjust the form of the registration
           form from frontend'
         in: body
@@ -346,6 +414,16 @@ paths:
   /barber/dynamic/{id}:
     get:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: ID
         in: path
         name: id
@@ -381,6 +459,16 @@ paths:
   /barber/dynamic/list:
     post:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: 'req param #changes are possible to adjust the form of the registration
           form from frontend'
         in: body
