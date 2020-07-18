@@ -151,17 +151,17 @@ func (u *ContUser) Create(e echo.Context) error {
 	if httpCode != 200 {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
-	claims, err := app.GetClaims(e)
-	if err != nil {
-		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
-	}
+	// claims, err := app.GetClaims(e)
+	// if err != nil {
+	// 	return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	// }
 	// mapping to struct model saRole
-	err = mapstructure.Decode(form, &sysUser)
+	err := mapstructure.Decode(form, &sysUser)
 	if err != nil {
 		return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 
 	}
-	sysUser.IDCreated = claims.UserID
+	// sysUser.UserInput = claims.UserID
 	err = u.useUser.Create(ctx, &sysUser)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)

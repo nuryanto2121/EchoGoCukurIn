@@ -12,6 +12,11 @@ definitions:
       password:
         type: string
     type: object
+  models.ForgotForm:
+    properties:
+      account:
+        type: string
+    type: object
   models.LoginForm:
     properties:
       account:
@@ -36,6 +41,19 @@ definitions:
       search:
         type: string
       sort_field:
+        type: string
+    type: object
+  models.RegisterForm:
+    properties:
+      account:
+        type: string
+      confirm_pwd:
+        type: string
+      name:
+        type: string
+      pwd:
+        type: string
+      user_type:
         type: string
     type: object
   models.ResetPasswd:
@@ -65,6 +83,13 @@ definitions:
         type: integer
       total:
         type: integer
+    type: object
+  models.VerifyForm:
+    properties:
+      account:
+        type: string
+      verify_code:
+        type: string
     type: object
   tool.ResponseModel:
     properties:
@@ -115,6 +140,37 @@ paths:
       summary: Change Password
       tags:
       - Auth
+  /barber/auth/forgot:
+    post:
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.ForgotForm'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      summary: Forgot Password
+      tags:
+      - Auth
   /barber/auth/login:
     post:
       parameters:
@@ -144,6 +200,68 @@ paths:
           schema:
             $ref: '#/definitions/tool.ResponseModel'
       summary: Login
+      tags:
+      - Auth
+  /barber/auth/register:
+    post:
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterForm'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      summary: Register
+      tags:
+      - Auth
+  /barber/auth/verify:
+    post:
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.VerifyForm'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      summary: Verify
       tags:
       - Auth
   /barber/dynamic:

@@ -2,6 +2,7 @@ package redisdb
 
 import (
 	"fmt"
+	"time"
 )
 
 // GetList :
@@ -38,8 +39,18 @@ func TurncateList(key string) error {
 }
 
 // AddSession :
-func AddSession(key string, val interface{}) error {
-	set := rdb.Set(key, val, 0)
+func AddSession(key string, val interface{}, mn int) error {
+	// ss := 1 * time.Hour
+	var (
+		tm = time.Minute
+	)
+	if mn > 0 {
+		tm := time.Duration(mn) * time.Minute
+		fmt.Println(tm)
+	} else {
+		tm = 0
+	}
+	set := rdb.Set(key, val, tm)
 	fmt.Println(set)
 	return nil
 }

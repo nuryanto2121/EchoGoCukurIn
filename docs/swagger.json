@@ -57,6 +57,51 @@
                 }
             }
         },
+        "/barber/auth/forgot": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Forgot Password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "req param #changes are possible to adjust the form of the registration form from frontend",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.ForgotForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ResponseModel"
+                        }
+                    }
+                }
+            }
+        },
         "/barber/auth/login": {
             "post": {
                 "produces": [
@@ -89,6 +134,96 @@
                         "schema": {
                             "type": "object",
                             "$ref": "#/definitions/models.LoginForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ResponseModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/barber/auth/register": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "req param #changes are possible to adjust the form of the registration form from frontend",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.RegisterForm"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ResponseModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/barber/auth/verify": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "req param #changes are possible to adjust the form of the registration form from frontend",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.VerifyForm"
                         }
                     }
                 ],
@@ -533,6 +668,14 @@
                 }
             }
         },
+        "models.ForgotForm": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                }
+            }
+        },
         "models.LoginForm": {
             "type": "object",
             "properties": {
@@ -569,6 +712,26 @@
                     "type": "string"
                 },
                 "sort_field": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.RegisterForm": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "confirm_pwd": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "pwd": {
+                    "type": "string"
+                },
+                "user_type": {
                     "type": "string"
                 }
             }
@@ -613,6 +776,17 @@
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.VerifyForm": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "verify_code": {
+                    "type": "string"
                 }
             }
         },

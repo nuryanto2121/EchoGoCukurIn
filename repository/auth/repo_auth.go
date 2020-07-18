@@ -35,3 +35,11 @@ func (m *repoAuth) ChangePassword(ctx context.Context, data interface{}) (err er
 	}
 	return nil
 }
+
+func (m *repoAuth) Register(ctx context.Context, dataUser models.SysUser) error {
+	_, err := m.DB.NamedExecContext(ctx, queryauth.QueryRegister, dataUser)
+	if err != nil {
+		return err
+	}
+	return nil
+}

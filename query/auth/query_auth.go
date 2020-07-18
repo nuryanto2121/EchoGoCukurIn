@@ -22,4 +22,9 @@ const (
 		SET pwd = :pwd
 	WHERE user_id = :user_id;
 	`
+	QueryRegister = `
+	INSERT INTO public.ss_user ("name", telp, email, is_active, join_date, pwd,  user_type, user_input, user_edit) 
+	VALUES(:name, :telp, :email, true, now(), :pwd, :user_type, :user_input, :user_edit);
+
+	`
 )
