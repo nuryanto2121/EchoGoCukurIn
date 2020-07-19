@@ -2,6 +2,7 @@ package tool
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -26,7 +27,15 @@ func ResultQuery(rows *sqlx.Rows) (result interface{}, err error) {
 			return nil, err
 		}
 		for i, col := range cols {
-			colassoc[col] = *colvals[i].(*interface{})
+
+			vallue := *colvals[i].(*interface{})
+
+			colassoc[col] = vallue
+			sVal := fmt.Sprintf("%s", colassoc[col])
+			dataType := fmt.Sprintf("%T", colassoc[col])
+			if dataType == "[]uint8" {
+				colassoc[col], _ = strconv.ParseFloat(fmt.Sprint(sVal), 64)
+			}
 			fmt.Printf("%s: %T %s\n", col, colassoc[col], colassoc[col])
 		}
 		fmt.Println(colassoc)
