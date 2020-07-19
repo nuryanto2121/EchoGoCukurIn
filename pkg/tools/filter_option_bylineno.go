@@ -1,6 +1,9 @@
 package tool
 
-import "nuryanto2121/dynamic_rest_api_go/models"
+import (
+	"nuryanto2121/dynamic_rest_api_go/models"
+	"strings"
+)
 
 func FilterOptionList(OptionList []models.OptionDB, LineNo int, MethodAPI string) (Out []models.OptionDB) {
 
@@ -12,7 +15,7 @@ func FilterOptionList(OptionList []models.OptionDB, LineNo int, MethodAPI string
 	if MethodAPI != "" {
 		var Outs []models.OptionDB
 		for _, Key := range Out {
-			if Key.MethodApi == MethodAPI {
+			if strings.ToLower(Key.MethodApi) == strings.ToLower(MethodAPI) {
 				Outs = append(Outs, Key)
 			}
 		}

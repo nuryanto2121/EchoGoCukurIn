@@ -2,6 +2,7 @@ package repooption
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	idynamic "nuryanto2121/dynamic_rest_api_go/interface/dynamic"
 	"nuryanto2121/dynamic_rest_api_go/models"
@@ -66,7 +67,12 @@ func (m *repoOptionDB) GetDefineColumn(ctx context.Context, MenuUrl string, Line
 	// errs := m.DB.SelectContext(ctx, &result, queryoption.QueryDefineColumn, MenuUrl, LineNo)
 	errs := m.DB.GetContext(ctx, &result, queryoption.QueryDefineColumn, MenuUrl, LineNo)
 	if errs != nil {
-		return result, errs
+		if errs == sql.ErrNoRows {
+			return result, nil
+		} else {
+			return result, errs
+		}
+
 	}
 	return result, nil
 }
