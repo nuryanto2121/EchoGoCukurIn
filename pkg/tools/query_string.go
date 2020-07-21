@@ -27,7 +27,14 @@ func QueryFunction(SpName string, ParamList []models.ParamFunction) string {
 
 	return result
 }
+func QueryJson(SpName string) string {
+	var result string
 
+	result = queryoption.QueryExecCUD
+	result = strings.Replace(result, "{FunctionName}", SpName, -1)
+	result = strings.Replace(result, "{ParameterFunction}", ":in_data", -1)
+	return result
+}
 func QueryFunctionByID(SpName string, ParamList []models.ParamFunction) string {
 	var (
 		result string

@@ -8,6 +8,7 @@ import (
 
 type Usecase interface {
 	Execute(ctx context.Context, claims util.Claims, data map[string]interface{}) (result interface{}, err error)
+	ExecuteMulti(ctx context.Context, claims util.Claims, data models.PostMulti, method string) (result interface{}, err error)
 	Delete(ctx context.Context, claims util.Claims, ParamGet models.ParamGet) error
 	GetDataBy(ctx context.Context, claims util.Claims, ParamGet models.ParamGet) (result interface{}, err error)
 	GetList(ctx context.Context, claims util.Claims, queryparam models.ParamDynamicList) (result models.ResponseModelList, err error)

@@ -8,7 +8,9 @@ import (
 	midd "nuryanto2121/dynamic_rest_api_go/middleware"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	app "nuryanto2121/dynamic_rest_api_go/pkg"
+	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	tool "nuryanto2121/dynamic_rest_api_go/pkg/tools"
+	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 
 	"github.com/labstack/echo/v4"
 )
@@ -30,6 +32,94 @@ func NewContDynamic(e *echo.Echo, a idynamic.Usecase) {
 	r.GET("/:id", controller.GetById)
 	r.POST("/list", controller.GetList)
 	r.DELETE("/:id", controller.Delete)
+
+	x := e.Group("/barber/dynamicmulti")
+	x.Use(midd.Versioning)
+	x.Use(midd.JWT)
+	x.POST("", controller.PostMulti)
+	x.PUT("", controller.PutMulti)
+}
+
+// Post Mulit :
+// @Summary Post Dynamic Multi
+// @Security ApiKeyAuth
+// @Tags DynamicMulti
+// @Produce json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
+// @Param req body models.PostMulti true "req param #changes are possible to adjust the form of the registration form from frontend"
+// @Success 200 {object} tool.ResponseModel
+// @Router /barber/dynamicmulti [post]
+func (c *ContDynamic) PostMulti(e echo.Context) error {
+	ctx := e.Request().Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	var (
+		logger = logging.Logger{} // wajib
+		appE   = tool.Res{R: e}   // wajib
+		// json_map = make(map[string]interface{})
+		form = models.PostMulti{}
+	)
+
+	httpCode, errMsg := app.BindAndValid(e, &form)
+	logger.Info(util.Stringify(form))
+	if httpCode != 200 {
+		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
+	}
+
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+	method := "Save"
+	data, err := c.useOption.ExecuteMulti(ctx, claims, form, method)
+	if err != nil {
+		return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
+	}
+
+	return appE.Response(http.StatusCreated, "Ok", data)
+}
+
+// Put Mulit :
+// @Summary Put Dynamic Multi
+// @Security ApiKeyAuth
+// @Tags DynamicMulti
+// @Produce json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
+// @Param req body models.PostMulti true "req param #changes are possible to adjust the form of the registration form from frontend"
+// @Success 200 {object} tool.ResponseModel
+// @Router /barber/dynamicmulti [put]
+func (c *ContDynamic) PutMulti(e echo.Context) error {
+	ctx := e.Request().Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	var (
+		logger = logging.Logger{} // wajib
+		appE   = tool.Res{R: e}   // wajib
+		// json_map = make(map[string]interface{})
+		form = models.PostMulti{}
+	)
+
+	httpCode, errMsg := app.BindAndValid(e, &form)
+	logger.Info(util.Stringify(form))
+	if httpCode != 200 {
+		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
+	}
+
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+	method := "Update"
+	data, err := c.useOption.ExecuteMulti(ctx, claims, form, method)
+	if err != nil {
+		return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
+	}
+
+	return appE.Response(http.StatusCreated, "Ok", data)
 }
 
 // Save :

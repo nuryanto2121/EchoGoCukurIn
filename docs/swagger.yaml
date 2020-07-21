@@ -43,6 +43,15 @@ definitions:
       sort_field:
         type: string
     type: object
+  models.PostMulti:
+    properties:
+      in_data:
+        type: object
+      line_no:
+        type: integer
+      menu_url:
+        type: string
+    type: object
   models.RegisterForm:
     properties:
       account:
@@ -489,6 +498,71 @@ paths:
       summary: GetList Dynamic
       tags:
       - Dynamic
+  /barber/dynamicmulti:
+    post:
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostMulti'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Post Dynamic Multi
+      tags:
+      - DynamicMulti
+    put:
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.PostMulti'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Put Dynamic Multi
+      tags:
+      - DynamicMulti
   /barber/user:
     delete:
       parameters:

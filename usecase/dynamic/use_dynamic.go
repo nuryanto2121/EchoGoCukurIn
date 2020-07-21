@@ -2,6 +2,7 @@ package usedynamic
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"math"
 	idynamic "nuryanto2121/dynamic_rest_api_go/interface/dynamic"
@@ -65,6 +66,49 @@ func (u *useOptionTemplate) Execute(ctx context.Context, claims util.Claims, dat
 	}
 
 	sQuery := tool.QueryFunction(SpName, DataParameter)
+	fmt.Printf(sQuery)
+	resultPost, err := u.repoOption.CRUD(ctx, sQuery, DataPostSP)
+	if err != nil {
+		return nil, err
+	}
+
+	return resultPost, nil
+}
+
+func (u *useOptionTemplate) ExecuteMulti(ctx context.Context, claims util.Claims, data models.PostMulti, method string) (result interface{}, err error) {
+	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
+	defer cancel()
+
+	// parameter wajib
+	OptionUrl := data.MenuUrl
+	Method := method
+	LineNo := data.LineNo
+
+	OptionDbList, err := u.repoOption.GetOptionByUrl(ctx, OptionUrl)
+	if err != nil {
+		return nil, err
+	}
+	var DataOption = tool.FilterOptionList(OptionDbList, LineNo, Method)[0]
+	fmt.Printf("%v", DataOption)
+
+	SpName := DataOption.SP
+
+	DataParameter, err := u.repoOption.GetParamFunction(ctx, SpName)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("%v", DataParameter)
+
+	dataString, err := json.Marshal(data.InData)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(string(dataString))
+
+	DataPostSP := make(map[string]interface{})
+	DataPostSP["in_data"] = string(dataString)
+
+	sQuery := tool.QueryJson(SpName)
 	fmt.Printf(sQuery)
 	resultPost, err := u.repoOption.CRUD(ctx, sQuery, DataPostSP)
 	if err != nil {
