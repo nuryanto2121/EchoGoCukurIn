@@ -765,37 +765,6 @@
                         }
                     }
                 }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "Delete User",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/tool.ResponseModel"
-                        }
-                    }
-                }
             }
         },
         "/barber/user/{id}": {
@@ -842,7 +811,7 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Update User",
+                "summary": "Rubah Profile",
                 "parameters": [
                     {
                         "type": "string",
@@ -858,8 +827,39 @@
                         "required": true,
                         "schema": {
                             "type": "object",
-                            "$ref": "#/definitions/models.AddUser"
+                            "$ref": "#/definitions/models.UpdateUser"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ResponseModel"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete User",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -880,16 +880,16 @@
                 "email": {
                     "type": "string"
                 },
-                "full_name": {
-                    "type": "string"
-                },
-                "handphone": {
-                    "type": "string"
-                },
                 "is_admin": {
                     "type": "boolean"
                 },
+                "name": {
+                    "type": "string"
+                },
                 "password": {
+                    "type": "string"
+                },
+                "telp": {
                     "type": "string"
                 }
             }
@@ -1016,6 +1016,20 @@
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "models.UpdateUser": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "telp": {
+                    "type": "string"
                 }
             }
         },

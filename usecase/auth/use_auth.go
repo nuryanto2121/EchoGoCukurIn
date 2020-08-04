@@ -110,7 +110,7 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	var User models.SysUser
+	var User models.SsUser
 
 	User.Name = dataRegister.Name
 	if dataRegister.Passwd != dataRegister.ConfirmPasswd {

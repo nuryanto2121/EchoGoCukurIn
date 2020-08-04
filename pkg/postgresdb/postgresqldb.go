@@ -53,7 +53,7 @@ func autoMigrate() {
 	Conn.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 	log.Println("STARTING AUTO MIGRATE ")
 	Conn.AutoMigrate(
-		models.SysUser{},
+		models.SsUser{},
 	)
 
 	log.Println("FINISHING AUTO MIGRATE ")

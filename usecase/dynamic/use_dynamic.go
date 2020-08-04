@@ -257,7 +257,7 @@ func (u *useOptionTemplate) GetList(ctx context.Context, claims util.Claims, que
 	if InitialWhere != "" {
 		InitialWhere = "WHERE " + InitialWhere
 	}
-	sWhere := strings.Replace(InitialWhere, "claims.user_id", claims.UserName, -1)
+	sWhere := strings.Replace(InitialWhere, "claims.user_id", strconv.Itoa(claims.UserID), -1)
 	sWhereLike := tool.SetWhereLikeList(FieldWhere, ParamWhere)
 
 	if ParamWhere != "" {

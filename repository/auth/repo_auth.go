@@ -41,7 +41,7 @@ func (m *repoAuth) ChangePassword(ctx context.Context, data interface{}) (err er
 	return nil
 }
 
-func (m *repoAuth) Register(ctx context.Context, dataUser models.SysUser) error {
+func (m *repoAuth) Register(ctx context.Context, dataUser models.SsUser) error {
 	var logger = logging.Logger{}
 	logger.Query(queryauth.QueryRegister, dataUser)
 	_, err := m.DB.NamedExecContext(ctx, queryauth.QueryRegister, dataUser)

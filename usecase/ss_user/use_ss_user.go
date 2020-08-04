@@ -21,11 +21,11 @@ func NewUserSysUser(a iusers.Repository, timeout time.Duration) iusers.Usecase {
 	return &useSysUser{repoUser: a, contextTimeOut: timeout}
 }
 
-func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result models.SysUser, err error) {
+func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result models.SsUser, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	a := models.SysUser{}
+	a := models.SsUser{}
 	result, err = u.repoUser.GetByEmailSaUser(email)
 	if err != nil {
 		return a, err
@@ -33,7 +33,7 @@ func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result
 	return result, nil
 }
 
-func (u *useSysUser) GetDataBy(ctx context.Context, ID int) (result *models.SysUser, err error) {
+func (u *useSysUser) GetDataBy(ctx context.Context, ID int) (result *models.SsUser, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
@@ -48,7 +48,7 @@ func (u *useSysUser) GetList(ctx context.Context, queryparam models.ParamList) (
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	var tUser = models.SysUser{}
+	var tUser = models.SsUser{}
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
 		value := reflect.ValueOf(tUser)
@@ -71,7 +71,7 @@ func (u *useSysUser) GetList(ctx context.Context, queryparam models.ParamList) (
 
 	return result, nil
 }
-func (u *useSysUser) Create(ctx context.Context, data *models.SysUser) (err error) {
+func (u *useSysUser) Create(ctx context.Context, data *models.SsUser) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
@@ -86,7 +86,7 @@ func (u *useSysUser) Update(ctx context.Context, ID int, data interface{}) (err 
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	var form = models.AddUser{}
+	var form = models.UpdateUser{}
 	err = mapstructure.Decode(data, &form)
 	if err != nil {
 		return err

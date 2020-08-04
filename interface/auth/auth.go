@@ -8,7 +8,7 @@ import (
 type Repository interface {
 	GetDataLogin(ctx context.Context, Account string) (models.DataLogin, error)
 	ChangePassword(ctx context.Context, data interface{}) (err error)
-	Register(ctx context.Context, dataUser models.SysUser) error
+	Register(ctx context.Context, dataUser models.SsUser) error
 }
 type Usecase interface {
 	Login(ctx context.Context, dataLogin *models.LoginForm) (output interface{}, err error)

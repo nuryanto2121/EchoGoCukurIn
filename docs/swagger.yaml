@@ -3,13 +3,13 @@ definitions:
     properties:
       email:
         type: string
-      full_name:
-        type: string
-      handphone:
-        type: string
       is_admin:
         type: boolean
+      name:
+        type: string
       password:
+        type: string
+      telp:
         type: string
     type: object
   models.ForgotForm:
@@ -92,6 +92,15 @@ definitions:
         type: integer
       total:
         type: integer
+    type: object
+  models.UpdateUser:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      telp:
+        type: string
     type: object
   models.VerifyForm:
     properties:
@@ -564,25 +573,6 @@ paths:
       tags:
       - DynamicMulti
   /barber/user:
-    delete:
-      parameters:
-      - description: ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/tool.ResponseModel'
-      security:
-      - ApiKeyAuth: []
-      summary: Delete User
-      tags:
-      - User
     get:
       parameters:
       - description: Page
@@ -642,6 +632,25 @@ paths:
       tags:
       - User
   /barber/user/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete User
+      tags:
+      - User
     get:
       parameters:
       - description: ID
@@ -674,7 +683,7 @@ paths:
         name: req
         required: true
         schema:
-          $ref: '#/definitions/models.AddUser'
+          $ref: '#/definitions/models.UpdateUser'
           type: object
       produces:
       - application/json
@@ -685,7 +694,7 @@ paths:
             $ref: '#/definitions/tool.ResponseModel'
       security:
       - ApiKeyAuth: []
-      summary: Update User
+      summary: Rubah Profile
       tags:
       - User
 securityDefinitions:

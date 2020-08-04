@@ -36,7 +36,7 @@ func NewContUser(e *echo.Echo, a iusers.Usecase) {
 	r.GET("", controller.GetList)
 	r.POST("", controller.Create)
 	r.PUT("/:id", controller.Update)
-	r.DELETE("", controller.Delete)
+	r.DELETE("/:id", controller.Delete)
 }
 
 // GetDataByID :
@@ -139,7 +139,7 @@ func (u *ContUser) Create(e echo.Context) error {
 	var (
 		// logger     = logging.Logger{} // wajib
 		appE    = tool.Res{R: e} // wajib
-		sysUser models.SysUser
+		sysUser models.SsUser
 		form    models.AddUser
 	)
 
@@ -171,12 +171,12 @@ func (u *ContUser) Create(e echo.Context) error {
 }
 
 // UpdateSaUser :
-// @Summary Update User
+// @Summary Rubah Profile
 // @Security ApiKeyAuth
 // @Tags User
 // @Produce json
 // @Param id path string true "ID"
-// @Param req body models.AddUser true "req param #changes are possible to adjust the form of the registration form from frontend"
+// @Param req body models.UpdateUser true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
 // @Router /barber/user/{id} [put]
 func (u *ContUser) Update(e echo.Context) error {
@@ -191,7 +191,7 @@ func (u *ContUser) Update(e echo.Context) error {
 		err  error
 		// valid  validation.Validation                 // wajib
 		id   = e.Param("id") //kalo bukan int => 0
-		form = models.AddUser{}
+		form = models.UpdateUser{}
 	)
 	// user := e.Get("user").(*jwt.Token)
 	// claims := user.Claims.(*util.Claims)
@@ -224,7 +224,7 @@ func (u *ContUser) Update(e echo.Context) error {
 // @Produce  json
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/user [delete]
+// @Router /barber/user/{id} [delete]
 func (u *ContUser) Delete(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {

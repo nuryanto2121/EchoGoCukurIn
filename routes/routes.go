@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"nuryanto2121/dynamic_rest_api_go/pkg/postgresdb"
 	sqlxposgresdb "nuryanto2121/dynamic_rest_api_go/pkg/postgresqlxdb"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 
@@ -15,6 +16,10 @@ import (
 	_saFilecont "nuryanto2121/dynamic_rest_api_go/controllers/fileupload"
 	_repoFile "nuryanto2121/dynamic_rest_api_go/repository/ss_fileupload"
 	_useFile "nuryanto2121/dynamic_rest_api_go/usecase/ss_fileupload"
+
+	_contUser "nuryanto2121/dynamic_rest_api_go/controllers/user"
+	_repoUser "nuryanto2121/dynamic_rest_api_go/repository/ss_user"
+	_useUser "nuryanto2121/dynamic_rest_api_go/usecase/ss_user"
 
 	"time"
 
@@ -33,9 +38,9 @@ func (e *EchoRoutes) InitialRouter() {
 	useDynamic := _useDynamic.NewUserSysUser(repoDynamic, timeoutContext)
 	_contDynamic.NewContDynamic(e.E, useDynamic)
 
-	// repoUser := _repoUser.NewRepoSysUser(postgresdb.Conn)
-	// useUser := _useUser.NewUserSysUser(repoUser, timeoutContext)
-	// _contUser.NewContUser(e.E, useUser)
+	repoUser := _repoUser.NewRepoSysUser(postgresdb.Conn)
+	useUser := _useUser.NewUserSysUser(repoUser, timeoutContext)
+	_contUser.NewContUser(e.E, useUser)
 
 	repoFile := _repoFile.NewRepoFileUpload(sqlxposgresdb.DbCon)
 	useFile := _useFile.NewSaFileUpload(repoFile, timeoutContext)

@@ -4,7 +4,7 @@ import "time"
 
 // import uuid "github.com/satori/go.uuid"
 
-type SysUser struct {
+type SsUser struct {
 	UserID    int       `json:"user_id" db:"user_id"`
 	Name      string    `json:"name" db:"name"`
 	Telp      string    `json:"telp" db:"telp"`
@@ -21,9 +21,15 @@ type SysUser struct {
 }
 
 type AddUser struct {
-	Email     string `json:"email" valid:"Required"`
-	Handphone string `json:"handphone"`
-	Password  string `json:"password"`
-	FullName  string `json:"full_name" valid:"Required"`
-	IsAdmin   bool   `json:"is_admin"`
+	Email    string `json:"email" valid:"Required"`
+	Telp     string `json:"telp"`
+	Password string `json:"password"`
+	Name     string `json:"name" valid:"Required"`
+	IsAdmin  bool   `json:"is_admin"`
+}
+
+type UpdateUser struct {
+	Email string `json:"email" valid:"Required"`
+	Telp  string `json:"telp"`
+	Name  string `json:"name" valid:"Required"`
 }
