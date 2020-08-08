@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	iauth "nuryanto2121/dynamic_rest_api_go/interface/auth"
+	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
+	iusers "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"nuryanto2121/dynamic_rest_api_go/redisdb"
@@ -12,18 +14,19 @@ import (
 )
 
 type useAuht struct {
-	repoAuth       iauth.Repository
+	repoAuth       iusers.Repository
+	repoFile       ifileupload.Repository
 	contextTimeOut time.Duration
 }
 
-func NewUserAuth(a iauth.Repository, timeout time.Duration) iauth.Usecase {
-	return &useAuht{repoAuth: a, contextTimeOut: timeout}
+func NewUserAuth(a iusers.Repository, b ifileupload.Repository, timeout time.Duration) iauth.Usecase {
+	return &useAuht{repoAuth: a, repoFile: b, contextTimeOut: timeout}
 }
 func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (output interface{}, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	DataUser, err := u.repoAuth.GetDataLogin(ctx, dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
+	DataUser, err := u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 	if err != nil {
 		// return util.GoutputErrCode(http.StatusUnauthorized, "Your User/Email not valid.") //appE.ResponseError(util.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 		return nil, errors.New("Your Account not valid.")
@@ -32,6 +35,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 	if !util.ComparePassword(DataUser.Password, util.GetPassword(dataLogin.Password)) {
 		return nil, errors.New("Your Password not valid.")
 	}
+	DataFile, err := u.repoFile.GetBySaFileUpload(ctx, DataUser.FileID)
 
 	token, err := util.GenerateToken(DataUser.UserID, dataLogin.Account, DataUser.UserType)
 	if err != nil {
@@ -46,9 +50,9 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 		"telp":      DataUser.Telp,
 		"user_name": DataUser.Name,
 		"user_type": DataUser.UserType,
-		"file_id":   DataUser.FileID.Int64,
-		"file_name": DataUser.FileName.String,
-		"file_path": DataUser.FilePath.String,
+		"file_id":   DataUser.FileID,
+		"file_name": DataFile.FileName,
+		"file_path": DataFile.FilePath,
 	}
 	response := map[string]interface{}{
 		"token":     token,
@@ -62,7 +66,7 @@ func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotF
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	DataUser, err := u.repoAuth.GetDataLogin(ctx, dataForgot.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
+	DataUser, err := u.repoAuth.GetByAccount(dataForgot.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 	if err != nil {
 		// return util.GoutputErrCode(http.StatusUnauthorized, "Your User/Email not valid.") //appE.ResponseError(util.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 		return errors.New("Your Account not valid.")
@@ -82,13 +86,12 @@ func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPass
 		return errors.New("Password and Confirm Password not same.")
 	}
 
-	DataUser, err := u.repoAuth.GetDataLogin(ctx, dataReset.Account)
+	DataUser, err := u.repoAuth.GetByAccount(dataReset.Account)
 	if err != nil {
 		return err
 	}
-	DataChange := make(map[string]interface{}, 0)
-	DataChange["user_id"] = DataUser.UserID
-	DataChange["pwd"], _ = util.Hash(dataReset.Passwd)
+
+	DataUser.Password, _ = util.Hash(dataReset.Passwd)
 	// email, err := util.ParseEmailToken(dataReset.TokenEmail)
 	// if err != nil {
 	// 	email = dataReset.TokenEmail
@@ -98,7 +101,7 @@ func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPass
 
 	// dataUser.Password, _ = util.Hash(dataReset.Passwd)
 
-	err = u.repoAuth.ChangePassword(ctx, DataChange) //u.repoUser.Update(dataUser.ID, &dataUser)
+	err = u.repoAuth.Update(DataUser.UserID, &DataUser)
 	if err != nil {
 		return err
 	}
@@ -127,7 +130,7 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	} else {
 		User.Telp = dataRegister.Account
 	}
-	err = u.repoAuth.Register(ctx, User)
+	err = u.repoAuth.Create(&User)
 	if err != nil {
 		return output, err
 	}

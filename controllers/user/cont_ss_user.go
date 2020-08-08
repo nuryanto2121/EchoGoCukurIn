@@ -44,6 +44,8 @@ func NewContUser(e *echo.Echo, a iusers.Usecase) {
 // @Security ApiKeyAuth
 // @Tags User
 // @Produce  json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
 // @Router /barber/user/{id} [get]
@@ -77,6 +79,8 @@ func (u *ContUser) GetDataBy(e echo.Context) error {
 // @Security ApiKeyAuth
 // @Tags User
 // @Produce  json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
 // @Param page query int true "Page"
 // @Param perpage query int true "PerPage"
 // @Param search query string false "Search"
@@ -127,6 +131,8 @@ func (u *ContUser) GetList(e echo.Context) error {
 // @Security ApiKeyAuth
 // @Tags User
 // @Produce json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
 // @Param req body models.AddUser true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
 // @Router /barber/user [post]
@@ -175,6 +181,8 @@ func (u *ContUser) Create(e echo.Context) error {
 // @Security ApiKeyAuth
 // @Tags User
 // @Produce json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Param req body models.UpdateUser true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
@@ -222,6 +230,8 @@ func (u *ContUser) Update(e echo.Context) error {
 // @Security ApiKeyAuth
 // @Tags User
 // @Produce  json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
 // @Router /barber/user/{id} [delete]

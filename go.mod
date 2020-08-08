@@ -9,7 +9,7 @@ require (
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/jinzhu/gorm v1.9.14
-	github.com/jinzhu/now v1.0.1
+	github.com/jinzhu/now v1.1.1
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo/v4 v4.1.16
@@ -24,4 +24,5 @@ require (
 	go.mongodb.org/mongo-driver v1.3.5
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
+	gorm.io/gorm v0.2.27
 )

@@ -18,9 +18,8 @@ func NewRepoSysUser(Conn *gorm.DB) iusers.Repository {
 	return &repoSysUser{Conn}
 }
 
-func (db *repoSysUser) GetByEmailSaUser(email string) (result models.SsUser, err error) {
-
-	query := db.Conn.Where("email = ?", email).First(&result)
+func (db *repoSysUser) GetByAccount(Account string) (result models.SsUser, err error) {
+	query := db.Conn.Where("email = ?", Account).Or("telp = ?", Account).First(&result)
 	log.Info(fmt.Sprintf("%v", query.QueryExpr()))
 	// logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error

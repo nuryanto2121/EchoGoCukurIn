@@ -3,7 +3,8 @@ package midd
 import (
 	"fmt"
 	"net/http"
-	sqlxposgresdb "nuryanto2121/dynamic_rest_api_go/pkg/postgresqlxdb"
+	version "nuryanto2121/dynamic_rest_api_go/middleware/versioning"
+	"nuryanto2121/dynamic_rest_api_go/pkg/postgresdb"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 	tool "nuryanto2121/dynamic_rest_api_go/pkg/tools"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
@@ -82,10 +83,15 @@ func Versioning(next echo.HandlerFunc) echo.HandlerFunc {
 			}
 			return e.JSON(http.StatusBadRequest, resp)
 		}
-		dataVersion, err := sqlxposgresdb.GetVersion(OS)
+
+		verService := &version.SsVersion{
+			OS:      OS,
+			Version: Version,
+		}
+		dataVersion, err := verService.GetVersion(postgresdb.Conn) //sqlxposgresdb.GetVersion(OS)
 		if err != nil {
 			resp := tool.ResponseModel{
-				Msg:  fmt.Sprintf("%v", err),
+				Msg:  fmt.Sprintf("Versioning : %v", err),
 				Data: nil,
 			}
 			return e.JSON(http.StatusBadRequest, resp)

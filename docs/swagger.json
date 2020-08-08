@@ -295,8 +295,8 @@
                 }
             }
         },
-        "/barber/dynamic": {
-            "put": {
+        "/barber/paket": {
+            "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -306,9 +306,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Dynamic"
+                    "Paket"
                 ],
-                "summary": "Edit Dynamic",
+                "summary": "GetList Paket",
                 "parameters": [
                     {
                         "type": "string",
@@ -325,21 +325,43 @@
                         "required": true
                     },
                     {
-                        "description": "req param #changes are possible to adjust the form of the registration form from frontend",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "$ref": "#/definitions/interface%7B%7D"
-                        }
+                        "type": "integer",
+                        "description": "Page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "PerPage",
+                        "name": "perpage",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "InitSearch",
+                        "name": "initsearch",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "SortField",
+                        "name": "sortfield",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tool.ResponseModel"
+                            "$ref": "#/definitions/models.ResponseModelList"
                         }
                     }
                 }
@@ -354,9 +376,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Dynamic"
+                    "Paket"
                 ],
-                "summary": "Add Dynamic",
+                "summary": "Add Paket",
                 "parameters": [
                     {
                         "type": "string",
@@ -379,7 +401,109 @@
                         "required": true,
                         "schema": {
                             "type": "object",
-                            "$ref": "#/definitions/interface%7B%7D"
+                            "$ref": "#/definitions/models.DataPaket"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ResponseModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/barber/paket/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Paket"
+                ],
+                "summary": "GetById",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ResponseModel"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Paket"
+                ],
+                "summary": "Rubah Profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "req param #changes are possible to adjust the form of the registration form from frontend",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.DataPaket"
                         }
                     }
                 ],
@@ -402,9 +526,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Dynamic"
+                    "Paket"
                 ],
-                "summary": "Delete Dynamic",
+                "summary": "Delete Paket",
                 "parameters": [
                     {
                         "type": "string",
@@ -421,248 +545,11 @@
                         "required": true
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "ID",
                         "name": "id",
                         "in": "path",
                         "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Lastupdatestamp",
-                        "name": "lastupdatestamp",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "MenuUrl",
-                        "name": "menu_url",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "LineNo",
-                        "name": "line_no",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/tool.ResponseModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/barber/dynamic/list": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Dynamic"
-                ],
-                "summary": "GetList Dynamic",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OS Device",
-                        "name": "OS",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "OS Device",
-                        "name": "Version",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "req param #changes are possible to adjust the form of the registration form from frontend",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "$ref": "#/definitions/models.ParamDynamicList"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.ResponseModelList"
-                        }
-                    }
-                }
-            }
-        },
-        "/barber/dynamic/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Dynamic"
-                ],
-                "summary": "GetById Dynamic",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OS Device",
-                        "name": "OS",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "OS Device",
-                        "name": "Version",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Lastupdatestamp",
-                        "name": "lastupdatestamp",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "MenuUrl",
-                        "name": "menu_url",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "LineNo",
-                        "name": "line_no",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/tool.ResponseModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/barber/dynamicmulti": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "DynamicMulti"
-                ],
-                "summary": "Put Dynamic Multi",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OS Device",
-                        "name": "OS",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "OS Device",
-                        "name": "Version",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "req param #changes are possible to adjust the form of the registration form from frontend",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "$ref": "#/definitions/models.PostMulti"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/tool.ResponseModel"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "DynamicMulti"
-                ],
-                "summary": "Post Dynamic Multi",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "OS Device",
-                        "name": "OS",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "OS Device",
-                        "name": "Version",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "req param #changes are possible to adjust the form of the registration form from frontend",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "$ref": "#/definitions/models.PostMulti"
-                        }
                     }
                 ],
                 "responses": {
@@ -690,6 +577,20 @@
                 ],
                 "summary": "GetList User",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "Page",
@@ -747,6 +648,20 @@
                 "summary": "Add User",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "req param #changes are possible to adjust the form of the registration form from frontend",
                         "name": "req",
                         "in": "body",
@@ -784,6 +699,20 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "ID",
                         "name": "id",
                         "in": "path",
@@ -813,6 +742,20 @@
                 ],
                 "summary": "Rubah Profile",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "ID",
@@ -856,6 +799,20 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "ID",
                         "name": "id",
                         "in": "path",
@@ -894,6 +851,50 @@
                 }
             }
         },
+        "models.DataPaket": {
+            "type": "object",
+            "properties": {
+                "descs": {
+                    "type": "string"
+                },
+                "durasi_end": {
+                    "type": "integer"
+                },
+                "durasi_start": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "is_promo": {
+                    "type": "boolean"
+                },
+                "owner_id": {
+                    "type": "integer"
+                },
+                "paket_name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "promo_end": {
+                    "type": "integer"
+                },
+                "promo_price": {
+                    "type": "number"
+                },
+                "promo_start": {
+                    "type": "integer"
+                },
+                "time_Edit": {
+                    "type": "string"
+                },
+                "user_edit": {
+                    "type": "string"
+                }
+            }
+        },
         "models.ForgotForm": {
             "type": "object",
             "properties": {
@@ -909,49 +910,6 @@
                     "type": "string"
                 },
                 "pwd": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.ParamDynamicList": {
-            "type": "object",
-            "properties": {
-                "init_search": {
-                    "type": "string"
-                },
-                "line_no": {
-                    "type": "integer"
-                },
-                "menu_url": {
-                    "type": "string"
-                },
-                "page": {
-                    "type": "integer"
-                },
-                "param_view": {
-                    "type": "string"
-                },
-                "per_page": {
-                    "type": "integer"
-                },
-                "search": {
-                    "type": "string"
-                },
-                "sort_field": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.PostMulti": {
-            "type": "object",
-            "properties": {
-                "in_data": {
-                    "type": "object"
-                },
-                "line_no": {
-                    "type": "integer"
-                },
-                "menu_url": {
                     "type": "string"
                 }
             }

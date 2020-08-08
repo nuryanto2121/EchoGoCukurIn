@@ -1,6 +1,7 @@
 package models
 
 type VersionApps struct {
-	OS      string `json:"os" db:"os"`
-	Version int    `json:"version" db:"version"`
+	VersionID int    `json:"version_id" gorm:"PRIMARY_KEY"`
+	OS        string `json:"os" gorm:"type:varchar(20)"`
+	Version   int    `json:"version" gorm:"type:integer"`
 }

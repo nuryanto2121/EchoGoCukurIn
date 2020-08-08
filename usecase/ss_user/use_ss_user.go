@@ -26,7 +26,7 @@ func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result
 	defer cancel()
 
 	a := models.SsUser{}
-	result, err = u.repoUser.GetByEmailSaUser(email)
+	result, err = u.repoUser.GetByAccount(email)
 	if err != nil {
 		return a, err
 	}
@@ -41,7 +41,7 @@ func (u *useSysUser) GetDataBy(ctx context.Context, ID int) (result *models.SsUs
 	if err != nil {
 		return result, err
 	}
-
+	result.Password = ""
 	return result, nil
 }
 func (u *useSysUser) GetList(ctx context.Context, queryparam models.ParamList) (result models.ResponseModelList, err error) {

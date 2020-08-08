@@ -12,6 +12,35 @@ definitions:
       telp:
         type: string
     type: object
+  models.DataPaket:
+    properties:
+      descs:
+        type: string
+      durasi_end:
+        type: integer
+      durasi_start:
+        type: integer
+      is_active:
+        type: boolean
+      is_promo:
+        type: boolean
+      owner_id:
+        type: integer
+      paket_name:
+        type: string
+      price:
+        type: number
+      promo_end:
+        type: integer
+      promo_price:
+        type: number
+      promo_start:
+        type: integer
+      time_Edit:
+        type: string
+      user_edit:
+        type: string
+    type: object
   models.ForgotForm:
     properties:
       account:
@@ -22,34 +51,6 @@ definitions:
       account:
         type: string
       pwd:
-        type: string
-    type: object
-  models.ParamDynamicList:
-    properties:
-      init_search:
-        type: string
-      line_no:
-        type: integer
-      menu_url:
-        type: string
-      page:
-        type: integer
-      param_view:
-        type: string
-      per_page:
-        type: integer
-      search:
-        type: string
-      sort_field:
-        type: string
-    type: object
-  models.PostMulti:
-    properties:
-      in_data:
-        type: object
-      line_no:
-        type: integer
-      menu_url:
         type: string
     type: object
   models.RegisterForm:
@@ -320,7 +321,86 @@ paths:
       summary: Verify
       tags:
       - Auth
-  /barber/dynamic:
+  /barber/paket:
+    get:
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: Page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: PerPage
+        in: query
+        name: perpage
+        required: true
+        type: integer
+      - description: Search
+        in: query
+        name: search
+        type: string
+      - description: InitSearch
+        in: query
+        name: initsearch
+        type: string
+      - description: SortField
+        in: query
+        name: sortfield
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ResponseModelList'
+      security:
+      - ApiKeyAuth: []
+      summary: GetList Paket
+      tags:
+      - Paket
+    post:
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: 'req param #changes are possible to adjust the form of the registration
+          form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.DataPaket'
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Add Paket
+      tags:
+      - Paket
+  /barber/paket/{id}:
     delete:
       parameters:
       - description: OS Device
@@ -337,22 +417,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
-      - description: Lastupdatestamp
-        in: query
-        name: lastupdatestamp
-        required: true
-        type: integer
-      - description: MenuUrl
-        in: query
-        name: menu_url
-        required: true
         type: string
-      - description: LineNo
-        in: query
-        name: line_no
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -362,74 +427,9 @@ paths:
             $ref: '#/definitions/tool.ResponseModel'
       security:
       - ApiKeyAuth: []
-      summary: Delete Dynamic
+      summary: Delete Paket
       tags:
-      - Dynamic
-    post:
-      parameters:
-      - description: OS Device
-        in: header
-        name: OS
-        required: true
-        type: string
-      - description: OS Device
-        in: header
-        name: Version
-        required: true
-        type: string
-      - description: 'req param #changes are possible to adjust the form of the registration
-          form from frontend'
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/interface%7B%7D'
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/tool.ResponseModel'
-      security:
-      - ApiKeyAuth: []
-      summary: Add Dynamic
-      tags:
-      - Dynamic
-    put:
-      parameters:
-      - description: OS Device
-        in: header
-        name: OS
-        required: true
-        type: string
-      - description: OS Device
-        in: header
-        name: Version
-        required: true
-        type: string
-      - description: 'req param #changes are possible to adjust the form of the registration
-          form from frontend'
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/interface%7B%7D'
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/tool.ResponseModel'
-      security:
-      - ApiKeyAuth: []
-      summary: Edit Dynamic
-      tags:
-      - Dynamic
-  /barber/dynamic/{id}:
+      - Paket
     get:
       parameters:
       - description: OS Device
@@ -446,22 +446,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
-      - description: Lastupdatestamp
-        in: query
-        name: lastupdatestamp
-        required: true
-        type: integer
-      - description: MenuUrl
-        in: query
-        name: menu_url
-        required: true
         type: string
-      - description: LineNo
-        in: query
-        name: line_no
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -471,75 +456,9 @@ paths:
             $ref: '#/definitions/tool.ResponseModel'
       security:
       - ApiKeyAuth: []
-      summary: GetById Dynamic
+      summary: GetById
       tags:
-      - Dynamic
-  /barber/dynamic/list:
-    post:
-      parameters:
-      - description: OS Device
-        in: header
-        name: OS
-        required: true
-        type: string
-      - description: OS Device
-        in: header
-        name: Version
-        required: true
-        type: string
-      - description: 'req param #changes are possible to adjust the form of the registration
-          form from frontend'
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/models.ParamDynamicList'
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.ResponseModelList'
-      security:
-      - ApiKeyAuth: []
-      summary: GetList Dynamic
-      tags:
-      - Dynamic
-  /barber/dynamicmulti:
-    post:
-      parameters:
-      - description: OS Device
-        in: header
-        name: OS
-        required: true
-        type: string
-      - description: OS Device
-        in: header
-        name: Version
-        required: true
-        type: string
-      - description: 'req param #changes are possible to adjust the form of the registration
-          form from frontend'
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/models.PostMulti'
-          type: object
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/tool.ResponseModel'
-      security:
-      - ApiKeyAuth: []
-      summary: Post Dynamic Multi
-      tags:
-      - DynamicMulti
+      - Paket
     put:
       parameters:
       - description: OS Device
@@ -552,13 +471,18 @@ paths:
         name: Version
         required: true
         type: string
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: string
       - description: 'req param #changes are possible to adjust the form of the registration
           form from frontend'
         in: body
         name: req
         required: true
         schema:
-          $ref: '#/definitions/models.PostMulti'
+          $ref: '#/definitions/models.DataPaket'
           type: object
       produces:
       - application/json
@@ -569,12 +493,22 @@ paths:
             $ref: '#/definitions/tool.ResponseModel'
       security:
       - ApiKeyAuth: []
-      summary: Put Dynamic Multi
+      summary: Rubah Profile
       tags:
-      - DynamicMulti
+      - Paket
   /barber/user:
     get:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: Page
         in: query
         name: page
@@ -611,6 +545,16 @@ paths:
       - User
     post:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: 'req param #changes are possible to adjust the form of the registration
           form from frontend'
         in: body
@@ -634,6 +578,16 @@ paths:
   /barber/user/{id}:
     delete:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: ID
         in: path
         name: id
@@ -653,6 +607,16 @@ paths:
       - User
     get:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: ID
         in: path
         name: id
@@ -672,6 +636,16 @@ paths:
       - User
     put:
       parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
       - description: ID
         in: path
         name: id

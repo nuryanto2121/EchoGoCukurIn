@@ -38,7 +38,7 @@ func NewContAuth(e *echo.Echo, useAuth iauth.Usecase) {
 	r.Use(midd.Versioning)
 	r.POST("/login", cont.Login)
 	r.POST("/forgot", cont.ForgotPassword)
-	r.GET("/change_password", cont.ChangePassword)
+	r.POST("/change_password", cont.ChangePassword)
 	r.POST("/verify", cont.Verify)
 	r.POST("/register", cont.Register)
 }

@@ -7,15 +7,15 @@ import (
 	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	queryauth "nuryanto2121/dynamic_rest_api_go/query/auth"
 
-	"github.com/jmoiron/sqlx"
+	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
 
 type repoAuth struct {
-	DB *sqlx.DB
+	DB *gorm.DB
 }
 
-func NewRepoOptionDB(Conn *sqlx.DB) iauth.Repository {
+func NewRepoOptionDB(Conn *gorm.DB) iauth.Repository {
 	return &repoAuth{Conn}
 }
 
@@ -24,9 +24,9 @@ func (m *repoAuth) GetDataLogin(ctx context.Context, Account string) (result mod
 	// errs := m.DB.SelectContext(ctx, &result, queryauth.QueryAuthLogin, Account)
 	var logger = logging.Logger{}
 	logger.Query(queryauth.QueryAuthLogin, Account, Account)
-	errs := m.DB.GetContext(ctx, &result, queryauth.QueryAuthLogin, Account, Account)
-	if errs != nil {
-		return result, errs
+	// errs := m.DB.GetContext(ctx, &result, queryauth.QueryAuthLogin, Account, Account)
+	if err != nil {
+		return result, err
 	}
 	return result, nil
 }
@@ -34,17 +34,17 @@ func (m *repoAuth) GetDataLogin(ctx context.Context, Account string) (result mod
 func (m *repoAuth) ChangePassword(ctx context.Context, data interface{}) (err error) {
 	var logger = logging.Logger{}
 	logger.Query(queryauth.QueryUpdatePassword, data)
-	_, errs := m.DB.NamedQueryContext(ctx, queryauth.QueryUpdatePassword, data)
-	if errs != nil {
-		return errs
+	// _, errs := m.DB.NamedQueryContext(ctx, queryauth.QueryUpdatePassword, data)
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
-func (m *repoAuth) Register(ctx context.Context, dataUser models.SsUser) error {
+func (m *repoAuth) Register(ctx context.Context, dataUser models.SsUser) (err error) {
 	var logger = logging.Logger{}
 	logger.Query(queryauth.QueryRegister, dataUser)
-	_, err := m.DB.NamedExecContext(ctx, queryauth.QueryRegister, dataUser)
+	// _, err := m.DB.NamedExecContext(ctx, queryauth.QueryRegister, dataUser)
 	if err != nil {
 		return err
 	}
