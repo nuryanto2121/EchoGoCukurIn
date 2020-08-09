@@ -13,4 +13,5 @@ type Repository interface {
 
 type UseCase interface {
 	CreateFileUpload(ctx context.Context, data models.SaFileUpload) error
+	GetBySaFileUpload(ctx context.Context, fileID int) (models.SaFileUpload, error)
 }

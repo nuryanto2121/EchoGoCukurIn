@@ -8,7 +8,6 @@ import (
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 
 	"github.com/jinzhu/gorm"
-	"github.com/labstack/gommon/log"
 )
 
 type repoPaket struct {
@@ -20,9 +19,12 @@ func NewRepoPaket(Conn *gorm.DB) ipaket.Repository {
 }
 
 func (db *repoPaket) GetDataBy(ID int) (result *models.Paket, err error) {
-	var mPaket = &models.Paket{}
+	var (
+		logger = logging.Logger{}
+		mPaket = &models.Paket{}
+	)
 	query := db.Conn.Where("paket_id = ? ", ID).Find(mPaket)
-	log.Info(fmt.Sprintf("%v", query.QueryExpr()))
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -39,8 +41,8 @@ func (db *repoPaket) GetList(queryparam models.ParamList) (result []*models.Pake
 		pageNum  = 0
 		pageSize = setting.FileConfigSetting.App.PageSize
 		sWhere   = ""
-		// logger   = logging.Logger{}
-		orderBy = queryparam.SortField
+		logger   = logging.Logger{}
+		orderBy  = queryparam.SortField
 	)
 	// pagination
 	if queryparam.Page > 0 {
@@ -73,11 +75,11 @@ func (db *repoPaket) GetList(queryparam models.ParamList) (result []*models.Pake
 	// end where
 	if pageNum >= 0 && pageSize > 0 {
 		query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-		fmt.Printf("%v", query.QueryExpr()) //cath to log query string
+		logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 		err = query.Error
 	} else {
 		query := db.Conn.Where(sWhere).Order(orderBy).Find(&result)
-		fmt.Printf("%v", query.QueryExpr()) //cath to log query string
+		logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 		err = query.Error
 	}
 
@@ -131,6 +133,7 @@ func (db *repoPaket) Delete(ID int) error {
 func (db *repoPaket) Count(queryparam models.ParamList) (result int, err error) {
 	var (
 		sWhere = ""
+		logger = logging.Logger{}
 	)
 	result = 0
 
@@ -146,7 +149,9 @@ func (db *repoPaket) Count(queryparam models.ParamList) (result int, err error) 
 	}
 	// end where
 
-	err = db.Conn.Model(&models.Paket{}).Where(sWhere).Count(&result).Error
+	query := db.Conn.Model(&models.Paket{}).Where(sWhere).Count(&result)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err = query.Error
 	if err != nil {
 		return 0, err
 	}

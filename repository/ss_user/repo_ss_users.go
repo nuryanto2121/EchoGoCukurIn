@@ -4,6 +4,7 @@ import (
 	"fmt"
 	iusers "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"
+	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 
 	"github.com/jinzhu/gorm"
@@ -105,23 +106,41 @@ func (db *repoSysUser) GetList(queryparam models.ParamList) (result []*models.Ss
 	}
 	return result, nil
 }
-func (db *repoSysUser) Create(data *models.SsUser) (err error) {
-
-	err = db.Conn.Create(data).Error
+func (db *repoSysUser) Create(data *models.SsUser) error {
+	var (
+		logger = logging.Logger{}
+		err    error
+	)
+	query := db.Conn.Create(data)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err = query.Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (db *repoSysUser) Update(ID int, data interface{}) (err error) {
-	err = db.Conn.Model(models.SsUser{}).Where("user_id = ?", ID).Updates(data).Error
+func (db *repoSysUser) Update(ID int, data interface{}) error {
+	var (
+		logger = logging.Logger{}
+		err    error
+	)
+	query := db.Conn.Model(models.SsUser{}).Where("user_id = ?", ID).Updates(data)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err = query.Error
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (db *repoSysUser) Delete(ID int) (err error) {
-	if err := db.Conn.Where("user_id = ?", ID).Delete(&models.SsUser{}).Error; err != nil {
+func (db *repoSysUser) Delete(ID int) error {
+	var (
+		logger = logging.Logger{}
+		err    error
+	)
+	query := db.Conn.Where("user_id = ?", ID).Delete(&models.SsUser{})
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err = query.Error
+	if err != nil {
 		return err
 	}
 	return nil
@@ -129,6 +148,7 @@ func (db *repoSysUser) Delete(ID int) (err error) {
 func (db *repoSysUser) Count(queryparam models.ParamList) (result int, err error) {
 	var (
 		sWhere = ""
+		logger = logging.Logger{}
 	)
 	result = 0
 
@@ -144,7 +164,9 @@ func (db *repoSysUser) Count(queryparam models.ParamList) (result int, err error
 	}
 	// end where
 
-	err = db.Conn.Model(&models.SsUser{}).Where(sWhere).Count(&result).Error
+	query := db.Conn.Model(&models.SsUser{}).Where(sWhere).Count(&result)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err = query.Error
 	if err != nil {
 		return 0, err
 	}

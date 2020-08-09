@@ -33,3 +33,16 @@ func (u *useSaFileUpload) CreateFileUpload(ctx context.Context, data models.SaFi
 
 	return nil
 }
+func (u *useSaFileUpload) GetBySaFileUpload(ctx context.Context, fileID int) (models.SaFileUpload, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
+	defer cancel()
+	var (
+		err    error
+		result models.SaFileUpload
+	)
+	result, err = u.GetBySaFileUpload(ctx, fileID)
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}

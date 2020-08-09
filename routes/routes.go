@@ -20,6 +20,10 @@ import (
 	_repoPaket "nuryanto2121/dynamic_rest_api_go/repository/paket"
 	_usePaket "nuryanto2121/dynamic_rest_api_go/usecase/paket"
 
+	_contCapster "nuryanto2121/dynamic_rest_api_go/controllers/capster"
+	_repoCapster "nuryanto2121/dynamic_rest_api_go/repository/capster"
+	_useCapster "nuryanto2121/dynamic_rest_api_go/usecase/capster"
+
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -44,6 +48,10 @@ func (e *EchoRoutes) InitialRouter() {
 	repoFile := _repoFile.NewRepoFileUpload(postgresdb.Conn)
 	useFile := _useFile.NewSaFileUpload(repoFile, timeoutContext)
 	_saFilecont.NewContFileUpload(e.E, useFile)
+
+	repoCapster := _repoCapster.NewRepoCapsterCollection(postgresdb.Conn)
+	useCapster := _useCapster.NewUserMCapster(repoCapster, repoUser, repoFile, timeoutContext)
+	_contCapster.NewContCapster(e.E, useCapster)
 
 	//_saauthcont
 	// repoAuth := _repoAuth.NewRepoOptionDB(postgresdb.Conn)
