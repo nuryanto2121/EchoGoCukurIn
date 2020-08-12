@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -15,7 +16,7 @@ import (
 
 // Claims :
 type Claims struct {
-	UserID   int    `json:"user_id,omitempty"`
+	UserID   string `json:"user_id,omitempty"`
 	UserName string `json:"user_name,omitempty"`
 	UserType string `json:"user_type,omitempty"`
 	// CompanyID int    `json:"company_id,omitempty"`
@@ -35,8 +36,9 @@ func GenerateToken(id int, user_name string, user_type string) (string, error) {
 	issuer := viper.GetString(`app.issuer`)
 	var jwtSecret = []byte(screet)
 	// Set custom claims
+	// Ids,_ :=strconv.I(id)
 	claims := &Claims{
-		UserID:   id,
+		UserID:   strconv.Itoa(id),
 		UserName: user_name,
 		UserType: user_type,
 		StandardClaims: jwt.StandardClaims{

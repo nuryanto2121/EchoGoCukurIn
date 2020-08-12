@@ -5,6 +5,7 @@ import (
 	"log"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
+	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -56,6 +57,10 @@ func autoMigrate() {
 		models.SsUser{},
 		models.Paket{},
 		models.CapsterCollection{},
+		models.Barber{},
+		models.BarberPaket{},
+		models.BarberCapster{},
+		models.SaFileUpload{},
 	)
 
 	log.Println("FINISHING AUTO MIGRATE ")
@@ -64,25 +69,37 @@ func autoMigrate() {
 // updateTimeStampForCreateCallback will set `CreatedOn`, `ModifiedOn` when creating
 func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
-		nowTime := time.Now().Unix()
-		if createTimeField, ok := scope.FieldByName("CreatedOn"); ok {
+		// nowTime := time.Now().Unix()
+		if createTimeField, ok := scope.FieldByName("TimeInput"); ok {
 			if createTimeField.IsBlank {
-				createTimeField.Set(nowTime)
+				createTimeField.Set(util.GetTimeNow())
 			}
 		}
 
-		if modifyTimeField, ok := scope.FieldByName("ModifiedOn"); ok {
+		if modifyTimeField, ok := scope.FieldByName("TimeEdit"); ok {
 			if modifyTimeField.IsBlank {
-				modifyTimeField.Set(nowTime)
+				modifyTimeField.Set(util.GetTimeNow())
 			}
 		}
+
+		// if createUserField, ok := scope.FieldByName("UserInput"); ok {
+		// 	if createUserField.IsBlank {
+		// 		createUserField.Set(util.GetTimeNow())
+		// 	}
+		// }
+		// if modifyUserField, ok := scope.FieldByName("UserEdit"); ok {
+		// 	if modifyUserField.IsBlank {
+		// 		modifyUserField.Set(util.GetTimeNow())
+		// 	}
+		// }
+
 	}
 }
 
 // updateTimeStampForUpdateCallback will set `ModifiedOn` when updating
 func updateTimeStampForUpdateCallback(scope *gorm.Scope) {
 	if _, ok := scope.Get("gorm:update_column"); !ok {
-		scope.SetColumn("ModifiedOn", time.Now().Unix())
+		scope.SetColumn("TimeEdit", util.GetTimeNow())
 	}
 }
 

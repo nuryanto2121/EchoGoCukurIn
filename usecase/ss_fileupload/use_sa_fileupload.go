@@ -19,7 +19,7 @@ func NewSaFileUpload(a ifileupload.Repository, timeout time.Duration) ifileuploa
 	}
 }
 
-func (u *useSaFileUpload) CreateFileUpload(ctx context.Context, data models.SaFileUpload) error {
+func (u *useSaFileUpload) CreateFileUpload(ctx context.Context, data *models.SaFileUpload) error {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 	var (

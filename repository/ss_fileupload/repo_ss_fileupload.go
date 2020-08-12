@@ -18,9 +18,9 @@ func NewRepoFileUpload(Conn *gorm.DB) ifileupload.Repository {
 	return &repoAuth{Conn}
 }
 
-func (m *repoAuth) CreateFileUpload(ctx context.Context, data models.SaFileUpload) (err error) {
+func (m *repoAuth) CreateFileUpload(ctx context.Context, data *models.SaFileUpload) (err error) {
 	var logger = logging.Logger{}
-	query := m.Conn.Create(data)
+	query := m.Conn.Create(&data)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	// err = db.Conn.Create(userData).Error

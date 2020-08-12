@@ -142,7 +142,7 @@ func (u *ContFileUpload) CreateImage(e echo.Context) (err error) {
 		imageForm.UserInput = claims.UserName
 		imageForm.UserEdit = claims.UserName
 		// err = u.useSaFileUpload.CreateSaFileUpload(ctx, &imageForm)
-		err = u.useSaFileUpload.CreateFileUpload(ctx, imageForm)
+		err = u.useSaFileUpload.CreateFileUpload(ctx, &imageForm)
 
 		if err != nil {
 			return err

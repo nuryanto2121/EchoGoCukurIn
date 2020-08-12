@@ -102,8 +102,7 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	if err != nil {
 		return err
 	}
-	mUser.TimeEdit = util.GetTimeNow()
-	mUser.TimeInput = util.GetTimeNow()
+
 	mUser.UserEdit = Claims.UserName
 	mUser.UserInput = Claims.UserName
 	err = u.repoUser.Create(&mUser)
@@ -117,8 +116,6 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 		capsterCollection.FileID = dataCollection.FileID
 		capsterCollection.UserInput = Claims.UserName
 		capsterCollection.UserEdit = Claims.UserName
-		capsterCollection.TimeInput = util.GetTimeNow()
-		capsterCollection.TimeEdit = util.GetTimeNow()
 		err = u.repoCapster.Create(&capsterCollection)
 		if err != nil {
 			return err
@@ -141,7 +138,6 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	dataUser.IsActive = data.IsActive
 	dataUser.FileID = data.FileID
 	dataUser.UserEdit = Claims.UserName
-	dataUser.TimeEdit = util.GetTimeNow()
 
 	err = u.repoUser.Update(ID, dataUser)
 	if err != nil {
@@ -158,8 +154,7 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 		capsterCollection.FileID = dataCollection.FileID
 		capsterCollection.UserInput = Claims.UserName
 		capsterCollection.UserEdit = Claims.UserName
-		capsterCollection.TimeInput = util.GetTimeNow()
-		capsterCollection.TimeEdit = util.GetTimeNow()
+
 		err = u.repoCapster.Create(&capsterCollection)
 		if err != nil {
 			return err

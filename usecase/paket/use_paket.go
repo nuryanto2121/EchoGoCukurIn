@@ -6,7 +6,6 @@ import (
 	ipaket "nuryanto2121/dynamic_rest_api_go/interface/paket"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	querywhere "nuryanto2121/dynamic_rest_api_go/pkg/query"
-	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"reflect"
 	"time"
 )
@@ -61,8 +60,6 @@ func (u *usePaket) Create(ctx context.Context, data *models.Paket) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	data.TimeEdit = util.GetTimeNow()
-	data.TimeInput = util.GetTimeNow()
 	err = u.repoPaket.Create(data)
 	if err != nil {
 		return err
