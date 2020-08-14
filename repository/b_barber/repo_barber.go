@@ -2,7 +2,7 @@ package repobarber
 
 import (
 	"fmt"
-	ibarber "nuryanto2121/dynamic_rest_api_go/interface/barber"
+	ibarber "nuryanto2121/dynamic_rest_api_go/interface/b_barber"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"

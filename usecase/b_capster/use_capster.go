@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
-	icapster "nuryanto2121/dynamic_rest_api_go/interface/capster"
+	icapster "nuryanto2121/dynamic_rest_api_go/interface/b_capster"
 	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
 	iuser "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"

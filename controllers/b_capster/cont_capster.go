@@ -1,10 +1,10 @@
-package contpaket
+package contcapster
 
 import (
 	"context"
 	"fmt"
 	"net/http"
-	ipakets "nuryanto2121/dynamic_rest_api_go/interface/paket"
+	icapsters "nuryanto2121/dynamic_rest_api_go/interface/b_capster"
 	midd "nuryanto2121/dynamic_rest_api_go/middleware"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	app "nuryanto2121/dynamic_rest_api_go/pkg"
@@ -14,19 +14,18 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mitchellh/mapstructure"
 )
 
-type ContPaket struct {
-	usePaket ipakets.Usecase
+type ContCapster struct {
+	useCapster icapsters.Usecase
 }
 
-func NewContPaket(e *echo.Echo, a ipakets.Usecase) {
-	controller := &ContPaket{
-		usePaket: a,
+func NewContCapster(e *echo.Echo, a icapsters.Usecase) {
+	controller := &ContCapster{
+		useCapster: a,
 	}
 
-	r := e.Group("/barber/paket")
+	r := e.Group("/barber/capster")
 	r.Use(midd.JWT)
 	r.GET("/:id", controller.GetDataBy)
 	r.GET("", controller.GetList)
@@ -38,14 +37,14 @@ func NewContPaket(e *echo.Echo, a ipakets.Usecase) {
 // GetDataByID :
 // @Summary GetById
 // @Security ApiKeyAuth
-// @Tags Paket
+// @Tags Capster
 // @Produce  json
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/paket/{id} [get]
-func (u *ContPaket) GetDataBy(e echo.Context) error {
+// @Router /barber/capster/{id} [get]
+func (u *ContCapster) GetDataBy(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
@@ -62,7 +61,11 @@ func (u *ContPaket) GetDataBy(e echo.Context) error {
 		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
 
-	data, err := u.usePaket.GetDataBy(ctx, ID)
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+	data, err := u.useCapster.GetDataBy(ctx, claims, ID)
 	if err != nil {
 		return appE.Response(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 	}
@@ -71,9 +74,9 @@ func (u *ContPaket) GetDataBy(e echo.Context) error {
 }
 
 // GetList :
-// @Summary GetList Paket
+// @Summary GetList Capster
 // @Security ApiKeyAuth
-// @Tags Paket
+// @Tags Capster
 // @Produce  json
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
@@ -83,8 +86,8 @@ func (u *ContPaket) GetDataBy(e echo.Context) error {
 // @Param initsearch query string false "InitSearch"
 // @Param sortfield query string false "SortField"
 // @Success 200 {object} models.ResponseModelList
-// @Router /barber/paket [get]
-func (u *ContPaket) GetList(e echo.Context) error {
+// @Router /barber/capster [get]
+func (u *ContCapster) GetList(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
@@ -109,66 +112,65 @@ func (u *ContPaket) GetList(e echo.Context) error {
 		return appE.ResponseErrorList(http.StatusBadRequest, fmt.Sprintf("%v", err), responseList)
 	}
 	// if !claims.IsAdmin {
-	paramquery.InitSearch = " owner_id = " + claims.UserID
+	// 	paramquery.InitSearch = " id_created = " + strconv.Itoa(claims.CapsterID)
 	// }
 
-	responseList, err = u.usePaket.GetList(ctx, paramquery)
+	responseList, err = u.useCapster.GetList(ctx, claims, paramquery)
 	if err != nil {
 		// return e.JSON(http.StatusBadRequest, err.Error())
 		return appE.ResponseErrorList(tool.GetStatusCode(err), fmt.Sprintf("%v", err), responseList)
 	}
 
-	// return e.JSON(http.StatusOK, ListDataPaket)
+	// return e.JSON(http.StatusOK, ListDataCapster)
 	return appE.ResponseList(http.StatusOK, "", responseList)
 }
 
-// CreateSaPaket :
-// @Summary Add Paket
+// CreateSaCapster :
+// @Summary Add Capster
 // @Security ApiKeyAuth
-// @Tags Paket
+// @Tags Capster
 // @Produce json
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
-// @Param req body models.DataPaket true "req param #changes are possible to adjust the form of the registration form from frontend"
+// @Param req body models.Capster true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/paket [post]
-func (u *ContPaket) Create(e echo.Context) error {
+// @Router /barber/capster [post]
+func (u *ContCapster) Create(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
 	}
 
 	var (
-		logger = logging.Logger{} // wajib
-		appE   = tool.Res{R: e}   // wajib
-		mPaket models.Paket
-		form   models.DataPaket
+		logger   = logging.Logger{} // wajib
+		appE     = tool.Res{R: e}   // wajib
+		mCapster models.Capster
+		// form     models.Capster
 	)
 
-	// paket := e.Get("paket").(*jwt.Token)
-	// claims := paket.Claims.(*util.Claims)
+	// capster := e.Get("capster").(*jwt.Token)
+	// claims := capster.Claims.(*util.Claims)
 	// validasi and bind to struct
-	httpCode, errMsg := app.BindAndValid(e, &form)
-	logger.Info(util.Stringify(form))
+	httpCode, errMsg := app.BindAndValid(e, &mCapster)
+	logger.Info(util.Stringify(mCapster))
 	if httpCode != 200 {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
 
 	// mapping to struct model saRole
-	err := mapstructure.Decode(form, &mPaket)
-	if err != nil {
-		return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
+	// err := mapstructure.Decode(form, &mCapster)
+	// if err != nil {
+	// 	return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 
-	}
+	// }
 
 	claims, err := app.GetClaims(e)
 	if err != nil {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
-	mPaket.UserInput = claims.UserName
-	mPaket.UserEdit = claims.UserName
-	// mPaket.PaketInput = claims.PaketID
-	err = u.usePaket.Create(ctx, &mPaket)
+
+	// mCapster.CapsterInput = claims.CapsterID
+	err = u.useCapster.Create(ctx, claims, &mCapster)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}
@@ -176,18 +178,18 @@ func (u *ContPaket) Create(e echo.Context) error {
 	return appE.Response(http.StatusCreated, "Ok", nil)
 }
 
-// UpdateSaPaket :
+// UpdateSaCapster :
 // @Summary Rubah Profile
 // @Security ApiKeyAuth
-// @Tags Paket
+// @Tags Capster
 // @Produce json
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
-// @Param req body models.DataPaket true "req param #changes are possible to adjust the form of the registration form from frontend"
+// @Param req body models.Capster true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/paket/{id} [put]
-func (u *ContPaket) Update(e echo.Context) error {
+// @Router /barber/capster/{id} [put]
+func (u *ContCapster) Update(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
@@ -199,12 +201,12 @@ func (u *ContPaket) Update(e echo.Context) error {
 		err  error
 		// valid  validation.Validation                 // wajib
 		id   = e.Param("id") //kalo bukan int => 0
-		form = models.DataPaket{}
+		form = models.Capster{}
 	)
-	// paket := e.Get("paket").(*jwt.Token)
-	// claims := paket.Claims.(*util.Claims)
+	// capster := e.Get("capster").(*jwt.Token)
+	// claims := capster.Claims.(*util.Claims)
 
-	PaketID, _ := strconv.Atoi(id)
+	CapsterID, _ := strconv.Atoi(id)
 	// logger.Info(id)
 	if err != nil {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
@@ -221,26 +223,26 @@ func (u *ContPaket) Update(e echo.Context) error {
 	if err != nil {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
-	form.UserEdit = claims.UserName
-	// form.UpdatedBy = claims.PaketName
-	err = u.usePaket.Update(ctx, PaketID, &form)
+
+	// form.UpdatedBy = claims.CapsterName
+	err = u.useCapster.Update(ctx, claims, CapsterID, &form)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}
 	return appE.Response(http.StatusCreated, "Ok", nil)
 }
 
-// DeleteSaPaket :
-// @Summary Delete Paket
+// DeleteSaCapster :
+// @Summary Delete Capster
 // @Security ApiKeyAuth
-// @Tags Paket
+// @Tags Capster
 // @Produce  json
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/paket/{id} [delete]
-func (u *ContPaket) Delete(e echo.Context) error {
+// @Router /barber/capster/{id} [delete]
+func (u *ContCapster) Delete(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
 		ctx = context.Background()
@@ -256,8 +258,11 @@ func (u *ContPaket) Delete(e echo.Context) error {
 	if err != nil {
 		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
-
-	err = u.usePaket.Delete(ctx, ID)
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+	err = u.useCapster.Delete(ctx, claims, ID)
 	if err != nil {
 		return appE.Response(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 	}

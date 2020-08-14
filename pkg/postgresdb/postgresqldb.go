@@ -61,6 +61,8 @@ func autoMigrate() {
 		models.BarberPaket{},
 		models.BarberCapster{},
 		models.SaFileUpload{},
+		models.OrderH{},
+		models.OrderD{},
 	)
 
 	log.Println("FINISHING AUTO MIGRATE ")
@@ -81,17 +83,6 @@ func updateTimeStampForCreateCallback(scope *gorm.Scope) {
 				modifyTimeField.Set(util.GetTimeNow())
 			}
 		}
-
-		// if createUserField, ok := scope.FieldByName("UserInput"); ok {
-		// 	if createUserField.IsBlank {
-		// 		createUserField.Set(util.GetTimeNow())
-		// 	}
-		// }
-		// if modifyUserField, ok := scope.FieldByName("UserEdit"); ok {
-		// 	if modifyUserField.IsBlank {
-		// 		modifyUserField.Set(util.GetTimeNow())
-		// 	}
-		// }
 
 	}
 }

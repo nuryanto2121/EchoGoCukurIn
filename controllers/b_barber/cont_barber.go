@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	ibarbers "nuryanto2121/dynamic_rest_api_go/interface/barber"
+	ibarbers "nuryanto2121/dynamic_rest_api_go/interface/b_barber"
 	midd "nuryanto2121/dynamic_rest_api_go/middleware"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	app "nuryanto2121/dynamic_rest_api_go/pkg"

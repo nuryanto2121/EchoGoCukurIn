@@ -20,11 +20,9 @@ func NewRepoOptionDB(Conn *gorm.DB) iauth.Repository {
 }
 
 func (m *repoAuth) GetDataLogin(ctx context.Context, Account string) (result models.DataLogin, err error) {
-	// fmt.Printf(queryoption.QueryGetListOption)
-	// errs := m.DB.SelectContext(ctx, &result, queryauth.QueryAuthLogin, Account)
-	var logger = logging.Logger{}
-	logger.Query(queryauth.QueryAuthLogin, Account, Account)
-	// errs := m.DB.GetContext(ctx, &result, queryauth.QueryAuthLogin, Account, Account)
+
+	// var logger = logging.Logger{}
+	// logger.Query(queryauth.QueryAuthLogin, Account, Account)
 	if err != nil {
 		return result, err
 	}

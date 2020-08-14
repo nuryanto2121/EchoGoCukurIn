@@ -20,7 +20,6 @@ func init() {
 	setting.Setup()
 	postgresdb.Setup()
 	redisdb.Setup()
-	// sqlxposgresdb.Setup()
 	monggodb.Setup()
 	logging.Setup()
 

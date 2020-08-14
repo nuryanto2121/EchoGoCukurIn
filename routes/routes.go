@@ -16,19 +16,19 @@ import (
 	_repoUser "nuryanto2121/dynamic_rest_api_go/repository/ss_user"
 	_useUser "nuryanto2121/dynamic_rest_api_go/usecase/ss_user"
 
-	_contPaket "nuryanto2121/dynamic_rest_api_go/controllers/paket"
-	_repoPaket "nuryanto2121/dynamic_rest_api_go/repository/paket"
-	_usePaket "nuryanto2121/dynamic_rest_api_go/usecase/paket"
+	_contPaket "nuryanto2121/dynamic_rest_api_go/controllers/b_paket"
+	_repoPaket "nuryanto2121/dynamic_rest_api_go/repository/b_paket"
+	_usePaket "nuryanto2121/dynamic_rest_api_go/usecase/b_paket"
 
-	_contCapster "nuryanto2121/dynamic_rest_api_go/controllers/capster"
-	_repoCapster "nuryanto2121/dynamic_rest_api_go/repository/capster"
-	_useCapster "nuryanto2121/dynamic_rest_api_go/usecase/capster"
+	_contCapster "nuryanto2121/dynamic_rest_api_go/controllers/b_capster"
+	_repoCapster "nuryanto2121/dynamic_rest_api_go/repository/b_capster"
+	_useCapster "nuryanto2121/dynamic_rest_api_go/usecase/b_capster"
 
-	_contBarber "nuryanto2121/dynamic_rest_api_go/controllers/barber"
-	_repoBarber "nuryanto2121/dynamic_rest_api_go/repository/barber"
-	_repoBarberCapster "nuryanto2121/dynamic_rest_api_go/repository/barber_capster"
-	_repoBarberPaket "nuryanto2121/dynamic_rest_api_go/repository/barber_paket"
-	_useBarber "nuryanto2121/dynamic_rest_api_go/usecase/barber"
+	_contBarber "nuryanto2121/dynamic_rest_api_go/controllers/b_barber"
+	_repoBarber "nuryanto2121/dynamic_rest_api_go/repository/b_barber"
+	_repoBarberCapster "nuryanto2121/dynamic_rest_api_go/repository/b_barber_capster"
+	_repoBarberPaket "nuryanto2121/dynamic_rest_api_go/repository/b_barber_paket"
+	_useBarber "nuryanto2121/dynamic_rest_api_go/usecase/b_barber"
 
 	"time"
 

@@ -3,7 +3,7 @@ package usepaket
 import (
 	"context"
 	"math"
-	ipaket "nuryanto2121/dynamic_rest_api_go/interface/paket"
+	ipaket "nuryanto2121/dynamic_rest_api_go/interface/b_paket"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	querywhere "nuryanto2121/dynamic_rest_api_go/pkg/query"
 	"reflect"
