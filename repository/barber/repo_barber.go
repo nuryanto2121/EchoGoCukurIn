@@ -73,8 +73,8 @@ func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.Bar
 
 	// end where
 
-	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	query := db.Conn.Table("ss_user").Select("ss_user.user_id as barber_id,ss_user.name,ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,sa_file_upload.file_path,sa_file_upload.file_type, '0' as rating").Joins("left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id").Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	// query := db.Conn.Table("ss_user").Select("ss_user.user_id as barber_id,ss_user.name,ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,sa_file_upload.file_path,sa_file_upload.file_type, '0' as rating").Joins("left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id").Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 
@@ -145,8 +145,7 @@ func (db *repoBarber) Count(queryparam models.ParamList) (result int, err error)
 	}
 	// end where
 
-	// query := db.Conn.Model(&models.Barber{}).Where(sWhere).Count(&result)
-	query := db.Conn.Table("ss_user").Select("ss_user.user_id as barber_id,ss_user.name,ss_user.is_active, 0 as rating").Where(sWhere).Count(&result)
+	query := db.Conn.Model(&models.Barber{}).Where(sWhere).Count(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {

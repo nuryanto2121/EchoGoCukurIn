@@ -123,7 +123,7 @@ func (u *ContUser) GetList(e echo.Context) error {
 	}
 
 	// return e.JSON(http.StatusOK, ListDataUser)
-	return appE.Response(http.StatusOK, "", responseList)
+	return appE.ResponseList(http.StatusOK, "", responseList)
 }
 
 // CreateSaUser :

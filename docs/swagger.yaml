@@ -26,18 +26,20 @@ definitions:
     properties:
       address:
         type: string
-      barber_name:
-        type: string
-      barberCapster:
+      barber_capster:
         items:
           $ref: '#/definitions/models.BarberCapsterPost'
         type: array
-      barberPaket:
+      barber_name:
+        type: string
+      barber_paket:
         items:
           $ref: '#/definitions/models.BarberPaketPost'
         type: array
       file_id:
         type: integer
+      is_active:
+        type: boolean
       operation_end:
         type: integer
       operation_start:
@@ -45,7 +47,7 @@ definitions:
       pin_map:
         type: string
       starts:
-        type: integer
+        type: number
     type: object
   models.Capster:
     properties:

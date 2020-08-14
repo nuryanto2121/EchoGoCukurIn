@@ -123,7 +123,7 @@ func (u *ContBarber) GetList(e echo.Context) error {
 	}
 
 	// return e.JSON(http.StatusOK, ListBarbersPost)
-	return appE.Response(http.StatusOK, "", responseList)
+	return appE.ResponseList(http.StatusOK, "", responseList)
 }
 
 // CreateSaBarber :
@@ -211,7 +211,7 @@ func (u *ContBarber) Update(e echo.Context) error {
 	}
 
 	// form.UpdatedBy = claims.BarberName
-	err = u.useBarber.Update(ctx, claims, BarberID, &form)
+	err = u.useBarber.Update(ctx, claims, BarberID, form)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}

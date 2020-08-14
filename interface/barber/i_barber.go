@@ -19,6 +19,6 @@ type Usecase interface {
 	GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result interface{}, err error)
 	GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error)
 	Create(ctx context.Context, Claims util.Claims, data *models.BarbersPost) error
-	Update(ctx context.Context, Claims util.Claims, ID int, data interface{}) (err error)
+	Update(ctx context.Context, Claims util.Claims, ID int, data models.BarbersPost) (err error)
 	Delete(ctx context.Context, Claims util.Claims, ID int) (err error)
 }

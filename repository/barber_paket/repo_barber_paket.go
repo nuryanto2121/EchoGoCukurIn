@@ -34,7 +34,7 @@ func (db *repoBarberPaket) GetDataBy(ID int) (result *models.BarberPaket, err er
 	}
 	return mBarberPaket, nil
 }
-func (db *repoBarberPaket) GetList(queryparam models.ParamList) (result []*models.BarberPaket, err error) {
+func (db *repoBarberPaket) GetList(queryparam models.ParamList) (result []*models.Paket, err error) {
 
 	var (
 		pageNum  = 0
@@ -74,7 +74,7 @@ func (db *repoBarberPaket) GetList(queryparam models.ParamList) (result []*model
 	// end where
 
 	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	query := db.Conn.Table("ss_user").Select("ss_user.user_id as barber_paket_id,ss_user.name,ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,sa_file_upload.file_path,sa_file_upload.file_type, '0' as rating").Joins("left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id").Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	query := db.Conn.Table("barber_paket").Select("paket.paket_id,paket.owner_id,paket.paket_name,paket.descs,paket.durasi_start,paket.durasi_end,paket.price,paket.is_active,paket.is_promo,paket.promo_price,paket.promo_start,paket.promo_end").Joins("left join paket ON paket.paket_id = barber_paket.paket_id").Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 
@@ -104,7 +104,7 @@ func (db *repoBarberPaket) Update(ID int, data interface{}) error {
 		logger = logging.Logger{}
 		err    error
 	)
-	query := db.Conn.Model(models.BarberPaket{}).Where("barber_paket_id = ?", ID).Updates(data)
+	query := db.Conn.Model(models.BarberPaket{}).Where("barber_id = ?", ID).Updates(data)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {
@@ -117,8 +117,8 @@ func (db *repoBarberPaket) Delete(ID int) error {
 		logger = logging.Logger{}
 		err    error
 	)
-	// query := db.Conn.Where("barber_paket_id = ?", ID).Delete(&models.BarberPaket{})
-	query := db.Conn.Exec("Delete From barber_paket_collection WHERE barber_paket_id = ?", ID)
+	// query := db.Conn.Where("barber_id = ?", ID).Delete(&models.BarberPaket{})
+	query := db.Conn.Exec("Delete From barber_paket WHERE barber_id = ?", ID)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {
@@ -146,7 +146,7 @@ func (db *repoBarberPaket) Count(queryparam models.ParamList) (result int, err e
 	// end where
 
 	// query := db.Conn.Model(&models.BarberPaket{}).Where(sWhere).Count(&result)
-	query := db.Conn.Table("ss_user").Select("ss_user.user_id as barber_paket_id,ss_user.name,ss_user.is_active, 0 as rating").Where(sWhere).Count(&result)
+	query := db.Conn.Table("ss_user").Select("ss_user.user_id as barber_id,ss_user.name,ss_user.is_active, 0 as rating").Where(sWhere).Count(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {

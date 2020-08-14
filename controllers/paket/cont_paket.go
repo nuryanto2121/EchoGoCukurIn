@@ -119,7 +119,7 @@ func (u *ContPaket) GetList(e echo.Context) error {
 	}
 
 	// return e.JSON(http.StatusOK, ListDataPaket)
-	return appE.Response(http.StatusOK, "", responseList)
+	return appE.ResponseList(http.StatusOK, "", responseList)
 }
 
 // CreateSaPaket :

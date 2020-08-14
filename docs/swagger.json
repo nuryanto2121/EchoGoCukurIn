@@ -1407,23 +1407,26 @@
                 "address": {
                     "type": "string"
                 },
-                "barberCapster": {
+                "barber_capster": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.BarberCapsterPost"
                     }
                 },
-                "barberPaket": {
+                "barber_name": {
+                    "type": "string"
+                },
+                "barber_paket": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.BarberPaketPost"
                     }
                 },
-                "barber_name": {
-                    "type": "string"
-                },
                 "file_id": {
                     "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
                 },
                 "operation_end": {
                     "type": "integer"
@@ -1435,7 +1438,7 @@
                     "type": "string"
                 },
                 "starts": {
-                    "type": "integer"
+                    "type": "number"
                 }
             }
         },
