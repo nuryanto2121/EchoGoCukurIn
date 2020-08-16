@@ -30,6 +30,11 @@ import (
 	_repoBarberPaket "nuryanto2121/dynamic_rest_api_go/repository/b_barber_paket"
 	_useBarber "nuryanto2121/dynamic_rest_api_go/usecase/b_barber"
 
+	_contOrder "nuryanto2121/dynamic_rest_api_go/controllers/c_order"
+	_repoOrderd "nuryanto2121/dynamic_rest_api_go/repository/c_order_d"
+	_repoOrder "nuryanto2121/dynamic_rest_api_go/repository/c_order_h"
+	_useOrder "nuryanto2121/dynamic_rest_api_go/usecase/c_order"
+
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -64,6 +69,11 @@ func (e *EchoRoutes) InitialRouter() {
 	repoBarber := _repoBarber.NewRepoBarber(postgresdb.Conn)
 	useBarber := _useBarber.NewUserMBarber(repoBarber, repoBarberPaket, repoBarberCapster, repoFile, timeoutContext)
 	_contBarber.NewContBarber(e.E, useBarber)
+
+	repoOrderD := _repoOrderd.NewRepoOrderD(postgresdb.Conn)
+	repoOrder := _repoOrder.NewRepoOrderH(postgresdb.Conn)
+	useOrder := _useOrder.NewUserMOrder(repoOrder, repoOrderD, timeoutContext)
+	_contOrder.NewContOrder(e.E, useOrder)
 
 	//_saauthcont
 	// repoAuth := _repoAuth.NewRepoOptionDB(postgresdb.Conn)
