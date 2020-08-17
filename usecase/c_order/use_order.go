@@ -46,7 +46,7 @@ func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, queryparam m
 		queryparam.Search = fmt.Sprintf("lower(order_name) LIKE '%%%s%%' ", queryparam.Search)
 	}
 
-	queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
+	queryparam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
 	result.Data, err = u.repoOrderH.GetList(queryparam)
 	if err != nil {
 		return result, err

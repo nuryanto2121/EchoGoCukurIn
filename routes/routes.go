@@ -24,6 +24,10 @@ import (
 	_repoCapster "nuryanto2121/dynamic_rest_api_go/repository/b_capster"
 	_useCapster "nuryanto2121/dynamic_rest_api_go/usecase/b_capster"
 
+	_contBerandaBarber "nuryanto2121/dynamic_rest_api_go/controllers/beranda_barber"
+	_repoBerandaBarber "nuryanto2121/dynamic_rest_api_go/repository/beranda_barber"
+	_useBerandaBarber "nuryanto2121/dynamic_rest_api_go/usecase/beranda_barber"
+
 	_contBarber "nuryanto2121/dynamic_rest_api_go/controllers/b_barber"
 	_repoBarber "nuryanto2121/dynamic_rest_api_go/repository/b_barber"
 	_repoBarberCapster "nuryanto2121/dynamic_rest_api_go/repository/b_barber_capster"
@@ -74,6 +78,10 @@ func (e *EchoRoutes) InitialRouter() {
 	repoOrder := _repoOrder.NewRepoOrderH(postgresdb.Conn)
 	useOrder := _useOrder.NewUserMOrder(repoOrder, repoOrderD, timeoutContext)
 	_contOrder.NewContOrder(e.E, useOrder)
+
+	repoBeranda := _repoBerandaBarber.NewRepoBerandaBarber(postgresdb.Conn)
+	UseBeranda := _useBerandaBarber.NewUserMBarber(repoBeranda, repoFile, timeoutContext)
+	_contBerandaBarber.NewContBeranda(e.E, UseBeranda)
 
 	//_saauthcont
 	// repoAuth := _repoAuth.NewRepoOptionDB(postgresdb.Conn)

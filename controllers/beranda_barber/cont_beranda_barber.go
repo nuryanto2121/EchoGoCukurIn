@@ -23,10 +23,11 @@ func NewContBeranda(e *echo.Echo, a iberandabarber.Usecase) {
 	}
 	r := e.Group("/barber/beranda")
 	r.Use(midd.JWT)
-	r.GET("/status_order", controller.GetStatusOrder)
+	// r.GET("/status_order", controller.GetStatusOrder)
 	r.GET("", controller.GetList)
 }
 
+/*
 // GetStatusOrder :
 // @Summary GetStatusOrder
 // @Security ApiKeyAuth
@@ -58,6 +59,7 @@ func (u *ContBerandaBarber) GetStatusOrder(e echo.Context) error {
 
 	return appE.Response(http.StatusOK, "Ok", data)
 }
+*/
 
 // GetList :
 // @Summary GetList Barber Beranda
@@ -83,30 +85,39 @@ func (u *ContBerandaBarber) GetList(e echo.Context) error {
 		// logger = logging.Logger{}
 		appE = tool.Res{R: e} // wajib
 		//valid      validation.Validation // wajib
-		paramquery   = models.ParamList{} // ini untuk list
-		responseList = models.ResponseModelList{}
-		err          error
+		paramquery = models.ParamList{} // ini untuk list
+		// responseList = models.ResponseModelList{}
+		// err          error
 	)
 
 	httpCode, errMsg := app.BindAndValid(e, &paramquery)
 	// logger.Info(util.Stringify(paramquery))
 	if httpCode != 200 {
-		return appE.ResponseErrorList(http.StatusBadRequest, errMsg, responseList)
+		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
 	claims, err := app.GetClaims(e)
 	if err != nil {
-		return appE.ResponseErrorList(http.StatusBadRequest, fmt.Sprintf("%v", err), responseList)
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
 	// if !claims.IsAdmin {
 	// 	paramquery.InitSearch = " id_created = " + strconv.Itoa(claims.BarberID)
 	// }
+	data, err := u.useBeranda.GetStatusOrder(ctx, claims)
+	if err != nil {
+		return appE.Response(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
+	}
 
-	responseList, err = u.useBeranda.GetListOrder(ctx, claims, paramquery)
+	responseList, err := u.useBeranda.GetListOrder(ctx, claims, paramquery)
 	if err != nil {
 		// return e.JSON(http.StatusBadRequest, err.Error())
-		return appE.ResponseErrorList(tool.GetStatusCode(err), fmt.Sprintf("%v", err), responseList)
+		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), responseList)
+	}
+
+	result := map[string]interface{}{
+		"status_order": data,
+		"data_list":    responseList,
 	}
 
 	// return e.JSON(http.StatusOK, ListBarbersPost)
-	return appE.ResponseList(http.StatusOK, "", responseList)
+	return appE.Response(http.StatusOK, "", result)
 }
