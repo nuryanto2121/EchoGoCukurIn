@@ -31,7 +31,7 @@ func (db *repoOrderH) GetDataBy(ID int) (result models.OrderDGet, err error) {
 				inner join barber on barber.barber_id =order_h.order_id 
 				inner join ss_user on ss_user.user_id = order_h.capster_id
 				left join sa_file_upload on sa_file_upload.file_id = ss_user.file_id
-				where order_h.order_id = ? `, ID).Scan(&result) //Find(&result)
+				where order_h.order_id = ? `, ID).Scan(&data) //Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error
 	if err != nil {

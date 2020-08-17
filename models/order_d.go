@@ -26,14 +26,14 @@ type OrderDPost struct {
 }
 type OrderDGet struct {
 	BarberName  string  `json:"barber_name"`
-	CapsterID   int     `json:"capster_id,omitempty"`
+	CapsterID   int     `json:"capster_id"`
 	CapsterName string  `json:"capster_name"`
 	FileID      int     `json:"file_id" `
 	FileName    string  `json:"file_name"`
 	FilePath    string  `json:"file_path"`
-	PaketID     int     `json:"paket_id" valid:"Required"`
-	PaketName   string  `json:"paket_name" valid:"Required"`
-	DurasiStart int     `json:"durasi_start" valid:"Required"`
-	DurasiEnd   int     `json:"durasi_end" valid:"Required"`
-	Price       float32 `json:"price" valid:"Required"`
+	PaketID     int     `json:"paket_id"`
+	PaketName   string  `json:"paket_name"`
+	Price       float32 `json:"price"`
+	DurasiStart int     `json:"durasi_start"`
+	DurasiEnd   int     `json:"durasi_end"`
 }
