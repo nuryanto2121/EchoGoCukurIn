@@ -102,7 +102,10 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	if err != nil {
 		return err
 	}
-
+	mUser.UserName, err = u.repoUser.GenUserCapster()
+	if err != nil {
+		return err
+	}
 	mUser.UserEdit = Claims.UserName
 	mUser.UserInput = Claims.UserName
 	err = u.repoUser.Create(&mUser)
@@ -178,3 +181,38 @@ func (u *useCapster) Delete(ctx context.Context, Claims util.Claims, ID int) (er
 	}
 	return nil
 }
+
+// func (u *useCapster) GenUserCapster() (string, error) {
+// 	var (
+// 		currentTime     = time.Now()
+// 		year            = currentTime.Year()
+// 		month       int = int(currentTime.Month())
+// 		day             = currentTime.Day()
+// 	)
+
+// 	result := u.repoUser.GetMaxUserCapster()
+// 	sYear := strconv.Itoa(year)[2:]
+// 	var sMonth string = strconv.Itoa(month)
+// 	if len(sMonth) == 1 {
+// 		sMonth = fmt.Sprintf("0%s", sMonth)
+// 	}
+// 	var sDay string = strconv.Itoa(day)
+// 	if len(sDay) == 1 {
+// 		sDay = fmt.Sprintf("0%s", sDay)
+// 	}
+// 	seqNo := "0001"
+// 	if result == "" {
+// 		result = fmt.Sprintf("CP%s%s%s%v", sYear, sMonth, sDay, seqNo)
+// 	} else {
+// 		seqNo = fmt.Sprintf("1%s", result[9:])
+// 		iSeqno, err := strconv.Atoi(seqNo)
+// 		if err != nil {
+// 			return "", err
+// 		}
+// 		iSeqno += 1
+// 		seqNo = strconv.Itoa(iSeqno)[1:]
+// 		result = fmt.Sprintf("CP%s%s%s%v", sYear, sMonth, sDay, seqNo)
+// 	}
+// 	return result, nil
+
+// }

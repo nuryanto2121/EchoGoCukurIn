@@ -6,6 +6,8 @@ import (
 	"nuryanto2121/dynamic_rest_api_go/models"
 	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
+	"strconv"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/gommon/log"
@@ -171,5 +173,49 @@ func (db *repoSysUser) Count(queryparam models.ParamList) (result int, err error
 		return 0, err
 	}
 
+	return result, nil
+}
+func (db *repoSysUser) GenUserCapster() (string, error) {
+	result := ""
+	row := db.Conn.Table("ss_user").Select("max(user_name)").Row()
+	//.Where("to_timestamp(created_on)::date = now()::date").Row()
+	row.Scan(&result)
+	// if result == "" {
+	// 	return "error"
+	// }
+	// if err != nil && err != gorm.ErrRecordNotFound {
+	// 	return result
+	// }
+	// return result, nil
+	var (
+		currentTime     = time.Now()
+		year            = currentTime.Year()
+		month       int = int(currentTime.Month())
+		day             = currentTime.Day()
+	)
+
+	// result := u.repoUser.GetMaxUserCapster()
+	sYear := strconv.Itoa(year)[2:]
+	var sMonth string = strconv.Itoa(month)
+	if len(sMonth) == 1 {
+		sMonth = fmt.Sprintf("0%s", sMonth)
+	}
+	var sDay string = strconv.Itoa(day)
+	if len(sDay) == 1 {
+		sDay = fmt.Sprintf("0%s", sDay)
+	}
+	seqNo := "0001"
+	if result == "" {
+		result = fmt.Sprintf("CP%s%s%s%v", sYear, sMonth, sDay, seqNo)
+	} else {
+		seqNo = fmt.Sprintf("1%s", result[9:])
+		iSeqno, err := strconv.Atoi(seqNo)
+		if err != nil {
+			return "", err
+		}
+		iSeqno += 1
+		seqNo = strconv.Itoa(iSeqno)[1:]
+		result = fmt.Sprintf("CP%s%s%s%v", sYear, sMonth, sDay, seqNo)
+	}
 	return result, nil
 }
