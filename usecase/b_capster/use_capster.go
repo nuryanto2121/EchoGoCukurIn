@@ -69,9 +69,9 @@ func (u *useCapster) GetList(ctx context.Context, Claims util.Claims, queryparam
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
 
-		queryparam.Search = fmt.Sprintf("lower(name) LIKE '%%%s%%' ", queryparam.Search)
+		queryparam.Search = fmt.Sprintf("lower(ss_user.name) LIKE '%%%s%%' ", queryparam.Search)
 	}
-	queryparam.InitSearch = "user_type='capster'"
+	queryparam.InitSearch = fmt.Sprintf("ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
 
 	result.Data, err = u.repoCapster.GetList(queryparam)
 	if err != nil {
@@ -106,8 +106,8 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	if err != nil {
 		return err
 	}
-	mUser.UserEdit = Claims.UserName
-	mUser.UserInput = Claims.UserName
+	mUser.UserEdit = Claims.UserID
+	mUser.UserInput = Claims.UserID
 	err = u.repoUser.Create(&mUser)
 	if err != nil {
 		return err
@@ -117,8 +117,8 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 		var capsterCollection = models.CapsterCollection{}
 		capsterCollection.CapsterID = mUser.UserID
 		capsterCollection.FileID = dataCollection.FileID
-		capsterCollection.UserInput = Claims.UserName
-		capsterCollection.UserEdit = Claims.UserName
+		capsterCollection.UserInput = Claims.UserID
+		capsterCollection.UserEdit = Claims.UserID
 		err = u.repoCapster.Create(&capsterCollection)
 		if err != nil {
 			return err
@@ -140,7 +140,7 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	dataUser.Name = data.Name
 	dataUser.IsActive = data.IsActive
 	dataUser.FileID = data.FileID
-	dataUser.UserEdit = Claims.UserName
+	dataUser.UserEdit = Claims.UserID
 
 	err = u.repoUser.Update(ID, dataUser)
 	if err != nil {
@@ -155,8 +155,8 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 		var capsterCollection = models.CapsterCollection{}
 		capsterCollection.CapsterID = ID
 		capsterCollection.FileID = dataCollection.FileID
-		capsterCollection.UserInput = Claims.UserName
-		capsterCollection.UserEdit = Claims.UserName
+		capsterCollection.UserInput = Claims.UserID
+		capsterCollection.UserEdit = Claims.UserID
 
 		err = u.repoCapster.Create(&capsterCollection)
 		if err != nil {

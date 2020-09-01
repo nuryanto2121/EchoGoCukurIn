@@ -37,7 +37,30 @@ func (db *repoSysUser) GetByAccount(Account string) (result models.SsUser, err e
 
 	return result, err
 }
+func (db *repoSysUser) GetByCapster(Account string) (result models.LoginCapster, err error) {
 
+	// query := db.Conn.Where("email = ?", Account).Or("telp = ?", Account).First(&result)
+	query := db.Conn.Table("ss_user su").Select(`su.user_id as capster_id, su."name" as capster_name,su."password",su.email ,
+						su.telp ,su.file_id ,sf.file_name ,sf.file_path ,b.barber_id ,b.barber_name,b.owner_id ,so."name" as owner_name`).Joins(`
+						inner join barber_capster bc on su.user_id = bc.capster_id`).Joins(`
+						inner join barber b on b.barber_id = bc.barber_id `).Joins(`
+						left join sa_file_upload sf on sf.file_id =su.file_id`).Joins(`
+						inner join ss_user so on so.user_id = b.owner_id `).Where(`
+						su.user_name = ?`, Account).First(&result)
+	log.Info(fmt.Sprintf("%v", query.QueryExpr()))
+	// logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
+	err = query.Error
+
+	if err != nil {
+		//
+		if err == gorm.ErrRecordNotFound {
+			return result, models.ErrNotFound
+		}
+		return result, err
+	}
+
+	return result, err
+}
 func (db *repoSysUser) GetDataBy(ID int) (result *models.SsUser, err error) {
 	var sysUser = &models.SsUser{}
 	query := db.Conn.Where("user_id = ? ", ID).Find(sysUser)

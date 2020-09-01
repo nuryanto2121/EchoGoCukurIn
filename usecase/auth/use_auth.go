@@ -26,37 +26,83 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	DataUser, err := u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
+	var (
+		DataUser         = models.SsUser{}
+		DataCapster      = models.LoginCapster{}
+		isUser      bool = true
+		response         = map[string]interface{}{}
+	)
+
+	DataUser, err = u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 	if err != nil {
-		// return util.GoutputErrCode(http.StatusUnauthorized, "Your User/Email not valid.") //appE.ResponseError(util.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
-		return nil, errors.New("Your Account not valid.")
+		if err == models.ErrNotFound {
+			DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
+			if err != nil {
+				return nil, errors.New("Your Account not valid.")
+			}
+			isUser = false
+		} else {
+			return nil, errors.New("Your Account not valid.")
+		}
 	}
 
-	if !util.ComparePassword(DataUser.Password, util.GetPassword(dataLogin.Password)) {
-		return nil, errors.New("Your Password not valid.")
-	}
-	DataFile, err := u.repoFile.GetBySaFileUpload(ctx, DataUser.FileID)
+	if isUser {
+		if !util.ComparePassword(DataUser.Password, util.GetPassword(dataLogin.Password)) {
+			return nil, errors.New("Your Password not valid.")
+		}
+		DataFile, err := u.repoFile.GetBySaFileUpload(ctx, DataUser.FileID)
 
-	token, err := util.GenerateToken(DataUser.UserID, dataLogin.Account, DataUser.UserType)
-	if err != nil {
-		return nil, err
-	}
+		token, err := util.GenerateToken(DataUser.UserID, dataLogin.Account, DataUser.UserType)
+		if err != nil {
+			return nil, err
+		}
 
-	redisdb.AddSession(token, DataUser.UserID, 0)
+		redisdb.AddSession(token, DataUser.UserID, 0)
 
-	restUser := map[string]interface{}{
-		"id":        DataUser.UserID,
-		"email":     DataUser.Email,
-		"telp":      DataUser.Telp,
-		"user_name": DataUser.Name,
-		"user_type": DataUser.UserType,
-		"file_id":   DataUser.FileID,
-		"file_name": DataFile.FileName,
-		"file_path": DataFile.FilePath,
-	}
-	response := map[string]interface{}{
-		"token":     token,
-		"data_user": restUser,
+		restUser := map[string]interface{}{
+			"owner_id":   DataUser.UserID,
+			"owner_name": DataUser.Name,
+			"email":      DataUser.Email,
+			"telp":       DataUser.Telp,
+			"file_id":    DataUser.FileID,
+			"file_name":  DataFile.FileName,
+			"file_path":  DataFile.FilePath,
+		}
+		response = map[string]interface{}{
+			"token":     token,
+			"data_user": restUser,
+			"user_type": "owner",
+		}
+
+	} else {
+		if !util.ComparePassword(DataCapster.Password, util.GetPassword(dataLogin.Password)) {
+			return nil, errors.New("Your Password not valid.")
+		}
+
+		token, err := util.GenerateTokenCapster(DataCapster.CapsterID, DataCapster.OwnerID, DataCapster.BarberID)
+		if err != nil {
+			return nil, err
+		}
+		redisdb.AddSession(token, DataCapster.CapsterID, 0)
+
+		restUser := map[string]interface{}{
+			"owner_id":     DataCapster.OwnerID,
+			"owner_name":   DataCapster.OwnerName,
+			"barber_id":    DataCapster.BarberID,
+			"barber_name":  DataCapster.BarberName,
+			"capster_id":   DataCapster.CapsterID,
+			"email":        DataCapster.Email,
+			"telp":         DataCapster.Telp,
+			"capster_name": DataCapster.CapsterName,
+			"file_id":      DataCapster.FileID,
+			"file_name":    DataCapster.FileName,
+			"file_path":    DataCapster.FilePath,
+		}
+		response = map[string]interface{}{
+			"token":        token,
+			"data_capster": restUser,
+			"user_type":    "capster",
+		}
 	}
 
 	return response, nil

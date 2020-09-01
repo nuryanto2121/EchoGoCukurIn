@@ -34,3 +34,18 @@ type UpdateUser struct {
 	Telp  string `json:"telp"`
 	Name  string `json:"name" valid:"Required"`
 }
+
+type LoginCapster struct {
+	CapsterID   int    `json:"capster_id"`
+	CapsterName string `json:"capster_name"`
+	Password    string `json:"password"`
+	Email       string `json:"email"`
+	Telp        string `json:"telp"`
+	FileID      int    `json:"file_id"`
+	FileName    string `json:"file_name"`
+	FilePath    string `json:"file_path"`
+	BarberID    int    `json:"barber_id"`
+	BarberName  string `json:"barber_name"`
+	OwnerID     int    `json:"owner_id"`
+	OwnerName   string `json:"owner_name"`
+}

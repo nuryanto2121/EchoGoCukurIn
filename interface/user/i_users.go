@@ -9,6 +9,7 @@ type Repository interface {
 	GenUserCapster() (string, error)
 	GetDataBy(ID int) (result *models.SsUser, err error)
 	GetByAccount(Account string) (result models.SsUser, err error)
+	GetByCapster(Account string) (result models.LoginCapster, err error)
 	GetList(queryparam models.ParamList) (result []*models.SsUser, err error)
 	Create(data *models.SsUser) (err error)
 	Update(ID int, data interface{}) (err error)

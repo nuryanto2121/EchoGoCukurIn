@@ -34,6 +34,7 @@ type Collections struct {
 
 type CapsterList struct {
 	CapsterID int    `json:"capster_id" valid:"Required"`
+	UserName  string `json:"user_name,omitempty"`
 	Name      string `json:"name" valid:"Required"`
 	IsActive  bool   `json:"is_active" valid:"Required"`
 	SaFileOutput
