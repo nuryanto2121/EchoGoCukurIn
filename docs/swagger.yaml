@@ -192,7 +192,9 @@ definitions:
     properties:
       email:
         type: string
-      name:
+      file_id:
+        type: integer
+      owner_name:
         type: string
       telp:
         type: string

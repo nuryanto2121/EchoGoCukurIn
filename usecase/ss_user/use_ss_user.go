@@ -43,7 +43,9 @@ func (u *useSysUser) GetDataBy(ctx context.Context, ID int) (result interface{},
 	}
 	DataFile, err := u.repoFile.GetBySaFileUpload(ctx, DataOwner.FileID)
 	if err != nil {
-		return result, err
+		if err != models.ErrNotFound {
+			return result, err
+		}
 	}
 	response := map[string]interface{}{
 		"owner_id":   DataOwner.UserID,

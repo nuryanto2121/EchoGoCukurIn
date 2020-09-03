@@ -69,9 +69,9 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 			"file_path":  DataFile.FilePath,
 		}
 		response = map[string]interface{}{
-			"token":     token,
-			"data_user": restUser,
-			"user_type": "barber",
+			"token":      token,
+			"data_owner": restUser,
+			"user_type":  "barber",
 		}
 
 	} else {
