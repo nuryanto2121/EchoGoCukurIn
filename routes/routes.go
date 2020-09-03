@@ -52,17 +52,17 @@ type EchoRoutes struct {
 func (e *EchoRoutes) InitialRouter() {
 	timeoutContext := time.Duration(setting.FileConfigSetting.Server.ReadTimeout) * time.Second
 
+	repoFile := _repoFile.NewRepoFileUpload(postgresdb.Conn)
+	useFile := _useFile.NewSaFileUpload(repoFile, timeoutContext)
+	_saFilecont.NewContFileUpload(e.E, useFile)
+
 	repoUser := _repoUser.NewRepoSysUser(postgresdb.Conn)
-	useUser := _useUser.NewUserSysUser(repoUser, timeoutContext)
+	useUser := _useUser.NewUserSysUser(repoUser, repoFile, timeoutContext)
 	_contUser.NewContUser(e.E, useUser)
 
 	repoPaket := _repoPaket.NewRepoPaket(postgresdb.Conn)
 	usePaket := _usePaket.NewUserMPaket(repoPaket, timeoutContext)
 	_contPaket.NewContPaket(e.E, usePaket)
-
-	repoFile := _repoFile.NewRepoFileUpload(postgresdb.Conn)
-	useFile := _useFile.NewSaFileUpload(repoFile, timeoutContext)
-	_saFilecont.NewContFileUpload(e.E, useFile)
 
 	repoCapster := _repoCapster.NewRepoCapsterCollection(postgresdb.Conn)
 	useCapster := _useCapster.NewUserMCapster(repoCapster, repoUser, repoFile, timeoutContext)

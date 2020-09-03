@@ -27,51 +27,51 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 	defer cancel()
 
 	var (
-		DataUser         = models.SsUser{}
+		DataOwner        = models.SsUser{}
 		DataCapster      = models.LoginCapster{}
-		isUser      bool = true
+		isBarber    bool = true
 		response         = map[string]interface{}{}
 	)
 
-	DataUser, err = u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
+	DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 	if err != nil {
 		if err == models.ErrNotFound {
 			DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
 			if err != nil {
 				return nil, errors.New("Your Account not valid.")
 			}
-			isUser = false
+			isBarber = false
 		} else {
 			return nil, errors.New("Your Account not valid.")
 		}
 	}
 
-	if isUser {
-		if !util.ComparePassword(DataUser.Password, util.GetPassword(dataLogin.Password)) {
+	if isBarber {
+		if !util.ComparePassword(DataOwner.Password, util.GetPassword(dataLogin.Password)) {
 			return nil, errors.New("Your Password not valid.")
 		}
-		DataFile, err := u.repoFile.GetBySaFileUpload(ctx, DataUser.FileID)
+		DataFile, err := u.repoFile.GetBySaFileUpload(ctx, DataOwner.FileID)
 
-		token, err := util.GenerateToken(DataUser.UserID, dataLogin.Account, DataUser.UserType)
+		token, err := util.GenerateToken(DataOwner.UserID, dataLogin.Account, DataOwner.UserType)
 		if err != nil {
 			return nil, err
 		}
 
-		redisdb.AddSession(token, DataUser.UserID, 0)
+		redisdb.AddSession(token, DataOwner.UserID, 0)
 
 		restUser := map[string]interface{}{
-			"owner_id":   DataUser.UserID,
-			"owner_name": DataUser.Name,
-			"email":      DataUser.Email,
-			"telp":       DataUser.Telp,
-			"file_id":    DataUser.FileID,
+			"owner_id":   DataOwner.UserID,
+			"owner_name": DataOwner.Name,
+			"email":      DataOwner.Email,
+			"telp":       DataOwner.Telp,
+			"file_id":    DataOwner.FileID,
 			"file_name":  DataFile.FileName,
 			"file_path":  DataFile.FilePath,
 		}
 		response = map[string]interface{}{
 			"token":     token,
 			"data_user": restUser,
-			"user_type": "owner",
+			"user_type": "barber",
 		}
 
 	} else {

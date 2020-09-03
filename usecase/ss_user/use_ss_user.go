@@ -3,22 +3,22 @@ package usesysuser
 import (
 	"context"
 	"math"
+	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
 	iusers "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	querywhere "nuryanto2121/dynamic_rest_api_go/pkg/query"
 	"reflect"
 	"time"
-
-	"github.com/mitchellh/mapstructure"
 )
 
 type useSysUser struct {
 	repoUser       iusers.Repository
+	repoFile       ifileupload.Repository
 	contextTimeOut time.Duration
 }
 
-func NewUserSysUser(a iusers.Repository, timeout time.Duration) iusers.Usecase {
-	return &useSysUser{repoUser: a, contextTimeOut: timeout}
+func NewUserSysUser(a iusers.Repository, b ifileupload.Repository, timeout time.Duration) iusers.Usecase {
+	return &useSysUser{repoUser: a, repoFile: b, contextTimeOut: timeout}
 }
 
 func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result models.SsUser, err error) {
@@ -33,16 +33,28 @@ func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result
 	return result, nil
 }
 
-func (u *useSysUser) GetDataBy(ctx context.Context, ID int) (result *models.SsUser, err error) {
+func (u *useSysUser) GetDataBy(ctx context.Context, ID int) (result interface{}, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	result, err = u.repoUser.GetDataBy(ID)
+	DataOwner, err := u.repoUser.GetDataBy(ID)
 	if err != nil {
 		return result, err
 	}
-	result.Password = ""
-	return result, nil
+	DataFile, err := u.repoFile.GetBySaFileUpload(ctx, DataOwner.FileID)
+	if err != nil {
+		return result, err
+	}
+	response := map[string]interface{}{
+		"owner_id":   DataOwner.UserID,
+		"owner_name": DataOwner.Name,
+		"email":      DataOwner.Email,
+		"telp":       DataOwner.Telp,
+		"file_id":    DataOwner.FileID,
+		"file_name":  DataFile.FileName,
+		"file_path":  DataFile.FilePath,
+	}
+	return response, nil
 }
 func (u *useSysUser) GetList(ctx context.Context, queryparam models.ParamList) (result models.ResponseModelList, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
@@ -82,18 +94,23 @@ func (u *useSysUser) Create(ctx context.Context, data *models.SsUser) (err error
 	return nil
 
 }
-func (u *useSysUser) Update(ctx context.Context, ID int, data interface{}) (err error) {
+func (u *useSysUser) Update(ctx context.Context, ID int, data models.UpdateUser) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	var form = models.UpdateUser{}
-	err = mapstructure.Decode(data, &form)
+	DataOwner, err := u.repoUser.GetDataBy(ID)
 	if err != nil {
 		return err
-		// return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
-
 	}
-	err = u.repoUser.Update(ID, form)
+	DataOwner.FileID = data.FileID
+	DataOwner.Name = data.Name
+	DataOwner.Telp = data.Telp
+	DataOwner.Email = data.Email
+
+	err = u.repoUser.Update(ID, DataOwner)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 func (u *useSysUser) Delete(ctx context.Context, ID int) (err error) {

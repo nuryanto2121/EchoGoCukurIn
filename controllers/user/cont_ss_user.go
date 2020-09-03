@@ -204,7 +204,7 @@ func (u *ContUser) Update(e echo.Context) error {
 	// user := e.Get("user").(*jwt.Token)
 	// claims := user.Claims.(*util.Claims)
 
-	MenuID, _ := strconv.Atoi(id)
+	OwnerID, _ := strconv.Atoi(id)
 	// logger.Info(id)
 	if err != nil {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
@@ -218,7 +218,7 @@ func (u *ContUser) Update(e echo.Context) error {
 	}
 
 	// form.UpdatedBy = claims.UserName
-	err = u.useUser.Update(ctx, MenuID, &form)
+	err = u.useUser.Update(ctx, OwnerID, form)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}
