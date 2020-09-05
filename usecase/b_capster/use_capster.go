@@ -9,6 +9,7 @@ import (
 	iuser "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+	useemailcapster "nuryanto2121/dynamic_rest_api_go/usecase/email_capster"
 	"time"
 
 	"github.com/mitchellh/mapstructure"
@@ -102,10 +103,10 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	if err != nil {
 		return err
 	}
-	mUser.UserName, err = u.repoUser.GenUserCapster()
-	if err != nil {
-		return err
-	}
+	// mUser.UserName, err = u.repoUser.GenUserCapster()
+	// if err != nil {
+	// 	return err
+	// }
 	mUser.UserEdit = Claims.UserID
 	mUser.UserInput = Claims.UserID
 	err = u.repoUser.Create(&mUser)
@@ -114,15 +115,32 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	}
 
 	for _, dataCollection := range data.TopCollection {
-		var capsterCollection = models.CapsterCollection{}
-		capsterCollection.CapsterID = mUser.UserID
-		capsterCollection.FileID = dataCollection.FileID
-		capsterCollection.UserInput = Claims.UserID
-		capsterCollection.UserEdit = Claims.UserID
-		err = u.repoCapster.Create(&capsterCollection)
-		if err != nil {
-			return err
+		if dataCollection.FileID > 0 {
+			var capsterCollection = models.CapsterCollection{}
+			capsterCollection.CapsterID = mUser.UserID
+			capsterCollection.FileID = dataCollection.FileID
+			capsterCollection.UserInput = Claims.UserID
+			capsterCollection.UserEdit = Claims.UserID
+			err = u.repoCapster.Create(&capsterCollection)
+			if err != nil {
+				return err
+			}
 		}
+
+	}
+	// gen Password
+	GenPassword := util.GenerateCode(4)
+
+	// send Password
+	mailService := &useemailcapster.RegisterCapster{
+		Email:    mUser.Email,
+		Name:     mUser.Name,
+		Password: GenPassword,
+	}
+
+	err = mailService.SendRegisterCapster()
+	if err != nil {
+		return err
 	}
 
 	return nil

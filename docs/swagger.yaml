@@ -51,6 +51,8 @@ definitions:
     type: object
   models.Capster:
     properties:
+      email:
+        type: string
       file_id:
         type: integer
       is_active:
@@ -59,14 +61,13 @@ definitions:
         type: string
       name:
         type: string
+      telp:
+        type: string
       topCollection:
         items:
           $ref: '#/definitions/models.Collections'
         type: array
       user_type:
-        description: |-
-          Telp      string    `json:"telp"`
-          Email     string    `json:"email"`
         type: string
     type: object
   models.Collections:

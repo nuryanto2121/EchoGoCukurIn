@@ -1784,6 +1784,9 @@
         "models.Capster": {
             "type": "object",
             "properties": {
+                "email": {
+                    "type": "string"
+                },
                 "file_id": {
                     "type": "integer"
                 },
@@ -1796,6 +1799,9 @@
                 "name": {
                     "type": "string"
                 },
+                "telp": {
+                    "type": "string"
+                },
                 "topCollection": {
                     "type": "array",
                     "items": {
@@ -1803,7 +1809,6 @@
                     }
                 },
                 "user_type": {
-                    "description": "Telp      string    `json:\"telp\"`\nEmail     string    `json:\"email\"`",
                     "type": "string"
                 }
             }

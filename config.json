@@ -12,7 +12,7 @@
     "smtp":{
         "server":"smtp.gmail.com",
         "port":587,
-        "user":"adm.accleog@gmail.com",
+        "user":"cukur.in.adm@gmail.com",
         "passwd":"!@#$%12345",
         "Identity":"Cukur_In",
         "sender":"nuryanto@gmail.com"
