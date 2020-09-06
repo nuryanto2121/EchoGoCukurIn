@@ -213,7 +213,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Register",
+                "summary": "Register Owner",
                 "parameters": [
                     {
                         "type": "string",
@@ -1936,19 +1936,8 @@
         "models.RegisterForm": {
             "type": "object",
             "properties": {
-                "account": {
-                    "type": "string"
-                },
-                "confirm_pwd": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "pwd": {
-                    "type": "string"
-                },
-                "user_type": {
+                "email": {
+                    "description": "PostCd           string    `json:\"post_cd,omitempty\"`\nTelephoneNo      string    `json:\"telephone_no,omitempty\"`",
                     "type": "string"
                 }
             }

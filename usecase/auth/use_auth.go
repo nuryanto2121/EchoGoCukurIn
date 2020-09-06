@@ -172,33 +172,30 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 
 	var User models.SsUser
 
-	User.Name = dataRegister.Name
-	if dataRegister.Passwd != dataRegister.ConfirmPasswd {
-		return output, errors.New("Password and Confirm Password Not Valid")
-	}
-	User.Password, _ = util.Hash(dataRegister.Passwd)
-	User.UserType = dataRegister.UserType
-	User.UserEdit = dataRegister.Name
-	User.UserInput = dataRegister.Name
+	User.Name = ""
+
+	User.UserType = "owner"
+	User.UserEdit = "cukur_in"
+	User.UserInput = "cukur_in"
 
 	//check email or telp
-	if util.CheckEmail(dataRegister.Account) {
-		User.Email = dataRegister.Account
-	} else {
-		User.Telp = dataRegister.Account
+	if !util.CheckEmail(dataRegister.EmailAddr) {
+		return output, errors.New("email not valid")
 	}
+
 	err = u.repoAuth.Create(&User)
 	if err != nil {
 		return output, err
 	}
 
-	GenCode := util.GenerateNumber(4)
+	// GenCode := util.GenerateNumber(4)
+	GenPassword := util.GenerateCode(4)
 
 	// send generate code
 	mailService := &useemailauth.Register{
 		Email:      User.Email,
 		Name:       User.Name,
-		GenerateNo: GenCode,
+		PasswordCd: GenPassword,
 	}
 
 	err = mailService.SendRegister()
@@ -207,12 +204,12 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	}
 
 	//store to redis
-	err = redisdb.AddSession(dataRegister.Account, GenCode, 2)
+	err = redisdb.AddSession(dataRegister.EmailAddr, GenPassword, 2)
 	if err != nil {
 		return output, err
 	}
 	out := map[string]interface{}{
-		"gen_code": GenCode,
+		"gen_password": GenPassword,
 	}
 	return out, nil
 }

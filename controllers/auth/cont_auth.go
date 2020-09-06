@@ -124,7 +124,7 @@ func (u *ContAuth) ChangePassword(e echo.Context) error {
 }
 
 // Register :
-// @Summary Register
+// @Summary Register Owner
 // @Tags Auth
 // @Produce json
 // @Param OS header string true "OS Device"

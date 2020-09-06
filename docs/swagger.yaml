@@ -150,15 +150,10 @@ definitions:
     type: object
   models.RegisterForm:
     properties:
-      account:
-        type: string
-      confirm_pwd:
-        type: string
-      name:
-        type: string
-      pwd:
-        type: string
-      user_type:
+      email:
+        description: |-
+          PostCd           string    `json:"post_cd,omitempty"`
+          TelephoneNo      string    `json:"telephone_no,omitempty"`
         type: string
     type: object
   models.ResetPasswd:
@@ -384,7 +379,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/tool.ResponseModel'
-      summary: Register
+      summary: Register Owner
       tags:
       - Auth
   /barber/auth/verify:

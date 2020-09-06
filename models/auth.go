@@ -13,14 +13,14 @@ type LoginForm struct {
 
 // RegisterForm :
 type RegisterForm struct {
-	Name     string `json:"name" valid:"Required"`
-	UserType string `json:"user_type" valid:"Required"`
-	ResetPasswd
+	// Name     string `json:"name" valid:"Required"`
+	// UserType string `json:"user_type" valid:"Required"`
+	// ResetPasswd
 	// Account          string    `json:"address,omitempty"`
 
 	// PostCd           string    `json:"post_cd,omitempty"`
 	// TelephoneNo      string    `json:"telephone_no,omitempty"`
-	// EmailAddr        string    `json:"email_addr,omitempty" valid:"Email"`
+	EmailAddr string `json:"email,omitempty" valid:"Email;Required"`
 	// ContactPerson    string    `json:"contact_person,omitempty"`
 	// ClientType       string    `json:"client_type,omitempty"`
 	// JoiningDate      time.Time `json:"joining_date,omitempty"`

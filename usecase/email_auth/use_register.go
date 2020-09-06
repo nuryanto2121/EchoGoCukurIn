@@ -10,11 +10,11 @@ import (
 type Register struct {
 	Email      string `json:"email"`
 	Name       string `json:"name"`
-	GenerateNo string `json:"generate_no"`
+	PasswordCd string `json:"generate_no"`
 }
 
 func (R *Register) SendRegister() error {
-	subjectEmail := "Verifikasi Code"
+	subjectEmail := "Activation Code"
 	fmt.Printf(subjectEmail)
 	err := util.SendEmail(R.Email, subjectEmail, getVerifyBody(R))
 	if err != nil {
@@ -24,9 +24,9 @@ func (R *Register) SendRegister() error {
 }
 
 func getVerifyBody(R *Register) string {
-	verifyHTML := templateemail.VerifyCode
+	verifyHTML := templateemail.SendPasswordCapster
 
 	verifyHTML = strings.ReplaceAll(verifyHTML, `{Name}`, R.Name)
-	verifyHTML = strings.ReplaceAll(verifyHTML, `{GenerateCode}`, R.GenerateNo)
+	verifyHTML = strings.ReplaceAll(verifyHTML, `{PasswordCode}`, R.PasswordCd)
 	return verifyHTML
 }
