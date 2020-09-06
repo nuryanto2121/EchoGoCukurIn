@@ -7,6 +7,7 @@ import (
 	iusers "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	querywhere "nuryanto2121/dynamic_rest_api_go/pkg/query"
+	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"reflect"
 	"time"
 )
@@ -33,7 +34,7 @@ func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result
 	return result, nil
 }
 
-func (u *useSysUser) GetDataBy(ctx context.Context, ID int) (result interface{}, err error) {
+func (u *useSysUser) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result interface{}, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
@@ -58,7 +59,7 @@ func (u *useSysUser) GetDataBy(ctx context.Context, ID int) (result interface{},
 	}
 	return response, nil
 }
-func (u *useSysUser) GetList(ctx context.Context, queryparam models.ParamList) (result models.ResponseModelList, err error) {
+func (u *useSysUser) GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
@@ -85,7 +86,7 @@ func (u *useSysUser) GetList(ctx context.Context, queryparam models.ParamList) (
 
 	return result, nil
 }
-func (u *useSysUser) Create(ctx context.Context, data *models.SsUser) (err error) {
+func (u *useSysUser) Create(ctx context.Context, Claims util.Claims, data *models.SsUser) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
@@ -96,7 +97,7 @@ func (u *useSysUser) Create(ctx context.Context, data *models.SsUser) (err error
 	return nil
 
 }
-func (u *useSysUser) Update(ctx context.Context, ID int, data models.UpdateUser) (err error) {
+func (u *useSysUser) Update(ctx context.Context, Claims util.Claims, ID int, data models.UpdateUser) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
@@ -108,7 +109,7 @@ func (u *useSysUser) Update(ctx context.Context, ID int, data models.UpdateUser)
 	DataOwner.Name = data.Name
 	DataOwner.Telp = data.Telp
 	DataOwner.Email = data.Email
-
+	DataOwner.UserEdit = Claims.UserID
 	err = u.repoUser.Update(ID, DataOwner)
 	if err != nil {
 		return err

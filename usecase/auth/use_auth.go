@@ -34,17 +34,28 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 	)
 
 	DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
-	if err != nil {
-		if err == models.ErrNotFound {
+	if DataOwner.UserType == "" && err == models.ErrNotFound {
+		return nil, errors.New("Your Account not valid.")
+	} else {
+		if DataOwner.UserType == "capster" {
 			DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
 			if err != nil {
 				return nil, errors.New("Your Account not valid.")
 			}
 			isBarber = false
-		} else {
-			return nil, errors.New("Your Account not valid.")
 		}
 	}
+	// if err != nil {
+	// 	if err == models.ErrNotFound {
+	// 		DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
+	// 		if err != nil {
+	// 			return nil, errors.New("Your Account not valid.")
+	// 		}
+	// 		isBarber = false
+	// 	} else {
+	// 		return nil, errors.New("Your Account not valid.")
+	// 	}
+	// }
 
 	if isBarber {
 		if !util.ComparePassword(DataOwner.Password, util.GetPassword(dataLogin.Password)) {

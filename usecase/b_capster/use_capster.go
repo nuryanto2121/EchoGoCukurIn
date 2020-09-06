@@ -103,10 +103,13 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	if err != nil {
 		return err
 	}
+	// gen Password
+	GenPassword := util.GenerateCode(4)
 	// mUser.UserName, err = u.repoUser.GenUserCapster()
 	// if err != nil {
 	// 	return err
 	// }
+	mUser.Password, _ = util.Hash(GenPassword)
 	mUser.UserEdit = Claims.UserID
 	mUser.UserInput = Claims.UserID
 	err = u.repoUser.Create(&mUser)
@@ -128,8 +131,6 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 		}
 
 	}
-	// gen Password
-	GenPassword := util.GenerateCode(4)
 
 	// send Password
 	mailService := &useemailcapster.RegisterCapster{

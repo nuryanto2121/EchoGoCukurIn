@@ -22,7 +22,7 @@ func NewRepoSysUser(Conn *gorm.DB) iusers.Repository {
 }
 
 func (db *repoSysUser) GetByAccount(Account string) (result models.SsUser, err error) {
-	query := db.Conn.Where("email = ?", Account).Or("telp = ?", Account).First(&result)
+	query := db.Conn.Where("(email = ? OR telp = ?) AND is_active = true", Account, Account).First(&result)
 	log.Info(fmt.Sprintf("%v", query.QueryExpr()))
 	// logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error
@@ -42,11 +42,19 @@ func (db *repoSysUser) GetByCapster(Account string) (result models.LoginCapster,
 	// query := db.Conn.Where("email = ?", Account).Or("telp = ?", Account).First(&result)
 	query := db.Conn.Table("ss_user su").Select(`su.user_id as capster_id, su."name" as capster_name,su."password",su.email ,
 						su.telp ,su.file_id ,sf.file_name ,sf.file_path ,b.barber_id ,b.barber_name,b.owner_id ,so."name" as owner_name`).Joins(`
-						inner join barber_capster bc on su.user_id = bc.capster_id`).Joins(`
-						inner join barber b on b.barber_id = bc.barber_id `).Joins(`
+						left join barber_capster bc on su.user_id = bc.capster_id`).Joins(`
+						left join barber b on b.barber_id = bc.barber_id `).Joins(`
 						left join sa_file_upload sf on sf.file_id =su.file_id`).Joins(`
-						inner join ss_user so on so.user_id = b.owner_id `).Where(`
-						su.user_name = ?`, Account).First(&result)
+						left join ss_user so on so.user_id = b.owner_id `).Where(`
+						(su.email = ? OR su.telp = ?) AND su.is_active = true`, Account, Account).First(&result)
+
+	// query := db.Conn.Table("ss_user su").Select(`su.user_id as capster_id, su."name" as capster_name,su."password",su.email ,
+	// su.telp ,su.file_id ,sf.file_name ,sf.file_path ,b.barber_id ,b.barber_name,b.owner_id ,so."name" as owner_name`).Joins(`
+	// inner join barber_capster bc on su.user_id = bc.capster_id`).Joins(`
+	// inner join barber b on b.barber_id = bc.barber_id `).Joins(`
+	// left join sa_file_upload sf on sf.file_id =su.file_id`).Joins(`
+	// inner join ss_user so on so.user_id = b.owner_id `).Where(`
+	// su.email = ?`, Account).Or(`su.telp = ?`, Account).First(&result)
 	log.Info(fmt.Sprintf("%v", query.QueryExpr()))
 	// logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error

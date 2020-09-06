@@ -65,8 +65,12 @@ func (u *ContUser) GetDataBy(e echo.Context) error {
 	if err != nil {
 		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
 
-	data, err := u.useUser.GetDataBy(ctx, ID)
+	data, err := u.useUser.GetDataBy(ctx, claims, ID)
 	if err != nil {
 		return appE.Response(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 	}
@@ -116,7 +120,12 @@ func (u *ContUser) GetList(e echo.Context) error {
 	// 	paramquery.InitSearch = " id_created = " + strconv.Itoa(claims.UserID)
 	// }
 
-	responseList, err = u.useUser.GetList(ctx, paramquery)
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.ResponseErrorList(http.StatusBadRequest, fmt.Sprintf("%v", err), responseList)
+	}
+
+	responseList, err = u.useUser.GetList(ctx, claims, paramquery)
 	if err != nil {
 		// return e.JSON(http.StatusBadRequest, err.Error())
 		return appE.ResponseErrorList(tool.GetStatusCode(err), fmt.Sprintf("%v", err), responseList)
@@ -167,8 +176,14 @@ func (u *ContUser) Create(e echo.Context) error {
 		return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 
 	}
+
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+
 	// sysUser.UserInput = claims.UserID
-	err = u.useUser.Create(ctx, &sysUser)
+	err = u.useUser.Create(ctx, claims, &sysUser)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}
@@ -210,6 +225,10 @@ func (u *ContUser) Update(e echo.Context) error {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
 
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
 	// validasi and bind to struct
 	httpCode, errMsg := app.BindAndValid(e, &form)
 	// logger.Info(util.Stringify(form))
@@ -218,7 +237,7 @@ func (u *ContUser) Update(e echo.Context) error {
 	}
 
 	// form.UpdatedBy = claims.UserName
-	err = u.useUser.Update(ctx, OwnerID, form)
+	err = u.useUser.Update(ctx, claims, OwnerID, form)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}
