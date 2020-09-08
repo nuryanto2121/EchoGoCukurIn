@@ -155,7 +155,7 @@ func (u *ContAuth) Register(e echo.Context) error {
 
 	data, err := u.useAuth.Register(ctx, form)
 	if err != nil {
-		return appE.ResponseError(http.StatusUnauthorized, fmt.Sprintf("%v", err), nil)
+		return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 	}
 	return appE.Response(http.StatusOK, "Ok", data)
 }

@@ -170,14 +170,25 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
+	CekData, err := u.repoAuth.GetByAccount(dataRegister.EmailAddr)
+
+	if CekData.Email == dataRegister.EmailAddr {
+		return output, errors.New("email sudah terdaftar.")
+	}
+
 	var User models.SsUser
+	// GenCode := util.GenerateNumber(4)
+	GenPassword := util.GenerateCode(4)
 
 	User.Name = ""
 
 	User.UserType = "owner"
 	User.UserEdit = "cukur_in"
 	User.UserInput = "cukur_in"
+	User.Email = dataRegister.EmailAddr
+	User.IsActive = true
 
+	User.Password, _ = util.Hash(GenPassword)
 	//check email or telp
 	if !util.CheckEmail(dataRegister.EmailAddr) {
 		return output, errors.New("email not valid")
@@ -188,9 +199,6 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 		return output, err
 	}
 
-	// GenCode := util.GenerateNumber(4)
-	GenPassword := util.GenerateCode(4)
-
 	// send generate code
 	mailService := &useemailauth.Register{
 		Email:      User.Email,
@@ -200,12 +208,14 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 
 	err = mailService.SendRegister()
 	if err != nil {
+		u.repoAuth.Delete(User.UserID)
 		return output, err
 	}
 
 	//store to redis
 	err = redisdb.AddSession(dataRegister.EmailAddr, GenPassword, 2)
 	if err != nil {
+		u.repoAuth.Delete(User.UserID)
 		return output, err
 	}
 	out := map[string]interface{}{

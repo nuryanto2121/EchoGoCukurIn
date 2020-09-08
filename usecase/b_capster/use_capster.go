@@ -51,6 +51,7 @@ func (u *useCapster) GetDataBy(ctx context.Context, Claims util.Claims, ID int) 
 	}
 	response := map[string]interface{}{
 		"capster_id":     dataCapster.UserID,
+		"email":          dataCapster.Email,
 		"name":           dataCapster.Name,
 		"join_date":      dataCapster.JoinDate,
 		"user_type":      dataCapster.UserType,
@@ -70,7 +71,7 @@ func (u *useCapster) GetList(ctx context.Context, Claims util.Claims, queryparam
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
 
-		queryparam.Search = fmt.Sprintf("lower(ss_user.name) LIKE '%%%s%%' ", queryparam.Search)
+		queryparam.Search = fmt.Sprintf("lower(ss_user.name) iLIKE '%%%s%%' ", queryparam.Search)
 	}
 	queryparam.InitSearch = fmt.Sprintf("ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
 
