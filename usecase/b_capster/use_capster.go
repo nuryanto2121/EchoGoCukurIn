@@ -55,6 +55,7 @@ func (u *useCapster) GetDataBy(ctx context.Context, Claims util.Claims, ID int) 
 		"name":           dataCapster.Name,
 		"join_date":      dataCapster.JoinDate,
 		"user_type":      dataCapster.UserType,
+		"is_active":      dataCapster.IsActive,
 		"file_id":        dataCapster.FileID,
 		"file_name":      dataFile.FileName,
 		"file_path":      dataFile.FilePath,
