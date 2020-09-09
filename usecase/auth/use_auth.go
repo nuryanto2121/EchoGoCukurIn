@@ -157,8 +157,11 @@ func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPass
 	// dataUser, err := u.repoUser.GetByEmailSaUser(email)
 
 	// dataUser.Password, _ = util.Hash(dataReset.Passwd)
+	var data = map[string]interface{}{
+		"password": DataUser.Password,
+	}
 
-	err = u.repoAuth.Update(DataUser.UserID, &DataUser)
+	err = u.repoAuth.Update(DataUser.UserID, data)
 	if err != nil {
 		return err
 	}

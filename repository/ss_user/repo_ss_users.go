@@ -152,12 +152,13 @@ func (db *repoSysUser) Create(data *models.SsUser) error {
 	}
 	return nil
 }
-func (db *repoSysUser) Update(ID int, data interface{}) error {
+func (db *repoSysUser) Update(ID int, data map[string]interface{}) error {
 	var (
 		logger = logging.Logger{}
 		err    error
+		tUser  models.SsUser
 	)
-	query := db.Conn.Model(models.SsUser{}).Where("user_id = ?", ID).Updates(data)
+	query := db.Conn.Model(&tUser).Where("user_id = ?", ID).Updates(data)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {

@@ -111,6 +111,7 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	// if err != nil {
 	// 	return err
 	// }
+	mUser.JoinDate = data.JoinDate
 	mUser.Password, _ = util.Hash(GenPassword)
 	mUser.UserEdit = Claims.UserID
 	mUser.UserInput = Claims.UserID
@@ -154,16 +155,37 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	defer cancel()
 	// var dataUser = &models.SsUser{}
 
-	dataUser, err := u.repoUser.GetDataBy(ID)
-	if err != nil {
-		return err
-	}
-	dataUser.Name = data.Name
-	dataUser.IsActive = data.IsActive
-	dataUser.FileID = data.FileID
-	dataUser.UserEdit = Claims.UserID
+	// dataUser, err := u.repoUser.GetDataBy(ID)
+	// if err != nil {
+	// 	return err
+	// }
+	// dataUser.JoinDate = data.JoinDate
+	// dataUser.Email = data.Email
+	// dataUser.Name = data.Name
+	// dataUser.IsActive = data.IsActive
+	// dataUser.FileID = data.FileID
+	// dataUser.UserEdit = Claims.UserID
+	// dataUser.UserType = data.UserType
+	// var (
+	// 	mUser = models.CapsterUpdate{}
+	// )
+	// err = mapstructure.Decode(data, &mUser)
+	// if err != nil {
+	// 	return err
+	// }
+	// mUser.JoinDate = data.JoinDate
 
-	err = u.repoUser.Update(ID, dataUser)
+	var datas = map[string]interface{}{
+		"name":      data.Name,
+		"telp":      data.Telp,
+		"email":     data.Email,
+		"user_type": data.UserType,
+		"is_active": data.IsActive,
+		"join_date": data.JoinDate,
+		"file_id":   data.FileID,
+	}
+
+	err = u.repoUser.Update(ID, datas)
 	if err != nil {
 		return err
 	}

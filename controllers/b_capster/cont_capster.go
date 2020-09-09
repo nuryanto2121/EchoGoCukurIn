@@ -156,7 +156,7 @@ func (u *ContCapster) Create(e echo.Context) error {
 	if httpCode != 200 {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
-
+	fmt.Println(mCapster.JoinDate)
 	// mapping to struct model saRole
 	// err := mapstructure.Decode(form, &mCapster)
 	// if err != nil {
@@ -179,7 +179,7 @@ func (u *ContCapster) Create(e echo.Context) error {
 }
 
 // UpdateSaCapster :
-// @Summary Rubah Profile
+// @Summary Update Capster
 // @Security ApiKeyAuth
 // @Tags Capster
 // @Produce json

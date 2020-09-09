@@ -101,16 +101,22 @@ func (u *useSysUser) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	DataOwner, err := u.repoUser.GetDataBy(ID)
-	if err != nil {
-		return err
+	// DataOwner, err := u.repoUser.GetDataBy(ID)
+	// if err != nil {
+	// 	return err
+	// }
+	// DataOwner.FileID = data.FileID
+	// DataOwner.Name = data.Name
+	// DataOwner.Telp = data.Telp
+	// DataOwner.Email = data.Email
+	// DataOwner.UserEdit = Claims.UserID
+	var datas = map[string]interface{}{
+		"name":    data.Name,
+		"telp":    data.Telp,
+		"email":   data.Email,
+		"file_id": data.FileID,
 	}
-	DataOwner.FileID = data.FileID
-	DataOwner.Name = data.Name
-	DataOwner.Telp = data.Telp
-	DataOwner.Email = data.Email
-	DataOwner.UserEdit = Claims.UserID
-	err = u.repoUser.Update(ID, DataOwner)
+	err = u.repoUser.Update(ID, datas)
 	if err != nil {
 		return err
 	}

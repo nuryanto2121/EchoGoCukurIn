@@ -8,9 +8,19 @@ type Capster struct {
 	Email         string    `json:"email"  valid:"Required"`
 	UserType      string    `json:"user_type" valid:"Required"`
 	IsActive      bool      `json:"is_active" valid:"Required"`
-	JoinDate      time.Time `json:"join_date,omitempty"`
+	JoinDate      time.Time `json:"join_date" valid:"Required"`
 	FileID        int       `json:"file_id,omitempty"`
 	TopCollection []Collections
+}
+
+type CapsterUpdate struct {
+	Name     string    `json:"name" valid:"Required"`
+	Telp     string    `json:"telp,omitempty"`
+	Email    string    `json:"email"  valid:"Required"`
+	UserType string    `json:"user_type" valid:"Required"`
+	IsActive bool      `json:"is_active" valid:"Required"`
+	JoinDate time.Time `json:"join_date" valid:"Required"`
+	FileID   int       `json:"file_id,omitempty"`
 }
 
 type CapsterCollection struct {

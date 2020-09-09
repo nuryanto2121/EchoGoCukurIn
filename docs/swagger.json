@@ -812,7 +812,7 @@
                 "tags": [
                     "Capster"
                 ],
-                "summary": "Rubah Profile",
+                "summary": "Update Capster",
                 "parameters": [
                     {
                         "type": "string",

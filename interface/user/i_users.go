@@ -13,7 +13,7 @@ type Repository interface {
 	GetByCapster(Account string) (result models.LoginCapster, err error)
 	GetList(queryparam models.ParamList) (result []*models.SsUser, err error)
 	Create(data *models.SsUser) (err error)
-	Update(ID int, data interface{}) (err error)
+	Update(ID int, data map[string]interface{}) (err error)
 	Delete(ID int) (err error)
 	Count(queryparam models.ParamList) (result int, err error)
 }

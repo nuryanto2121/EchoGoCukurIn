@@ -11,7 +11,7 @@ type SsUser struct {
 	Telp      string    `json:"telp" gorm:"type:varchar(20)"`
 	Email     string    `json:"email" gorm:"type:varchar(60)"`
 	IsActive  bool      `json:"is_active" gorm:"type:boolean"`
-	JoinDate  time.Time `json:"join_date" gorm:"type:timestamp(0);default:now()"`
+	JoinDate  time.Time `json:"join_date" gorm:"type:timestamp(0)"`
 	Password  string    `json:"password" gorm:"type:varchar(150)"`
 	FileID    int       `json:"file_id" gorm:"type:integer"`
 	UserType  string    `json:"user_type" gorm:"type:varchar(10)"`
