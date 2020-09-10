@@ -64,15 +64,15 @@ func (e *EchoRoutes) InitialRouter() {
 	usePaket := _usePaket.NewUserMPaket(repoPaket, timeoutContext)
 	_contPaket.NewContPaket(e.E, usePaket)
 
-	repoCapster := _repoCapster.NewRepoCapsterCollection(postgresdb.Conn)
-	useCapster := _useCapster.NewUserMCapster(repoCapster, repoUser, repoFile, timeoutContext)
-	_contCapster.NewContCapster(e.E, useCapster)
-
 	repoBarberPaket := _repoBarberPaket.NewRepoBarberPaket(postgresdb.Conn)
 	repoBarberCapster := _repoBarberCapster.NewRepoBarberCapster(postgresdb.Conn)
 	repoBarber := _repoBarber.NewRepoBarber(postgresdb.Conn)
 	useBarber := _useBarber.NewUserMBarber(repoBarber, repoBarberPaket, repoBarberCapster, repoFile, timeoutContext)
 	_contBarber.NewContBarber(e.E, useBarber)
+
+	repoCapster := _repoCapster.NewRepoCapsterCollection(postgresdb.Conn)
+	useCapster := _useCapster.NewUserMCapster(repoCapster, repoUser, repoBarberCapster, repoFile, timeoutContext)
+	_contCapster.NewContCapster(e.E, useCapster)
 
 	repoOrderD := _repoOrderd.NewRepoOrderD(postgresdb.Conn)
 	repoOrder := _repoOrder.NewRepoOrderH(postgresdb.Conn)

@@ -10,5 +10,6 @@ type Repository interface {
 	Create(data *models.BarberCapster) (err error)
 	Update(ID int, data interface{}) (err error)
 	Delete(ID int) (err error)
+	DeleteByCapster(ID int) (err error)
 	Count(queryparam models.ParamList) (result int, err error)
 }

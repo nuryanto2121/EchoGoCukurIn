@@ -126,6 +126,20 @@ func (db *repoBarberCapster) Delete(ID int) error {
 	}
 	return nil
 }
+func (db *repoBarberCapster) DeleteByCapster(ID int) error {
+	var (
+		logger = logging.Logger{}
+		err    error
+	)
+	// query := db.Conn.Where("barber_id = ?", ID).Delete(&models.BarberCapster{})
+	query := db.Conn.Exec("Delete From barber_capster WHERE capster_id = ?", ID)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err = query.Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (db *repoBarberCapster) Count(queryparam models.ParamList) (result int, err error) {
 	var (
 		sWhere = ""

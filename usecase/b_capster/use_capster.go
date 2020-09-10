@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	ibarbercapster "nuryanto2121/dynamic_rest_api_go/interface/b_barber_capster"
 	icapster "nuryanto2121/dynamic_rest_api_go/interface/b_capster"
 	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
 	iuser "nuryanto2121/dynamic_rest_api_go/interface/user"
@@ -12,22 +13,25 @@ import (
 	useemailcapster "nuryanto2121/dynamic_rest_api_go/usecase/email_capster"
 	"time"
 
+	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
 )
 
 type useCapster struct {
-	repoCapster    icapster.Repository
-	repoUser       iuser.Repository
-	repoFile       ifileupload.Repository
-	contextTimeOut time.Duration
+	repoCapster       icapster.Repository
+	repoUser          iuser.Repository
+	repoBarberCapster ibarbercapster.Repository
+	repoFile          ifileupload.Repository
+	contextTimeOut    time.Duration
 }
 
-func NewUserMCapster(a icapster.Repository, b iuser.Repository, c ifileupload.Repository, timeout time.Duration) icapster.Usecase {
+func NewUserMCapster(a icapster.Repository, b iuser.Repository, c ibarbercapster.Repository, d ifileupload.Repository, timeout time.Duration) icapster.Usecase {
 	return &useCapster{
-		repoCapster:    a,
-		repoUser:       b,
-		repoFile:       c,
-		contextTimeOut: timeout,
+		repoCapster:       a,
+		repoUser:          b,
+		repoBarberCapster: c,
+		repoFile:          d,
+		contextTimeOut:    timeout,
 	}
 }
 
@@ -153,37 +157,25 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, data *models.Capster) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
-	// var dataUser = &models.SsUser{}
+	var dataUser = &models.CapsterUpdate{}
 
-	// dataUser, err := u.repoUser.GetDataBy(ID)
-	// if err != nil {
-	// 	return err
-	// }
-	// dataUser.JoinDate = data.JoinDate
-	// dataUser.Email = data.Email
-	// dataUser.Name = data.Name
-	// dataUser.IsActive = data.IsActive
-	// dataUser.FileID = data.FileID
-	// dataUser.UserEdit = Claims.UserID
-	// dataUser.UserType = data.UserType
-	// var (
-	// 	mUser = models.CapsterUpdate{}
-	// )
-	// err = mapstructure.Decode(data, &mUser)
-	// if err != nil {
-	// 	return err
-	// }
-	// mUser.JoinDate = data.JoinDate
-
-	var datas = map[string]interface{}{
-		"name":      data.Name,
-		"telp":      data.Telp,
-		"email":     data.Email,
-		"user_type": data.UserType,
-		"is_active": data.IsActive,
-		"join_date": data.JoinDate,
-		"file_id":   data.FileID,
+	err = mapstructure.Decode(data, &dataUser)
+	if err != nil {
+		return err
 	}
+	dataUser.JoinDate = data.JoinDate
+
+	//if status not active then delete relasi in barber_capster
+	if !dataUser.IsActive {
+		err = u.repoBarberCapster.DeleteByCapster(ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	datas := structs.Map(dataUser)
+	datas["user_edit"] = Claims.UserID
+	fmt.Println(datas)
 
 	err = u.repoUser.Update(ID, datas)
 	if err != nil {
