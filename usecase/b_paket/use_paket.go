@@ -2,12 +2,16 @@ package usepaket
 
 import (
 	"context"
+	"fmt"
 	"math"
 	ipaket "nuryanto2121/dynamic_rest_api_go/interface/b_paket"
 	"nuryanto2121/dynamic_rest_api_go/models"
-	querywhere "nuryanto2121/dynamic_rest_api_go/pkg/query"
-	"reflect"
+	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+	"strconv"
 	"time"
+
+	"github.com/fatih/structs"
+	"github.com/mitchellh/mapstructure"
 )
 
 type usePaket struct {
@@ -19,7 +23,7 @@ func NewUserMPaket(a ipaket.Repository, timeout time.Duration) ipaket.Usecase {
 	return &usePaket{repoPaket: a, contextTimeOut: timeout}
 }
 
-func (u *usePaket) GetDataBy(ctx context.Context, ID int) (result *models.Paket, err error) {
+func (u *usePaket) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result *models.Paket, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
@@ -29,17 +33,19 @@ func (u *usePaket) GetDataBy(ctx context.Context, ID int) (result *models.Paket,
 	}
 	return result, nil
 }
-func (u *usePaket) GetList(ctx context.Context, queryparam models.ParamList) (result models.ResponseModelList, err error) {
+func (u *usePaket) GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	var tUser = models.Paket{}
+	// var tUser = models.Paket{}
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
-		value := reflect.ValueOf(tUser)
-		types := reflect.TypeOf(&tUser)
-		queryparam.Search = querywhere.GetWhereLikeStruct(value, types, queryparam.Search, "")
+		queryparam.Search = fmt.Sprintf("paket_name iLIKE '%%%s%%' OR descs iLIKE '%%%s%%'", queryparam.Search, queryparam.Search)
+		// value := reflect.ValueOf(tUser)
+		// types := reflect.TypeOf(&tUser)
+		// queryparam.Search = querywhere.GetWhereLikeStruct(value, types, queryparam.Search, "")
 	}
+	queryparam.InitSearch = " owner_id = " + Claims.UserID
 	result.Data, err = u.repoPaket.GetList(queryparam)
 	if err != nil {
 		return result, err
@@ -56,25 +62,45 @@ func (u *usePaket) GetList(ctx context.Context, queryparam models.ParamList) (re
 
 	return result, nil
 }
-func (u *usePaket) Create(ctx context.Context, data *models.Paket) (err error) {
+func (u *usePaket) Create(ctx context.Context, Claims util.Claims, data *models.DataPaket) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
+	var (
+		mPaket models.Paket
+	)
 
-	err = u.repoPaket.Create(data)
+	// mapping to struct model saRole
+	err = mapstructure.Decode(data, &mPaket)
+	if err != nil {
+		return err
+	}
+	mPaket.OwnerID, _ = strconv.Atoi(Claims.UserID)
+	mPaket.UserEdit = Claims.UserID
+	mPaket.UserInput = Claims.UserID
+
+	err = u.repoPaket.Create(&mPaket)
 	if err != nil {
 		return err
 	}
 	return nil
 
 }
-func (u *usePaket) Update(ctx context.Context, ID int, data interface{}) (err error) {
+func (u *usePaket) Update(ctx context.Context, Claims util.Claims, ID int, data *models.DataPaket) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	err = u.repoPaket.Update(ID, data)
+	// myMap := util.ConvertStructToMap(data)
+	myMap := structs.Map(data)
+	// myMap := data.(map[string]interface{})
+	myMap["user_edit"] = Claims.UserID
+	fmt.Println(myMap)
+	err = u.repoPaket.Update(ID, myMap)
+	if err != nil {
+		return err
+	}
 	return nil
 }
-func (u *usePaket) Delete(ctx context.Context, ID int) (err error) {
+func (u *usePaket) Delete(ctx context.Context, Claims util.Claims, ID int) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 

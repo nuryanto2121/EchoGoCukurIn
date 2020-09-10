@@ -104,7 +104,7 @@ func (db *repoPaket) Create(data *models.Paket) error {
 	}
 	return nil
 }
-func (db *repoPaket) Update(ID int, data interface{}) error {
+func (db *repoPaket) Update(ID int, data map[string]interface{}) error {
 	var (
 		logger = logging.Logger{}
 		err    error

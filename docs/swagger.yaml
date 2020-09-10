@@ -87,21 +87,16 @@ definitions:
         type: boolean
       is_promo:
         type: boolean
-      owner_id:
-        type: integer
       paket_name:
+        description: OwnerID     int       `json:"owner_id" valid:"Required"`
         type: string
       price:
         type: number
       promo_end:
-        type: integer
+        type: string
       promo_price:
         type: number
       promo_start:
-        type: integer
-      time_Edit:
-        type: string
-      user_edit:
         type: string
     type: object
   models.ForgotForm:

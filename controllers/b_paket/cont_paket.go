@@ -14,7 +14,6 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/mitchellh/mapstructure"
 )
 
 type ContPaket struct {
@@ -61,8 +60,11 @@ func (u *ContPaket) GetDataBy(e echo.Context) error {
 	if err != nil {
 		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
-
-	data, err := u.usePaket.GetDataBy(ctx, ID)
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+	data, err := u.usePaket.GetDataBy(ctx, claims, ID)
 	if err != nil {
 		return appE.Response(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 	}
@@ -108,11 +110,8 @@ func (u *ContPaket) GetList(e echo.Context) error {
 	if err != nil {
 		return appE.ResponseErrorList(http.StatusBadRequest, fmt.Sprintf("%v", err), responseList)
 	}
-	// if !claims.IsAdmin {
-	paramquery.InitSearch = " owner_id = " + claims.UserID
-	// }
 
-	responseList, err = u.usePaket.GetList(ctx, paramquery)
+	responseList, err = u.usePaket.GetList(ctx, claims, paramquery)
 	if err != nil {
 		// return e.JSON(http.StatusBadRequest, err.Error())
 		return appE.ResponseErrorList(tool.GetStatusCode(err), fmt.Sprintf("%v", err), responseList)
@@ -141,34 +140,21 @@ func (u *ContPaket) Create(e echo.Context) error {
 	var (
 		logger = logging.Logger{} // wajib
 		appE   = tool.Res{R: e}   // wajib
-		mPaket models.Paket
 		form   models.DataPaket
 	)
 
-	// paket := e.Get("paket").(*jwt.Token)
-	// claims := paket.Claims.(*util.Claims)
-	// validasi and bind to struct
 	httpCode, errMsg := app.BindAndValid(e, &form)
 	logger.Info(util.Stringify(form))
 	if httpCode != 200 {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
 
-	// mapping to struct model saRole
-	err := mapstructure.Decode(form, &mPaket)
-	if err != nil {
-		return appE.ResponseError(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
-
-	}
-
 	claims, err := app.GetClaims(e)
 	if err != nil {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
-	mPaket.UserInput = claims.UserName
-	mPaket.UserEdit = claims.UserName
-	// mPaket.PaketInput = claims.PaketID
-	err = u.usePaket.Create(ctx, &mPaket)
+
+	err = u.usePaket.Create(ctx, claims, &form)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}
@@ -221,9 +207,9 @@ func (u *ContPaket) Update(e echo.Context) error {
 	if err != nil {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
-	form.UserEdit = claims.UserName
+
 	// form.UpdatedBy = claims.PaketName
-	err = u.usePaket.Update(ctx, PaketID, &form)
+	err = u.usePaket.Update(ctx, claims, PaketID, &form)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}
@@ -256,8 +242,11 @@ func (u *ContPaket) Delete(e echo.Context) error {
 	if err != nil {
 		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
 	}
-
-	err = u.usePaket.Delete(ctx, ID)
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+	err = u.usePaket.Delete(ctx, claims, ID)
 	if err != nil {
 		return appE.Response(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 	}

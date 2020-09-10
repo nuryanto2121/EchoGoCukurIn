@@ -86,7 +86,7 @@ func (u *useBarber) GetList(ctx context.Context, Claims util.Claims, queryparam 
 	// var tUser = models.Barber{}
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
-		queryparam.Search = fmt.Sprintf("lower(barber_name) LIKE '%%%s%%' ", queryparam.Search)
+		queryparam.Search = fmt.Sprintf("lower(barber_name) iLIKE '%%%s%%' ", queryparam.Search)
 	}
 
 	queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
