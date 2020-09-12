@@ -148,7 +148,11 @@ func (u *ContPaket) Create(e echo.Context) error {
 	if httpCode != 200 {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
-
+	if form.IsPromo {
+		if form.PromoStart.After(form.PromoEnd) {
+			return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", "Promo End harus lebih besar dari jam Start."), nil)
+		}
+	}
 	claims, err := app.GetClaims(e)
 	if err != nil {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
