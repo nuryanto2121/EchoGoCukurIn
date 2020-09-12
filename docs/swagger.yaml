@@ -14,7 +14,7 @@ definitions:
     type: object
   models.BarberCapsterPost:
     properties:
-      capster_jd:
+      capster_id:
         type: integer
     type: object
   models.BarberPaketPost:
@@ -40,14 +40,14 @@ definitions:
         type: integer
       is_active:
         type: boolean
-      operation_end:
-        type: integer
-      operation_start:
-        type: integer
-      pin_map:
-        type: string
-      starts:
+      latitude:
         type: number
+      longitude:
+        type: number
+      operation_end:
+        type: string
+      operation_start:
+        type: string
     type: object
   models.Capster:
     properties:

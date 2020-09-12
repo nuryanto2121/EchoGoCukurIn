@@ -155,6 +155,9 @@ func (u *ContBarber) Create(e echo.Context) error {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
 
+	if form.OperationStart.After(form.OperationEnd) {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", "Jam buka harus lebih besar dari jam tutup."), nil)
+	}
 	claims, err := app.GetClaims(e)
 	if err != nil {
 		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
@@ -203,6 +206,9 @@ func (u *ContBarber) Update(e echo.Context) error {
 	logger.Info(util.Stringify(form))
 	if httpCode != 200 {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
+	}
+	if form.OperationStart.After(form.OperationEnd) {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", "Jam buka harus lebih besar dari jam tutup."), nil)
 	}
 
 	claims, err := app.GetClaims(e)

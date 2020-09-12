@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -65,8 +66,8 @@ func (u *useBarber) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (
 	response := map[string]interface{}{
 		"barber_name":     result.BarberName,
 		"address":         result.Address,
-		"pin_map":         result.PinMap,
-		"starts":          result.Starts,
+		"latitude":        result.Latitude,
+		"longitude":       result.Longitude,
 		"operation_start": result.OperationStart,
 		"operation_end":   result.OperationEnd,
 		"is_active":       result.IsActive,
@@ -117,6 +118,8 @@ func (u *useBarber) Create(ctx context.Context, Claims util.Claims, data *models
 	if err != nil {
 		return err
 	}
+	mBarber.OperationEnd = data.OperationEnd
+	mBarber.OperationStart = data.OperationStart
 	mBarber.OwnerID, _ = strconv.Atoi(Claims.UserID)
 	mBarber.UserInput = Claims.UserID
 	mBarber.UserEdit = Claims.UserID
@@ -165,7 +168,12 @@ func (u *useBarber) Update(ctx context.Context, Claims util.Claims, ID int, data
 	if err != nil {
 		return err
 	}
-	err = u.repoBarber.Update(ID, mBarber)
+	mBarber.OperationStart = data.OperationStart
+	mBarber.OperationEnd = data.OperationEnd
+
+	dataUpdate := structs.Map(mBarber)
+	dataUpdate["user_edit"] = Claims.UserID
+	err = u.repoBarber.Update(ID, dataUpdate)
 	if err != nil {
 		return err
 	}
