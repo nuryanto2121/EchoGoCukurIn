@@ -78,8 +78,12 @@ func (u *useCapster) GetList(ctx context.Context, Claims util.Claims, queryparam
 
 		queryparam.Search = fmt.Sprintf("lower(ss_user.name) iLIKE '%%%s%%' ", queryparam.Search)
 	}
-	queryparam.InitSearch = fmt.Sprintf("ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
 
+	if queryparam.InitSearch != "" {
+		queryparam.InitSearch += fmt.Sprintf(" AND ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
+	} else {
+		queryparam.InitSearch = fmt.Sprintf("ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
+	}
 	result.Data, err = u.repoCapster.GetList(queryparam)
 	if err != nil {
 		return result, err

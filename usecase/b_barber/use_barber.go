@@ -90,7 +90,11 @@ func (u *useBarber) GetList(ctx context.Context, Claims util.Claims, queryparam 
 		queryparam.Search = fmt.Sprintf("lower(barber_name) iLIKE '%%%s%%' ", queryparam.Search)
 	}
 
-	queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
+	if queryparam.InitSearch != "" {
+		queryparam.InitSearch += fmt.Sprintf(" AND owner_id = %s", Claims.UserID)
+	} else {
+		queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
+	}
 	result.Data, err = u.repoBarber.GetList(queryparam)
 	if err != nil {
 		return result, err

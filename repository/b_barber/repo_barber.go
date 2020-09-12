@@ -34,7 +34,7 @@ func (db *repoBarber) GetDataBy(ID int) (result *models.Barber, err error) {
 	}
 	return mBarber, nil
 }
-func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.Barber, err error) {
+func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.BarbersList, err error) {
 
 	var (
 		pageNum  = 0
@@ -73,8 +73,16 @@ func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.Bar
 
 	// end where
 
-	query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	// query := db.Conn.Table("ss_user").Select("ss_user.user_id as barber_id,ss_user.name,ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,sa_file_upload.file_path,sa_file_upload.file_type, '0' as rating").Joins("left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id").Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	query := db.Conn.Table("barber b ").Select(`
+	b.barber_id,b.barber_name,
+	b.address,b.latitude,b.longitude,
+	b.operation_start,b.operation_end,
+	b.is_active,c.file_id ,c.file_name ,c.file_path ,c.file_type
+	`).Joins(`
+	left join sa_file_upload c
+	on b.file_id = c.file_id 
+	`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 

@@ -63,6 +63,7 @@ func autoMigrate() {
 		models.SaFileUpload{},
 		models.OrderH{},
 		models.OrderD{},
+		models.SsSequenceNo{},
 	)
 
 	log.Println("FINISHING AUTO MIGRATE ")

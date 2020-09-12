@@ -45,7 +45,12 @@ func (u *usePaket) GetList(ctx context.Context, Claims util.Claims, queryparam m
 		// types := reflect.TypeOf(&tUser)
 		// queryparam.Search = querywhere.GetWhereLikeStruct(value, types, queryparam.Search, "")
 	}
-	queryparam.InitSearch = " owner_id = " + Claims.UserID
+
+	if queryparam.InitSearch != "" {
+		queryparam.InitSearch += " AND owner_id = " + Claims.UserID
+	} else {
+		queryparam.InitSearch = " owner_id = " + Claims.UserID
+	}
 	result.Data, err = u.repoPaket.GetList(queryparam)
 	if err != nil {
 		return result, err

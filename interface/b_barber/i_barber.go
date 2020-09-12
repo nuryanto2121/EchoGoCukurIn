@@ -8,7 +8,7 @@ import (
 
 type Repository interface {
 	GetDataBy(ID int) (result *models.Barber, err error)
-	GetList(queryparam models.ParamList) (result []*models.Barber, err error)
+	GetList(queryparam models.ParamList) (result []*models.BarbersList, err error)
 	Create(data *models.Barber) (err error)
 	Update(ID int, data interface{}) (err error)
 	Delete(ID int) (err error)
