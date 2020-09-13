@@ -11,6 +11,7 @@ import (
 	"nuryanto2121/dynamic_rest_api_go/models"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	useemailcapster "nuryanto2121/dynamic_rest_api_go/usecase/email_capster"
+	"strings"
 	"time"
 
 	"github.com/fatih/structs"
@@ -80,6 +81,7 @@ func (u *useCapster) GetList(ctx context.Context, Claims util.Claims, queryparam
 	}
 
 	if queryparam.InitSearch != "" {
+		queryparam.InitSearch = strings.ReplaceAll(queryparam.InitSearch, "capster_id", "ss_user.user_id")
 		queryparam.InitSearch += fmt.Sprintf(" AND ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
 	} else {
 		queryparam.InitSearch = fmt.Sprintf("ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
@@ -152,6 +154,8 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 
 	err = mailService.SendRegisterCapster()
 	if err != nil {
+		u.repoUser.Delete(mUser.UserID)
+		u.repoCapster.Delete(mUser.UserID)
 		return err
 	}
 
