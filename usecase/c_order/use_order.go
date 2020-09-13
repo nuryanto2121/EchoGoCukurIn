@@ -43,7 +43,7 @@ func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, queryparam m
 	defer cancel()
 
 	if queryparam.Search != "" {
-		queryparam.Search = fmt.Sprintf("lower(order_name) LIKE '%%%s%%' ", queryparam.Search)
+		queryparam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", queryparam.Search)
 	}
 
 	queryparam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)

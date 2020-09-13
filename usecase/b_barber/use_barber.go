@@ -83,6 +83,38 @@ func (u *useBarber) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (
 
 	return response, nil
 }
+func (u *useBarber) GetDataFirst(ctx context.Context, Claims util.Claims, ID int) (interface{}, error) {
+	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
+	defer cancel()
+	// var (
+	// 	queryparam models.ParamList
+	// )
+	OwnerID, _ := strconv.Atoi(Claims.UserID)
+	result, err := u.repoBarber.GetDataFirs(OwnerID)
+	if err != nil {
+		return result, err
+	}
+
+	dataFile, err := u.repoFile.GetBySaFileUpload(ctx, result.FileID)
+	if err != nil {
+		return result, err
+	}
+
+	response := map[string]interface{}{
+		"barber_name":     result.BarberName,
+		"address":         result.Address,
+		"latitude":        result.Latitude,
+		"longitude":       result.Longitude,
+		"operation_start": result.OperationStart,
+		"operation_end":   result.OperationEnd,
+		"is_active":       result.IsActive,
+		"file_id":         dataFile.FileID,
+		"file_name":       dataFile.FileName,
+		"file_path":       dataFile.FilePath,
+	}
+
+	return response, nil
+}
 func (u *useBarber) GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()

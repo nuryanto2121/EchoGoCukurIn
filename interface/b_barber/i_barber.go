@@ -8,6 +8,7 @@ import (
 
 type Repository interface {
 	GetDataBy(ID int) (result *models.Barber, err error)
+	GetDataFirs(OwnerID int) (result *models.Barber, err error)
 	GetList(queryparam models.ParamList) (result []*models.BarbersList, err error)
 	Create(data *models.Barber) (err error)
 	Update(ID int, data interface{}) (err error)
@@ -17,6 +18,7 @@ type Repository interface {
 
 type Usecase interface {
 	GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result interface{}, err error)
+	GetDataFirst(ctx context.Context, Claims util.Claims, ID int) (result interface{}, err error)
 	GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error)
 	Create(ctx context.Context, Claims util.Claims, data *models.BarbersPost) error
 	Update(ctx context.Context, Claims util.Claims, ID int, data models.BarbersPost) (err error)

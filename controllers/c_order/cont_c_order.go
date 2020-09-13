@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	ibarbers "nuryanto2121/dynamic_rest_api_go/interface/b_barber"
 	icorder "nuryanto2121/dynamic_rest_api_go/interface/c_order_h"
 	midd "nuryanto2121/dynamic_rest_api_go/middleware"
 	"nuryanto2121/dynamic_rest_api_go/models"
@@ -17,12 +18,14 @@ import (
 )
 
 type ContOrder struct {
-	useOrder icorder.Usecase
+	useOrder  icorder.Usecase
+	useBarber ibarbers.Usecase
 }
 
-func NewContOrder(e *echo.Echo, a icorder.Usecase) {
+func NewContOrder(e *echo.Echo, a icorder.Usecase, b ibarbers.Usecase) {
 	controller := &ContOrder{
-		useOrder: a,
+		useOrder:  a,
+		useBarber: b,
 	}
 
 	r := e.Group("/barber/order")
@@ -115,6 +118,7 @@ func (u *ContOrder) GetList(e echo.Context) error {
 	// if !claims.IsAdmin {
 	// 	paramquery.InitSearch = " id_created = " + strconv.Itoa(claims.OrderID)
 	// }
+	dataBarber, err := u.useBarber.GetDataFirst(ctx, claims, 0)
 
 	responseList, err = u.useOrder.GetList(ctx, claims, paramquery)
 	if err != nil {
@@ -122,8 +126,13 @@ func (u *ContOrder) GetList(e echo.Context) error {
 		return appE.ResponseErrorList(tool.GetStatusCode(err), fmt.Sprintf("%v", err), responseList)
 	}
 
+	result := map[string]interface{}{
+		"data_barber": dataBarber,
+		"data_list":   responseList,
+	}
+
 	// return e.JSON(http.StatusOK, ListOrderPost)
-	return appE.ResponseList(http.StatusOK, "", responseList)
+	return appE.Response(http.StatusOK, "", result)
 }
 
 // CreateSaOrder :

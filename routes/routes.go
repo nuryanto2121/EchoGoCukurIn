@@ -77,7 +77,7 @@ func (e *EchoRoutes) InitialRouter() {
 	repoOrderD := _repoOrderd.NewRepoOrderD(postgresdb.Conn)
 	repoOrder := _repoOrder.NewRepoOrderH(postgresdb.Conn)
 	useOrder := _useOrder.NewUserMOrder(repoOrder, repoOrderD, timeoutContext)
-	_contOrder.NewContOrder(e.E, useOrder)
+	_contOrder.NewContOrder(e.E, useOrder, useBarber)
 
 	repoBeranda := _repoBerandaBarber.NewRepoBerandaBarber(postgresdb.Conn)
 	UseBeranda := _useBerandaBarber.NewUserMBarber(repoBeranda, repoFile, timeoutContext)

@@ -34,6 +34,25 @@ func (db *repoBarber) GetDataBy(ID int) (result *models.Barber, err error) {
 	}
 	return mBarber, nil
 }
+func (db *repoBarber) GetDataFirs(OwnerID int) (result *models.Barber, err error) {
+	var (
+		logger  = logging.Logger{}
+		mBarber = &models.Barber{}
+	)
+	// query := db.Conn.First(&mBarber)
+	query := db.Conn.Raw(`SELECT * FROM barber where owner_id = ? 
+							order by barber_id 
+							limit 1`, OwnerID).Scan(&mBarber)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
+	err = query.Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, models.ErrNotFound
+		}
+		return nil, err
+	}
+	return mBarber, nil
+}
 func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.BarbersList, err error) {
 
 	var (

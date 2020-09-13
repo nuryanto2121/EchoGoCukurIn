@@ -152,12 +152,12 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 		Password: GenPassword,
 	}
 
-	err = mailService.SendRegisterCapster()
-	if err != nil {
-		u.repoUser.Delete(mUser.UserID)
-		u.repoCapster.Delete(mUser.UserID)
-		return err
-	}
+	go mailService.SendRegisterCapster()
+	// if err != nil {
+	// 	u.repoUser.Delete(mUser.UserID)
+	// 	u.repoCapster.Delete(mUser.UserID)
+	// 	return err
+	// }
 
 	return nil
 
