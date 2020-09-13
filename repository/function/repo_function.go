@@ -6,6 +6,7 @@ import (
 	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	"nuryanto2121/dynamic_rest_api_go/pkg/postgresdb"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+	"strconv"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -21,12 +22,11 @@ func (fn *FN) GenBarberCode() (string, error) {
 		conn   *gorm.DB
 		logger = logging.Logger{}
 		mSeqNo = &models.SsSequenceNo{}
-		// []prefix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
+		abjad  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	)
 	conn = postgresdb.Conn
 
-	prefixArr := strings.Split("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "")
+	prefixArr := strings.Split(abjad, "")
 	fmt.Printf("%v", prefixArr)
 	// ss := prefixArr[0]
 	// query := conn.Table("barber").Select("max(barber_cd)") //
@@ -55,7 +55,34 @@ func (fn *FN) GenBarberCode() (string, error) {
 	if mSeqNo.SeqNo == 99 {
 		mSeqNo.SeqNo = 1
 
+		pref := strings.Split(mSeqNo.Prefix, "")
+		i1 := strings.Index(abjad, pref[0])
+		i2 := strings.Index(abjad, pref[1])
+		aa := len(prefixArr) - 1
+		if i2 == aa {
+			i2 = 0
+			i1 += 1
+		} else {
+			i2 += 1
+		}
+
+		mSeqNo.Prefix = fmt.Sprintf("%s%s", prefixArr[i1], prefixArr[i2])
+
+	} else {
+		mSeqNo.SeqNo += 1
 	}
+
+	sNo := mSeqNo.SeqNo + 100
+
+	runes := []rune(strconv.Itoa(sNo))
+	no := string(runes[1:])
+	query = conn.Model(models.SsSequenceNo{}).Where("sequence_id = ?", mSeqNo.SequenceID).Updates(mSeqNo)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
+	err = query.Error
+	if err != nil {
+		return "", err
+	}
+	result = fmt.Sprintf("%s%s", mSeqNo.Prefix, no)
 
 	return result, nil
 }

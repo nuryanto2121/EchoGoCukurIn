@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"math"
+
+	repofunction "nuryanto2121/dynamic_rest_api_go/repository/function"
+
 	ibarber "nuryanto2121/dynamic_rest_api_go/interface/b_barber"
 	ibarbercapster "nuryanto2121/dynamic_rest_api_go/interface/b_barber_capster"
 	ibarberpaket "nuryanto2121/dynamic_rest_api_go/interface/b_barber_paket"
@@ -116,9 +119,17 @@ func (u *useBarber) Create(ctx context.Context, Claims util.Claims, data *models
 	defer cancel()
 	var (
 		mBarber models.Barber
+		// fn      = &repofunction.FN{Claims}
 	)
+	fn := &repofunction.FN{
+		Claims: Claims,
+	}
 	// mapping to struct model saRole
 	err = mapstructure.Decode(data, &mBarber)
+	if err != nil {
+		return err
+	}
+	mBarber.BarberCd, err = fn.GenBarberCode()
 	if err != nil {
 		return err
 	}
