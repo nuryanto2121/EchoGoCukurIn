@@ -1909,7 +1909,7 @@
                     "type": "string"
                 },
                 "order_date": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "paket_ids": {
                     "type": "array",
