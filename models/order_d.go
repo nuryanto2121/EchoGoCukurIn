@@ -24,6 +24,18 @@ type OrderDPost struct {
 	DurasiEnd   int     `json:"durasi_end" valid:"Required"`
 	Price       float32 `json:"price" valid:"Required"`
 }
+type OrderHGet struct {
+	BarberID    int       `json:"barber_id"`
+	OrderDate   time.Time `json:"order_date"`
+	BarberName  string    `json:"barber_name"`
+	CapsterID   int       `json:"capster_id"`
+	CapsterName string    `json:"capster_name"`
+	FileID      int       `json:"file_id" `
+	FileName    string    `json:"file_name"`
+	FilePath    string    `json:"file_path"`
+	Price       float32   `json:"price"`
+}
+
 type OrderDGet struct {
 	BarberName  string  `json:"barber_name"`
 	CapsterID   int     `json:"capster_id"`

@@ -31,12 +31,36 @@ func (u *useOrder) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (i
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
+	var (
+		queryparam models.ParamList
+	)
 	result, err := u.repoOrderH.GetDataBy(ID)
 	if err != nil {
 		return result, err
 	}
 
-	return result, nil
+	queryparam.Page = 1
+	queryparam.PerPage = 20
+	queryparam.InitSearch = fmt.Sprintf("order_id = %d", ID)
+
+	dataDetail, err := u.repoOrderD.GetList(queryparam)
+	if err != nil {
+		return result, err
+	}
+	response := map[string]interface{}{
+		"order_id":     ID,
+		"order_date":   result.OrderDate,
+		"barbar_id":    result.BarberID,
+		"barber_name":  result.BarberName,
+		"capter_id":    result.CapsterID,
+		"capster_name": result.CapsterName,
+		"file_id":      result.FileID,
+		"file_name":    result.FileName,
+		"file_path":    result.FilePath,
+		"detail_order": dataDetail,
+		"total_price":  result.Price,
+	}
+	return response, nil
 }
 func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)

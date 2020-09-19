@@ -18,20 +18,25 @@ func NewRepoOrderH(Conn *gorm.DB) iorder_h.Repository {
 	return &repoOrderH{Conn}
 }
 
-func (db *repoOrderH) GetDataBy(ID int) (result models.OrderDGet, err error) {
+func (db *repoOrderH) GetDataBy(ID int) (result models.OrderHGet, err error) {
 	var (
 		logger = logging.Logger{}
-		data   models.OrderDGet
+		data   models.OrderHGet
 	)
-	query := db.Conn.Raw(`select barber.barber_name ,order_h.capster_id ,ss_user."name" as capster_name,
-					sa_file_upload.file_id ,sa_file_upload.file_name,sa_file_upload.file_path ,
-					order_d.paket_id ,order_d.paket_name ,order_d.price ,order_d.durasi_start,order_d.durasi_end
-				from order_h inner join order_d 
-				on order_h.order_id = order_d.order_id 
-				inner join barber on barber.barber_id =order_h.order_id 
-				inner join ss_user on ss_user.user_id = order_h.capster_id
-				left join sa_file_upload on sa_file_upload.file_id = ss_user.file_id
-				where order_h.order_id = ? `, ID).Scan(&data) //Find(&result)
+	query := db.Conn.Raw(`select barber.barber_id,barber.barber_name ,order_h.capster_id ,ss_user."name" as capster_name,
+								sa_file_upload.file_id ,sa_file_upload.file_name,sa_file_upload.file_path ,
+								sum(order_d.price) as price ,order_h.order_date 
+							from order_h inner join order_d 
+							on order_h.order_id = order_d.order_id 
+							left join barber on barber.barber_id =order_h.barber_id 
+							left join ss_user on ss_user.user_id = order_h.capster_id
+							left join sa_file_upload on sa_file_upload.file_id = ss_user.file_id
+							where order_h.order_id = ?
+							group by barber.barber_name ,order_h.capster_id ,ss_user."name",
+								sa_file_upload.file_id ,sa_file_upload.file_name,sa_file_upload.file_path,
+								order_h.order_date ,barber.barber_id
+
+				`, ID).Scan(&data) //Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error
 	if err != nil {

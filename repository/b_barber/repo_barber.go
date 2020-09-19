@@ -40,7 +40,7 @@ func (db *repoBarber) GetDataFirs(OwnerID int) (result *models.Barber, err error
 		mBarber = &models.Barber{}
 	)
 	// query := db.Conn.First(&mBarber)
-	query := db.Conn.Raw(`SELECT * FROM barber where owner_id = ? 
+	query := db.Conn.Raw(`SELECT * FROM barber where is_active = true and owner_id = ? 
 							order by barber_id 
 							limit 1`, OwnerID).Scan(&mBarber)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
