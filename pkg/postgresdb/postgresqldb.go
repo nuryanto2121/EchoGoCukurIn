@@ -66,6 +66,50 @@ func autoMigrate() {
 		models.SsSequenceNo{},
 	)
 
+	Conn.Exec(`
+	CREATE OR REPLACE FUNCTION public.last_day(date)
+	RETURNS date AS
+	$$
+  		SELECT (date_trunc('MONTH', $1) + INTERVAL '1 MONTH - 1 day')::date;
+	$$ LANGUAGE 'sql' IMMUTABLE STRICT;
+			
+	CREATE OR REPLACE FUNCTION public.week_of_month(
+		p_date        DATE,
+		p_direction   INT -- DEFAULT 1 -- for 8.4 and above
+	  ) RETURNS INT AS
+	  $$
+		SELECT CASE WHEN $2 >= 0 THEN
+		  CEIL(EXTRACT(DAY FROM $1) / 7)::int
+		ELSE 
+		  0 - CEIL(
+			(EXTRACT(DAY FROM last_day($1)) - EXTRACT(DAY FROM $1) + 1) / 7
+		  )::int
+		END
+	  $$ LANGUAGE 'sql' IMMUTABLE;
+	  
+	 
+	  create or replace view v_order_h
+	  as 
+	  SELECT 	barber.owner_id,barber.barber_id ,
+			  barber.barber_name ,order_h.order_id ,
+			  order_h.status ,order_h.from_apps ,
+			  order_h.capster_id ,order_h.order_date ,
+			  ss_user."name" as capster_name,
+			  ss_user.file_id ,sa_file_upload.file_name,
+			  sa_file_upload.file_path ,
+			  (select sum(order_d.price ) from order_d where order_d.order_id = order_h.order_id ) as price ,
+			  week_of_month(order_h.order_date::date,1) as weeks,
+			  extract (year from order_h.order_date ) as years,
+			  extract (month from order_h.order_date ) as months
+	  FROM "barber" inner join order_h 
+			  on order_h.barber_id = barber.barber_id 
+		  inner join ss_user 
+			  on ss_user.user_id = order_h.capster_id 
+		  left join sa_file_upload 
+			  on sa_file_upload.file_id = ss_user.file_id ;
+	 
+	  `)
+
 	log.Println("FINISHING AUTO MIGRATE ")
 }
 

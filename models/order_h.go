@@ -29,6 +29,7 @@ type OrderPost struct {
 }
 
 type OrderList struct {
+	OwnerID     int       `json:"owner_id"`
 	BarberID    int       `json:"barber_id" valid:"Required"`
 	BarberName  string    `json:"barber_name"`
 	OrderID     int       `json:"order_id"`
@@ -41,4 +42,7 @@ type OrderList struct {
 	FileName    string    `json:"file_name"`
 	FilePath    string    `json:"file_path"`
 	Price       float32   `json:"price" `
+	Weeks       int       `json:"weeks"`
+	Months      int       `json:"months"`
+	Years       int       `json:"years"`
 }

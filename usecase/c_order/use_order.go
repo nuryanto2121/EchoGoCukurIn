@@ -70,7 +70,12 @@ func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, queryparam m
 		queryparam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", queryparam.Search)
 	}
 
-	queryparam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
+	// queryparam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
+	if queryparam.InitSearch != "" {
+		queryparam.InitSearch += fmt.Sprintf(" AND owner_id = %s", Claims.UserID) //" AND owner_id = " + Claims.UserID
+	} else {
+		queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
+	}
 	result.Data, err = u.repoOrderH.GetList(queryparam)
 	if err != nil {
 		return result, err
@@ -84,6 +89,27 @@ func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, queryparam m
 	// d := float64(result.Total) / float64(queryparam.PerPage)
 	result.LastPage = int(math.Ceil(float64(result.Total) / float64(queryparam.PerPage)))
 	result.Page = queryparam.Page
+
+	return result, nil
+}
+func (u *useOrder) GetSumPrice(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result float32, err error) {
+	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
+	defer cancel()
+
+	if queryparam.Search != "" {
+		queryparam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", queryparam.Search)
+	}
+
+	// queryparam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
+	if queryparam.InitSearch != "" {
+		queryparam.InitSearch += fmt.Sprintf(" AND owner_id = %s", Claims.UserID) //" AND owner_id = " + Claims.UserID
+	} else {
+		queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
+	}
+	result, err = u.repoOrderH.SumPriceDetail(queryparam)
+	if err != nil {
+		return result, err
+	}
 
 	return result, nil
 }

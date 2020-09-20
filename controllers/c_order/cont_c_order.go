@@ -126,9 +126,15 @@ func (u *ContOrder) GetList(e echo.Context) error {
 		return appE.ResponseErrorList(tool.GetStatusCode(err), fmt.Sprintf("%v", err), responseList)
 	}
 
+	totalPrice, err := u.useOrder.GetSumPrice(ctx, claims, paramquery)
+	if err != nil {
+		// return e.JSON(http.StatusBadRequest, err.Error())
+		return appE.ResponseErrorList(tool.GetStatusCode(err), fmt.Sprintf("%v", err), responseList)
+	}
 	result := map[string]interface{}{
 		"data_barber": dataBarber,
 		"data_list":   responseList,
+		"total_price": totalPrice,
 	}
 
 	// return e.JSON(http.StatusOK, ListOrderPost)
