@@ -205,15 +205,16 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	// send generate code
 	mailService := &useemailauth.Register{
 		Email:      User.Email,
-		Name:       User.Name,
+		Name:       User.Email,
 		PasswordCd: GenPassword,
 	}
 
-	err = mailService.SendRegister()
-	if err != nil {
-		u.repoAuth.Delete(User.UserID)
-		return output, err
-	}
+	go mailService.SendRegister()
+	// err = mailService.SendRegister()
+	// if err != nil {
+	// 	u.repoAuth.Delete(User.UserID)
+	// 	return output, err
+	// }
 
 	//store to redis
 	err = redisdb.AddSession(dataRegister.EmailAddr, GenPassword, 2)

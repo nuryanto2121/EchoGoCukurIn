@@ -14,19 +14,20 @@ type Register struct {
 }
 
 func (R *Register) SendRegister() error {
-	subjectEmail := "Activation Code"
+	subjectEmail := "Informasi Login"
 	fmt.Printf(subjectEmail)
-	err := util.SendEmail(R.Email, subjectEmail, getVerifyBody(R))
+	err := util.SendEmail(R.Email, subjectEmail, getInformasiLoginBody(R))
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func getVerifyBody(R *Register) string {
-	verifyHTML := templateemail.SendPasswordCapster
+func getInformasiLoginBody(R *Register) string {
+	verifyHTML := templateemail.SendRegister
 
 	verifyHTML = strings.ReplaceAll(verifyHTML, `{Name}`, R.Name)
+	verifyHTML = strings.ReplaceAll(verifyHTML, `{Email}`, R.Email)
 	verifyHTML = strings.ReplaceAll(verifyHTML, `{PasswordCode}`, R.PasswordCd)
 	return verifyHTML
 }

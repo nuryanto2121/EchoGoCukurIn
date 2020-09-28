@@ -4,6 +4,7 @@ import "time"
 
 type OrderH struct {
 	OrderID      int       `json:"order_id" gorm:"primary_key;auto_increment:true"`
+	OrderNo      string    `json:"order_no" gorm:"type:varchar(20)"`
 	BarberID     int       `json:"barber_id" gorm:"type:integer"`
 	CapsterID    int       `json:"capster_id" gorm:"type:integer"`
 	OrderDate    time.Time `json:"order_date" gorm:"type:timestamp(0) without time zone"`

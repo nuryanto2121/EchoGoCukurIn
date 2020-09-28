@@ -10,7 +10,9 @@ import (
 	iuser "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
-	useemailcapster "nuryanto2121/dynamic_rest_api_go/usecase/email_capster"
+
+	// useemailcapster "nuryanto2121/dynamic_rest_api_go/usecase/email_capster"
+	useemailauth "nuryanto2121/dynamic_rest_api_go/usecase/email_auth"
 	"strings"
 	"time"
 
@@ -146,13 +148,13 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	}
 
 	// send Password
-	mailService := &useemailcapster.RegisterCapster{
-		Email:    mUser.Email,
-		Name:     mUser.Name,
-		Password: GenPassword,
+	mailService := &useemailauth.Register{
+		Email:      mUser.Email,
+		Name:       mUser.Name,
+		PasswordCd: GenPassword,
 	}
 
-	go mailService.SendRegisterCapster()
+	go mailService.SendRegister()
 	// if err != nil {
 	// 	u.repoUser.Delete(mUser.UserID)
 	// 	u.repoCapster.Delete(mUser.UserID)
