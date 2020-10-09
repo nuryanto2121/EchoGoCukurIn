@@ -26,6 +26,7 @@ type OrderDPost struct {
 }
 type OrderHGet struct {
 	BarberID    int       `json:"barber_id"`
+	BarberCd    string    `json:"barber_cd"`
 	OrderDate   time.Time `json:"order_date"`
 	BarberName  string    `json:"barber_name"`
 	CapsterID   int       `json:"capster_id"`

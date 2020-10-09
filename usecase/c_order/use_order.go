@@ -51,6 +51,7 @@ func (u *useOrder) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (i
 		"order_id":     ID,
 		"order_date":   result.OrderDate,
 		"barbar_id":    result.BarberID,
+		"barber_cd":    result.BarberCd,
 		"barber_name":  result.BarberName,
 		"capter_id":    result.CapsterID,
 		"capster_name": result.CapsterName,

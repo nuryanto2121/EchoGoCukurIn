@@ -67,6 +67,8 @@ func (u *useBarber) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (
 		return result, err
 	}
 	response := map[string]interface{}{
+		"barber_id":       result.BarberID,
+		"barber_cd":       result.BarberCd,
 		"barber_name":     result.BarberName,
 		"address":         result.Address,
 		"latitude":        result.Latitude,
@@ -101,6 +103,8 @@ func (u *useBarber) GetDataFirst(ctx context.Context, Claims util.Claims, ID int
 	}
 
 	response := map[string]interface{}{
+		"barber_id":       result.BarberID,
+		"barber_cd":       result.BarberCd,
 		"barber_name":     result.BarberName,
 		"address":         result.Address,
 		"latitude":        result.Latitude,

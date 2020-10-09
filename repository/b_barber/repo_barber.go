@@ -94,7 +94,7 @@ func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.Bar
 
 	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	query := db.Conn.Table("barber b ").Select(`
-	b.barber_id,b.barber_name,
+	b.barber_id,b.barber_cd,b.barber_name,
 	b.address,b.latitude,b.longitude,
 	b.operation_start,b.operation_end,
 	b.is_active,c.file_id ,c.file_name ,c.file_path ,c.file_type
