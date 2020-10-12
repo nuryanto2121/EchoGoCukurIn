@@ -818,6 +818,11 @@ paths:
         name: Version
         required: true
         type: string
+      - description: BarberId
+        in: query
+        name: barberid
+        required: true
+        type: integer
       - description: Page
         in: query
         name: page

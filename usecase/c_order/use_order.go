@@ -32,18 +32,18 @@ func (u *useOrder) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (i
 	defer cancel()
 
 	var (
-		queryparam models.ParamList
+		QueryParam models.ParamList
 	)
 	result, err := u.repoOrderH.GetDataBy(ID)
 	if err != nil {
 		return result, err
 	}
 
-	queryparam.Page = 1
-	queryparam.PerPage = 20
-	queryparam.InitSearch = fmt.Sprintf("order_id = %d", ID)
+	QueryParam.Page = 1
+	QueryParam.PerPage = 20
+	QueryParam.InitSearch = fmt.Sprintf("order_id = %d", ID)
 
-	dataDetail, err := u.repoOrderD.GetList(queryparam)
+	dataDetail, err := u.repoOrderD.GetList(QueryParam)
 	if err != nil {
 		return result, err
 	}
@@ -63,51 +63,83 @@ func (u *useOrder) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (i
 	}
 	return response, nil
 }
-func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error) {
+func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, QueryParam models.ParamListOrder) (result models.ResponseModelList, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	if queryparam.Search != "" {
-		queryparam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", queryparam.Search)
+	var (
+		queryParam   models.ParamList
+		filterBarber = ""
+	)
+
+	queryParam.Page = QueryParam.Page
+	queryParam.PerPage = QueryParam.PerPage
+	queryParam.InitSearch = QueryParam.InitSearch
+	queryParam.Search = QueryParam.Search
+	queryParam.SortField = QueryParam.SortField
+
+	if queryParam.Search != "" {
+		queryParam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", queryParam.Search)
 	}
 
-	// queryparam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
-	if queryparam.InitSearch != "" {
-		queryparam.InitSearch += fmt.Sprintf(" AND owner_id = %s", Claims.UserID) //" AND owner_id = " + Claims.UserID
+	// queryParam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
+	if QueryParam.BarberId != 0 {
+		filterBarber = fmt.Sprintf("AND barber_id = %d", QueryParam.BarberId)
+	}
+	if queryParam.InitSearch != "" {
+		queryParam.InitSearch += fmt.Sprintf(" AND owner_id = %s  %s", Claims.UserID, filterBarber) //" AND owner_id = " + Claims.UserID
 	} else {
-		queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
+		queryParam.InitSearch = fmt.Sprintf("owner_id = %s %s", Claims.UserID, filterBarber)
 	}
-	result.Data, err = u.repoOrderH.GetList(queryparam)
+	result.Data, err = u.repoOrderH.GetList(queryParam)
 	if err != nil {
 		return result, err
 	}
 
-	result.Total, err = u.repoOrderH.Count(queryparam)
+	result.Total, err = u.repoOrderH.Count(queryParam)
 	if err != nil {
 		return result, err
 	}
 
-	// d := float64(result.Total) / float64(queryparam.PerPage)
-	result.LastPage = int(math.Ceil(float64(result.Total) / float64(queryparam.PerPage)))
-	result.Page = queryparam.Page
+	// d := float64(result.Total) / float64(queryParam.PerPage)
+	result.LastPage = int(math.Ceil(float64(result.Total) / float64(queryParam.PerPage)))
+	result.Page = queryParam.Page
 
 	return result, nil
 }
-func (u *useOrder) GetSumPrice(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result float32, err error) {
+func (u *useOrder) GetSumPrice(ctx context.Context, Claims util.Claims, QueryParam models.ParamListOrder) (result float32, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	if queryparam.Search != "" {
-		queryparam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", queryparam.Search)
+	var (
+		queryParam   models.ParamList
+		filterBarber = ""
+	)
+
+	queryParam.Page = QueryParam.Page
+	queryParam.PerPage = QueryParam.PerPage
+	queryParam.InitSearch = QueryParam.InitSearch
+	queryParam.Search = QueryParam.Search
+	queryParam.SortField = QueryParam.SortField
+	// err = mapstructure.Decode(QueryParam, &queryParam)
+	// if err != nil {
+	// 	return result, err
+	// }
+
+	if queryParam.Search != "" {
+		queryParam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", QueryParam.Search)
 	}
 
-	// queryparam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
-	if queryparam.InitSearch != "" {
-		queryparam.InitSearch += fmt.Sprintf(" AND owner_id = %s", Claims.UserID) //" AND owner_id = " + Claims.UserID
-	} else {
-		queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
+	// queryParam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
+	if QueryParam.BarberId != 0 {
+		filterBarber = fmt.Sprintf("AND barber_id = %d", QueryParam.BarberId)
 	}
-	result, err = u.repoOrderH.SumPriceDetail(queryparam)
+	if queryParam.InitSearch != "" {
+		queryParam.InitSearch += fmt.Sprintf(" AND owner_id = %s  %s", Claims.UserID, filterBarber) //" AND owner_id = " + Claims.UserID
+	} else {
+		queryParam.InitSearch = fmt.Sprintf("owner_id = %s %s", Claims.UserID, filterBarber)
+	}
+	result, err = u.repoOrderH.SumPriceDetail(queryParam)
 	if err != nil {
 		return result, err
 	}

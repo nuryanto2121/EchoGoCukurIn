@@ -84,6 +84,7 @@ func (u *ContOrder) GetDataBy(e echo.Context) error {
 // @Produce  json
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
+// @Param barberid query int true "BarberId"
 // @Param page query int true "Page"
 // @Param perpage query int true "PerPage"
 // @Param search query string false "Search"
@@ -97,11 +98,13 @@ func (u *ContOrder) GetList(e echo.Context) error {
 		ctx = context.Background()
 	}
 
+	idUser := e.QueryParam("barber_id")
+	fmt.Printf(idUser)
 	var (
 		// logger = logging.Logger{}
 		appE = tool.Res{R: e} // wajib
 		//valid      validation.Validation // wajib
-		paramquery   = models.ParamList{} // ini untuk list
+		paramquery   = models.ParamListOrder{} // ini untuk list
 		responseList = models.ResponseModelList{}
 		err          error
 	)
@@ -118,8 +121,14 @@ func (u *ContOrder) GetList(e echo.Context) error {
 	// if !claims.IsAdmin {
 	// 	paramquery.InitSearch = " id_created = " + strconv.Itoa(claims.OrderID)
 	// }
-	dataBarber, err := u.useBarber.GetDataFirst(ctx, claims, 0)
+	dataBarber, err := u.useBarber.GetDataFirst(ctx, claims, paramquery.BarberId)
 
+	fmt.Println(dataBarber)
+	if paramquery.BarberId == 0 {
+		myMap := dataBarber.(map[string]interface{})
+		// fmt.Println(myMap["barber_id"])
+		paramquery.BarberId, _ = strconv.Atoi(fmt.Sprintf("%v", myMap["barber_id"]))
+	}
 	responseList, err = u.useOrder.GetList(ctx, claims, paramquery)
 	if err != nil {
 		// return e.JSON(http.StatusBadRequest, err.Error())

@@ -92,7 +92,7 @@ func (u *useBarber) GetDataFirst(ctx context.Context, Claims util.Claims, ID int
 	// 	queryparam models.ParamList
 	// )
 	OwnerID, _ := strconv.Atoi(Claims.UserID)
-	result, err := u.repoBarber.GetDataFirs(OwnerID)
+	result, err := u.repoBarber.GetDataFirs(OwnerID, ID)
 	if err != nil {
 		return result, err
 	}

@@ -18,8 +18,8 @@ type Repository interface {
 
 type Usecase interface {
 	GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result interface{}, err error)
-	GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error)
-	GetSumPrice(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result float32, err error)
+	GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamListOrder) (result models.ResponseModelList, err error)
+	GetSumPrice(ctx context.Context, Claims util.Claims, queryparam models.ParamListOrder) (result float32, err error)
 	Create(ctx context.Context, Claims util.Claims, data *models.OrderPost) error
 	Update(ctx context.Context, Claims util.Claims, ID int, data models.OrderPost) (err error)
 	Delete(ctx context.Context, Claims util.Claims, ID int) (err error)

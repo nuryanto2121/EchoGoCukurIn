@@ -34,23 +34,42 @@ func (db *repoBarber) GetDataBy(ID int) (result *models.Barber, err error) {
 	}
 	return mBarber, nil
 }
-func (db *repoBarber) GetDataFirs(OwnerID int) (result *models.Barber, err error) {
+func (db *repoBarber) GetDataFirs(OwnerID int, BarberID int) (result *models.Barber, err error) {
 	var (
 		logger  = logging.Logger{}
 		mBarber = &models.Barber{}
+		sQuery  = ""
 	)
 	// query := db.Conn.First(&mBarber)
-	query := db.Conn.Raw(`SELECT * FROM barber where is_active = true and owner_id = ? 
-							order by barber_id 
-							limit 1`, OwnerID).Scan(&mBarber)
-	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
-	err = query.Error
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return nil, models.ErrNotFound
+	if BarberID == 0 {
+		sQuery = `SELECT * FROM barber where is_active = true and owner_id = ? 
+		order by barber_id 
+		limit 1`
+
+		query := db.Conn.Raw(sQuery, OwnerID).Scan(&mBarber)
+		logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
+		err = query.Error
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				return nil, models.ErrNotFound
+			}
+			return nil, err
 		}
-		return nil, err
+	} else {
+		sQuery = `SELECT * FROM barber where is_active = true and owner_id = ? AND barber_id = ?
+		limit 1`
+
+		query := db.Conn.Raw(sQuery, OwnerID, BarberID).Scan(&mBarber)
+		logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
+		err = query.Error
+		if err != nil {
+			if err == gorm.ErrRecordNotFound {
+				return nil, models.ErrNotFound
+			}
+			return nil, err
+		}
 	}
+
 	return mBarber, nil
 }
 func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.BarbersList, err error) {

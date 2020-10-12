@@ -932,6 +932,13 @@
                     },
                     {
                         "type": "integer",
+                        "description": "BarberId",
+                        "name": "barberid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
                         "description": "Page",
                         "name": "page",
                         "in": "query",
