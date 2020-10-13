@@ -10,7 +10,7 @@ type ParamList struct {
 }
 
 type ParamListOrder struct {
-	BarberId   int    `json:"barber_id"`
+	BarberId   int    `json:"barber_id" valid:"Required"`
 	Page       int    `json:"page" valid:"Required"`
 	PerPage    int    `json:"per_page" valid:"Required"`
 	Search     string `json:"search,omitempty"`

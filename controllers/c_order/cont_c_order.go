@@ -98,8 +98,8 @@ func (u *ContOrder) GetList(e echo.Context) error {
 		ctx = context.Background()
 	}
 
-	// idUser := e.QueryParam("barber_id")
-	// fmt.Printf(idUser)
+	idUser := e.QueryParam("barber_id")
+	fmt.Printf(idUser)
 	var (
 		// logger = logging.Logger{}
 		appE = tool.Res{R: e} // wajib
