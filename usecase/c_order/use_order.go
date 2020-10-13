@@ -58,6 +58,7 @@ func (u *useOrder) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (i
 		"file_id":      result.FileID,
 		"file_name":    result.FileName,
 		"file_path":    result.FilePath,
+		"from_apps":    result.FromApps,
 		"detail_order": dataDetail,
 		"total_price":  result.Price,
 	}

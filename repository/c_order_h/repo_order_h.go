@@ -26,7 +26,7 @@ func (db *repoOrderH) GetDataBy(ID int) (result models.OrderHGet, err error) {
 	)
 	query := db.Conn.Raw(`select barber.barber_id,barber.barber_cd,barber.barber_name ,order_h.capster_id ,ss_user."name" as capster_name,
 								sa_file_upload.file_id ,sa_file_upload.file_name,sa_file_upload.file_path ,
-								sum(order_d.price) as price ,order_h.order_date 
+								sum(order_d.price) as price ,order_h.order_date ,order_h.from_apps
 							from order_h inner join order_d 
 							on order_h.order_id = order_d.order_id 
 							left join barber on barber.barber_id =order_h.barber_id 
@@ -35,7 +35,7 @@ func (db *repoOrderH) GetDataBy(ID int) (result models.OrderHGet, err error) {
 							where order_h.order_id = ?
 							group by barber.barber_name ,barber.barber_cd,order_h.capster_id ,ss_user."name",
 								sa_file_upload.file_id ,sa_file_upload.file_name,sa_file_upload.file_path,
-								order_h.order_date ,barber.barber_id
+								order_h.order_date ,barber.barber_id,order_h.from_apps
 
 				`, ID).Scan(&data) //Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
