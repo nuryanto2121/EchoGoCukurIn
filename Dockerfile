@@ -3,7 +3,7 @@
 # Dockerfile References: https://docs.docker.com/engine/reference/builder/
 
 # Start from the latest golang base image
-FROM golang:1.12.8 as builder
+FROM golang:1.12.13 as builder
 
 # Add Maintainer Info
 LABEL maintainer="Nuryanto <nuryantofattih@gmail.com>"
