@@ -10,9 +10,8 @@ require (
 	github.com/go-gomail/gomail v0.0.0-20160411212932-81ebce5c23df
 	github.com/go-redis/redis v6.15.8+incompatible
 	github.com/jinzhu/gorm v1.9.14
-	github.com/jinzhu/now v1.1.1
 	github.com/jmoiron/sqlx v1.2.0
-	github.com/labstack/echo v3.3.10+incompatible
+	github.com/labstack/echo v3.3.10+incompatible // indirect
 	github.com/labstack/echo/v4 v4.1.16
 	github.com/labstack/gommon v0.3.0
 	github.com/lib/pq v1.1.1
@@ -24,6 +23,7 @@ require (
 	github.com/swaggo/swag v1.6.3
 	go.mongodb.org/mongo-driver v1.3.5
 	golang.org/x/crypto v0.0.0-20200221231518-2aa609cf4a9d
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
-	gorm.io/gorm v0.2.27
+	gorm.io/gorm v0.2.27 // indirect
 )
