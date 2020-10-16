@@ -84,7 +84,7 @@ func (u *ContOrder) GetDataBy(e echo.Context) error {
 // @Produce  json
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
-// @Param barber_id query int true "BarberId"
+// @Param barberid query int true "BarberId"
 // @Param page query int true "Page"
 // @Param perpage query int true "PerPage"
 // @Param search query string false "Search"
@@ -113,6 +113,9 @@ func (u *ContOrder) GetList(e echo.Context) error {
 	// logger.Info(util.Stringify(paramquery))
 	if httpCode != 200 {
 		return appE.ResponseErrorList(http.StatusBadRequest, errMsg, responseList)
+	}
+	if paramquery.BarberId == 0 {
+		paramquery.BarberId, _ = strconv.Atoi(idUser)
 	}
 	claims, err := app.GetClaims(e)
 	if err != nil {

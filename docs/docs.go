@@ -939,8 +939,8 @@ var doc = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Barber_Id",
-                        "name": "barber_id",
+                        "description": "BarberId",
+                        "name": "barberid",
                         "in": "query",
                         "required": true
                     },
