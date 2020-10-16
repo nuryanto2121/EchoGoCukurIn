@@ -84,7 +84,7 @@ func (u *ContOrder) GetDataBy(e echo.Context) error {
 // @Produce  json
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
-// @Param barberid query int true "BarberId"
+// @Param barber_id query int true "BarberId"
 // @Param page query int true "Page"
 // @Param perpage query int true "PerPage"
 // @Param search query string false "Search"

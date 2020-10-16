@@ -8,7 +8,6 @@
             "url": "https://www.linkedin.com/in/nuryanto-1b2721156/",
             "email": "nuryantofattih@gmail.com"
         },
-        "license": {},
         "version": "1.0"
     },
     "paths": {
@@ -100,7 +99,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.ResetPasswd"
                         }
                     }
@@ -145,7 +143,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.ForgotForm"
                         }
                     }
@@ -190,7 +187,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.LoginForm"
                         }
                     }
@@ -235,7 +231,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.RegisterForm"
                         }
                     }
@@ -280,7 +275,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.VerifyForm"
                         }
                     }
@@ -400,7 +394,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.BarbersPost"
                         }
                     }
@@ -502,7 +495,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.BarbersPost"
                         }
                     }
@@ -739,7 +731,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.Capster"
                         }
                     }
@@ -841,7 +832,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.Capster"
                         }
                     }
@@ -932,8 +922,8 @@
                     },
                     {
                         "type": "integer",
-                        "description": "BarberId",
-                        "name": "barberid",
+                        "description": "Barber_Id",
+                        "name": "barber_id",
                         "in": "query",
                         "required": true
                     },
@@ -1013,7 +1003,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.OrderPost"
                         }
                     }
@@ -1115,7 +1104,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.OrderPost"
                         }
                     }
@@ -1280,7 +1268,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.DataPaket"
                         }
                     }
@@ -1382,7 +1369,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.DataPaket"
                         }
                     }
@@ -1547,7 +1533,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.AddUser"
                         }
                     }
@@ -1649,7 +1634,6 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
                             "$ref": "#/definitions/models.UpdateUser"
                         }
                     }
