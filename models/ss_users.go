@@ -39,6 +39,7 @@ type UpdateUser struct {
 type LoginCapster struct {
 	CapsterID   int    `json:"capster_id"`
 	CapsterName string `json:"capster_name"`
+	IsActive    bool   `json:"is_active"`
 	Password    string `json:"password"`
 	Email       string `json:"email"`
 	Telp        string `json:"telp"`

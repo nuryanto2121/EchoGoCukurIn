@@ -35,6 +35,7 @@ type OrderHGet struct {
 	FileName    string    `json:"file_name"`
 	FilePath    string    `json:"file_path"`
 	FromApps    bool      `json:"from_apps"`
+	Status      string    `json:"status"`
 	Price       float32   `json:"price"`
 }
 

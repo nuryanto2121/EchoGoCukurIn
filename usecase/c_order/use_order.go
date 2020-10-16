@@ -50,15 +50,16 @@ func (u *useOrder) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (i
 	response := map[string]interface{}{
 		"order_id":     ID,
 		"order_date":   result.OrderDate,
-		"barbar_id":    result.BarberID,
+		"barber_id":    result.BarberID,
 		"barber_cd":    result.BarberCd,
 		"barber_name":  result.BarberName,
-		"capter_id":    result.CapsterID,
+		"capster_id":   result.CapsterID,
 		"capster_name": result.CapsterName,
 		"file_id":      result.FileID,
 		"file_name":    result.FileName,
 		"file_path":    result.FilePath,
 		"from_apps":    result.FromApps,
+		"status":       result.Status,
 		"detail_order": dataDetail,
 		"total_price":  result.Price,
 	}

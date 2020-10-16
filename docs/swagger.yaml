@@ -801,7 +801,7 @@ paths:
         type: string
       - description: BarberId
         in: query
-        name: barberid
+        name: barber_id
         required: true
         type: integer
       - description: Page

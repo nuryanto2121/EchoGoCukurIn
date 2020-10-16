@@ -42,7 +42,18 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 			if err != nil {
 				return nil, errors.New("Your Account not valid.")
 			}
+			if !DataCapster.IsActive {
+				return nil, errors.New("Account and belum aktif. Silahkan hubungi pemilik Barber")
+			}
+
+			if DataCapster.BarberID == 0 {
+				return nil, errors.New("Anda belum terhubung dengan Barber, Silahkan hubungi pemilik Barber")
+			}
 			isBarber = false
+		}
+
+		if !DataOwner.IsActive {
+			return nil, errors.New("Account and belum aktif. Silahkan hubungi pemilik Barber")
 		}
 	}
 	// if err != nil {

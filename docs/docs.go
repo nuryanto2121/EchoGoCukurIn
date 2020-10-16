@@ -940,7 +940,7 @@ var doc = `{
                     {
                         "type": "integer",
                         "description": "BarberId",
-                        "name": "barberid",
+                        "name": "barber_id",
                         "in": "query",
                         "required": true
                     },
