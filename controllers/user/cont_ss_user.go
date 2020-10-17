@@ -35,6 +35,7 @@ func NewContUser(e *echo.Echo, a iusers.Usecase) {
 	r.GET("/:id", controller.GetDataBy)
 	r.GET("", controller.GetList)
 	r.POST("", controller.Create)
+	r.POST("/change_password", controller.ChangePassword)
 	r.PUT("/:id", controller.Update)
 	r.DELETE("/:id", controller.Delete)
 }
@@ -238,6 +239,56 @@ func (u *ContUser) Update(e echo.Context) error {
 
 	// form.UpdatedBy = claims.UserName
 	err = u.useUser.Update(ctx, claims, OwnerID, form)
+	if err != nil {
+		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
+	}
+	return appE.Response(http.StatusCreated, "Ok", nil)
+}
+
+// ChangePassword :
+// @Summary Rubah Password
+// @Security ApiKeyAuth
+// @Tags User
+// @Produce json
+// @Param OS header string true "OS Device"
+// @Param Version header string true "OS Device"
+// @Param req body models.ChangePassword true "req param #changes are possible to adjust the form of the registration form from frontend"
+// @Success 200 {object} tool.ResponseModel
+// @Router /barber/user/change_password [post]
+func (u *ContUser) ChangePassword(e echo.Context) error {
+	ctx := e.Request().Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	var (
+		// logger = logging.Logger{} // wajib
+		appE = tool.Res{R: e} // wajib
+		err  error
+		// valid  validation.Validation                 // wajib
+		form = models.ChangePassword{}
+	)
+	// user := e.Get("user").(*jwt.Token)
+	// claims := user.Claims.(*util.Claims)
+
+	// logger.Info(id)
+	if err != nil {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+
+	claims, err := app.GetClaims(e)
+	if err != nil {
+		return appE.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+	// validasi and bind to struct
+	httpCode, errMsg := app.BindAndValid(e, &form)
+	// logger.Info(util.Stringify(form))
+	if httpCode != 200 {
+		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
+	}
+
+	// form.UpdatedBy = claims.UserName
+	err = u.useUser.ChangePassword(ctx, claims, form)
 	if err != nil {
 		return appE.ResponseError(tool.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 	}

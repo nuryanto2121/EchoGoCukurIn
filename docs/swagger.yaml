@@ -70,6 +70,15 @@ definitions:
       user_type:
         type: string
     type: object
+  models.ChangePassword:
+    properties:
+      confirm_password:
+        type: string
+      new_password:
+        type: string
+      old_password:
+        type: string
+    type: object
   models.Collections:
     properties:
       file_id:
@@ -1302,6 +1311,37 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Rubah Profile
+      tags:
+      - User
+  /barber/user/change_password:
+    post:
+      parameters:
+      - description: OS Device
+        in: header
+        name: OS
+        required: true
+        type: string
+      - description: OS Device
+        in: header
+        name: Version
+        required: true
+        type: string
+      - description: 'req param #changes are possible to adjust the form of the registration form from frontend'
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/models.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tool.ResponseModel'
+      security:
+      - ApiKeyAuth: []
+      summary: Rubah Password
       tags:
       - User
 securityDefinitions:

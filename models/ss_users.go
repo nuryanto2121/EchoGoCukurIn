@@ -65,3 +65,9 @@ type UserList struct {
 	UserEdit string `json:"user_edit" gorm:"type:varchar(20)"`
 	SaFileOutput
 }
+
+type ChangePassword struct {
+	OldPassword     string `json:"old_password" valid:"Required"`
+	NewPassword     string `json:"new_password" valid:"Required"`
+	ConfirmPassword string `json:"confirm_password" valid:"Required"`
+}

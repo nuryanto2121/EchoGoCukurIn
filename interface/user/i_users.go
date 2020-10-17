@@ -19,6 +19,7 @@ type Repository interface {
 }
 type Usecase interface {
 	GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result interface{}, err error)
+	ChangePassword(ctx context.Context, Claims util.Claims, DataChangePwd models.ChangePassword) (err error)
 	GetByEmailSaUser(ctx context.Context, email string) (result models.SsUser, err error)
 	GetList(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error)
 	Create(ctx context.Context, Claims util.Claims, data *models.SsUser) (err error)

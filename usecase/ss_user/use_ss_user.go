@@ -2,6 +2,7 @@ package usesysuser
 
 import (
 	"context"
+	"errors"
 	"math"
 	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
 	iusers "nuryanto2121/dynamic_rest_api_go/interface/user"
@@ -9,6 +10,7 @@ import (
 	querywhere "nuryanto2121/dynamic_rest_api_go/pkg/query"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"reflect"
+	"strconv"
 	"time"
 )
 
@@ -33,7 +35,33 @@ func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result
 	}
 	return result, nil
 }
+func (u *useSysUser) ChangePassword(ctx context.Context, Claims util.Claims, DataChangePwd models.ChangePassword) (err error) {
+	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
+	defer cancel()
 
+	ID, _ := strconv.Atoi(Claims.UserID)
+	dataUser, err := u.repoUser.GetDataBy(ID)
+	if err != nil {
+		return err
+	}
+
+	// DataChangePwd.OldPassword, _ = util.Hash(DataChangePwd.OldPassword)
+	if !util.ComparePassword(dataUser.Password, util.GetPassword(DataChangePwd.OldPassword)) {
+		return errors.New("Your Password not valid.")
+	}
+
+	if DataChangePwd.NewPassword != DataChangePwd.ConfirmPassword {
+		return errors.New("Password and Confirm Password not same.")
+	}
+
+	DataChangePwd.NewPassword, _ = util.Hash(DataChangePwd.NewPassword)
+	var data = map[string]interface{}{
+		"password": DataChangePwd.NewPassword,
+	}
+
+	err = u.repoUser.Update(ID, data)
+	return nil
+}
 func (u *useSysUser) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result interface{}, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
