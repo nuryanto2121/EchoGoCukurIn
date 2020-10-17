@@ -83,14 +83,14 @@ func (db *repoSysUser) GetDataBy(ID int) (result *models.SsUser, err error) {
 	return sysUser, nil
 }
 
-func (db *repoSysUser) GetList(queryparam models.ParamList) (result []*models.SsUser, err error) {
+func (db *repoSysUser) GetList(queryparam models.ParamList) (result []*models.UserList, err error) {
 
 	var (
 		pageNum  = 0
 		pageSize = setting.FileConfigSetting.App.PageSize
 		sWhere   = ""
-		// logger   = logging.Logger{}
-		orderBy = queryparam.SortField
+		logger   = logging.Logger{}
+		orderBy  = queryparam.SortField
 	)
 	// pagination
 	if queryparam.Page > 0 {
@@ -119,17 +119,20 @@ func (db *repoSysUser) GetList(queryparam models.ParamList) (result []*models.Ss
 			sWhere += queryparam.Search
 		}
 	}
+	query := db.Conn.Table("ss_user sa ").Select(`
+				sa.user_id ,sa.user_name ,
+				sa."name" ,sa.telp ,
+				sa.email ,sa.is_active ,
+				sa.join_date ,sa.user_type ,
+				sa.file_id ,sf.file_name ,
+				sf.file_path ,sf.file_type
+	`).Joins(`
+	left join sa_file_upload sf
+	on sf.file_id = sa.file_id 
+	`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 
-	// end where
-	if pageNum >= 0 && pageSize > 0 {
-		query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-		fmt.Printf("%v", query.QueryExpr()) //cath to log query string
-		err = query.Error
-	} else {
-		query := db.Conn.Where(sWhere).Order(orderBy).Find(&result)
-		fmt.Printf("%v", query.QueryExpr()) //cath to log query string
-		err = query.Error
-	}
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err = query.Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {

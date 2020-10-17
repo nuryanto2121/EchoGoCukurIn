@@ -11,7 +11,7 @@ type Repository interface {
 	GetDataBy(ID int) (result *models.SsUser, err error)
 	GetByAccount(Account string) (result models.SsUser, err error)
 	GetByCapster(Account string) (result models.LoginCapster, err error)
-	GetList(queryparam models.ParamList) (result []*models.SsUser, err error)
+	GetList(queryparam models.ParamList) (result []*models.UserList, err error)
 	Create(data *models.SsUser) (err error)
 	Update(ID int, data map[string]interface{}) (err error)
 	Delete(ID int) (err error)
