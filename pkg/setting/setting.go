@@ -87,6 +87,7 @@ type MongoDB struct {
 
 // FileConfig :
 type FileConfig struct {
+	JWTExpired     int       `mapstructure:"expire_jwt"`
 	Debug          bool      `mapstructure:"debug"`
 	Server         *Server   `mapstructure:"server"`
 	SMTP           *SMTP     `mapstructure:"smtp"`

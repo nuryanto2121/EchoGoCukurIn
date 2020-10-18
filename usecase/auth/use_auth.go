@@ -7,6 +7,7 @@ import (
 	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
 	iusers "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"
+	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"nuryanto2121/dynamic_rest_api_go/redisdb"
 	useemailauth "nuryanto2121/dynamic_rest_api_go/usecase/email_auth"
@@ -31,8 +32,10 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 		DataCapster      = models.LoginCapster{}
 		isBarber    bool = true
 		response         = map[string]interface{}{}
+		expireToken      = setting.FileConfigSetting.JWTExpired
 	)
 
+	// expireToken := setting.FileConfigSetting.JWTExpired
 	DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 	if DataOwner.UserType == "" && err == models.ErrNotFound {
 		return nil, errors.New("Your Account not valid.")
@@ -79,7 +82,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 			return nil, err
 		}
 
-		redisdb.AddSession(token, DataOwner.UserID, 0)
+		redisdb.AddSession(token, DataOwner.UserID, time.Duration(expireToken)*time.Hour)
 
 		restUser := map[string]interface{}{
 			"owner_id":   DataOwner.UserID,
@@ -105,7 +108,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 		if err != nil {
 			return nil, err
 		}
-		redisdb.AddSession(token, DataCapster.CapsterID, 0)
+		redisdb.AddSession(token, DataCapster.CapsterID, time.Duration(expireToken)*time.Hour)
 
 		restUser := map[string]interface{}{
 			"owner_id":     DataCapster.OwnerID,
@@ -130,20 +133,41 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 	return response, nil
 }
 
-func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotForm) (err error) {
+func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotForm) (result string, err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
 	DataUser, err := u.repoAuth.GetByAccount(dataForgot.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 	if err != nil {
 		// return util.GoutputErrCode(http.StatusUnauthorized, "Your User/Email not valid.") //appE.ResponseError(util.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
-		return errors.New("Your Account not valid.")
+		return "", errors.New("Your Account not valid.")
 	}
 	if DataUser.Name == "" {
-		return errors.New("Your Account not valid.")
+		return "", errors.New("Your Account not valid.")
+	}
+	GenOTP := util.GenerateNumber(6)
+	// send generate password
+	mailservice := &useemailauth.Forgot{
+		Email: DataUser.Email,
+		Name:  DataUser.Name,
+		OTP:   GenOTP,
 	}
 
-	return nil
+	//store to redis
+	err = redisdb.AddSession(GenOTP, dataForgot.Account, 1440*time.Minute)
+	if err != nil {
+		return "", err
+	}
+	// out := map[string]interface{}{
+	// 	"gen_password": GenPassword,
+	// }
+	// go mailservice.SendForgot().Error()
+	err = mailservice.SendForgot()
+	if err != nil {
+		return "", err
+	}
+
+	return GenOTP, nil
 }
 
 func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPasswd) (err error) {
@@ -242,13 +266,14 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 func (u *useAuht) Verify(ctx context.Context, dataVeriry models.VerifyForm) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
-	data := redisdb.GetSession(dataVeriry.Account)
+
+	data := redisdb.GetSession(dataVeriry.VerifyCode)
 	if data == "" {
 		return errors.New("Please Resend Code")
 	}
 
-	if data != dataVeriry.VerifyCode {
-		return errors.New("Invalid Code.")
+	if data != dataVeriry.Account {
+		return errors.New("Invalid Account.")
 	}
 
 	return nil

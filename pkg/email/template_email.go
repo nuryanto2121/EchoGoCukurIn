@@ -5,13 +5,26 @@ const (
 	<!DOCTYPE html>
 	<html lang="en">
 	<head>
-		<title>Title of the document</title>
+		<title>Forgot Password</title>
 	</head>
 	<body>
 
-	<h4>Hai {Name}</h4>
-	
-	<h1>{GenerateCode}</h1>
+	<p>Hallo {Name},</p>
+	<p style="text-align: justify;">Anda telah melakukan permohonan lupa password untuk Akun Anda. Abaikan Email ini Jika Anda tidak merasa melakukan permintaan lupa password.</p>
+	<p style="text-align: justify;"><br />Silahkan masukan kode OTP di bawah ini untuk memasukkan password baru Anda. OTP ini hanya berlaku 1x24 jam sejak Email ini dikirimkan atau setelah password Anda berhasil diubah.</p>
+	<p style="text-align: justify;"></p>
+	<table style="height: 35px; width: 93.0782%; border-collapse: collapse; margin-left: auto; margin-right: auto;" height="22" border="1">
+	<tbody>
+		<tr>
+			<td style="width: 100%; background-color: #00ffff; text-align: center;">
+				<h4><span style="color: #0000ff;">{OTP}</span></h4>
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<p></p>
+	<p></p>
+
 
 
 	</body>

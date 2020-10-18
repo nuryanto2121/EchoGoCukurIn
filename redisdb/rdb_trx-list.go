@@ -39,18 +39,11 @@ func TurncateList(key string) error {
 }
 
 // AddSession :
-func AddSession(key string, val interface{}, mn int) error {
-	// ss := 1 * time.Hour
-	var (
-		tm = time.Minute
-	)
-	if mn > 0 {
-		tm := time.Duration(mn) * time.Minute
-		fmt.Println(tm)
-	} else {
-		tm = 0
+func AddSession(key string, val interface{}, mn time.Duration) error {
+	set, err := rdb.Set(key, val, mn).Result()
+	if err != nil {
+		return err
 	}
-	set := rdb.Set(key, val, tm)
 	fmt.Println(set)
 	return nil
 }

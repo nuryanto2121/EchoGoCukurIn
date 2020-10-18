@@ -12,7 +12,7 @@ type Repository interface {
 }
 type Usecase interface {
 	Login(ctx context.Context, dataLogin *models.LoginForm) (output interface{}, err error)
-	ForgotPassword(ctx context.Context, dataForgot *models.ForgotForm) (err error)
+	ForgotPassword(ctx context.Context, dataForgot *models.ForgotForm) (result string, err error)
 	ResetPassword(ctx context.Context, dataReset *models.ResetPasswd) (err error)
 	Register(ctx context.Context, dataRegister models.RegisterForm) (output interface{}, err error)
 	Verify(ctx context.Context, dataVeriry models.VerifyForm) (err error)

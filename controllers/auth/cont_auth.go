@@ -225,11 +225,13 @@ func (u *ContAuth) ForgotPassword(e echo.Context) error {
 		return appE.ResponseError(http.StatusBadRequest, errMsg, nil)
 	}
 
-	err := u.useAuth.ForgotPassword(ctx, &form)
+	OTP, err := u.useAuth.ForgotPassword(ctx, &form)
 	if err != nil {
 		return appE.ResponseError(http.StatusUnauthorized, fmt.Sprintf("%v", err), nil)
 	}
-
-	return appE.Response(http.StatusOK, "Check Your Email", nil)
+	result := map[string]interface{}{
+		"otp": OTP,
+	}
+	return appE.Response(http.StatusOK, "Check Your Email", result)
 
 }

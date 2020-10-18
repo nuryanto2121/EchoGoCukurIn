@@ -13,8 +13,8 @@ type Forgot struct {
 	OTP   string `json:"otp"`
 }
 
-func (F *Forgot) SendRegister() error {
-	subjectEmail := "Lupa Password"
+func (F *Forgot) SendForgot() error {
+	subjectEmail := "Permintaan Lupa Password"
 	fmt.Printf(subjectEmail)
 	err := util.SendEmail(F.Email, subjectEmail, getInformasiLoginBodyForgot(F))
 	if err != nil {
@@ -24,10 +24,10 @@ func (F *Forgot) SendRegister() error {
 }
 
 func getInformasiLoginBodyForgot(F *Forgot) string {
-	verifyHTML := templateemail.SendRegister
+	verifyHTML := templateemail.VerifyCode
 
 	verifyHTML = strings.ReplaceAll(verifyHTML, `{Name}`, F.Name)
 	verifyHTML = strings.ReplaceAll(verifyHTML, `{Email}`, F.Email)
-	verifyHTML = strings.ReplaceAll(verifyHTML, `{PasswordCode}`, F.OTP)
+	verifyHTML = strings.ReplaceAll(verifyHTML, `{OTP}`, F.OTP)
 	return verifyHTML
 }
