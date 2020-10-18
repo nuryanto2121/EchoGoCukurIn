@@ -139,8 +139,8 @@ func (u *ContFileUpload) CreateImage(e echo.Context) (err error) {
 		imageForm.FileName = fileNameAndUnix
 		imageForm.FilePath = fmt.Sprintf("%s/%s", path_file, fileNameAndUnix)
 		imageForm.FileType = filepath.Ext(fileNameAndUnix)
-		imageForm.UserInput = claims.UserName
-		imageForm.UserEdit = claims.UserName
+		imageForm.UserInput = claims.UserID
+		imageForm.UserEdit = claims.UserID
 		// err = u.useSaFileUpload.CreateSaFileUpload(ctx, &imageForm)
 		err = u.useSaFileUpload.CreateFileUpload(ctx, &imageForm)
 
