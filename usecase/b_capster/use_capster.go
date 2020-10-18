@@ -2,6 +2,7 @@ package usecapster
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 	ibarbercapster "nuryanto2121/dynamic_rest_api_go/interface/b_barber_capster"
@@ -117,6 +118,11 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	if err != nil {
 		return err
 	}
+	dataCapster, err := u.repoUser.GetByAccount(data.Email)
+	if dataCapster.Email != "" {
+		return errors.New("Email Capster sudah terdaftar.")
+	}
+
 	// gen Password
 	GenPassword := util.GenerateCode(4)
 	// mUser.UserName, err = u.repoUser.GenUserCapster()
@@ -173,6 +179,12 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	if err != nil {
 		return err
 	}
+
+	dataCapster, err := u.repoUser.GetByAccount(dataUser.Email)
+	if dataCapster.UserID != ID {
+		return errors.New("Email Capster sudah terdaftar.")
+	}
+
 	dataUser.JoinDate = data.JoinDate
 
 	//if status not active then delete relasi in barber_capster

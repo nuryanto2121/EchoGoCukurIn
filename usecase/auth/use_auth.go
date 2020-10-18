@@ -143,9 +143,9 @@ func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotF
 		return "", errors.New("Your Account not valid.")
 	}
 	if DataUser.Name == "" {
-		return "", errors.New("Your Account not valid.")
+		return "", errors.New("Your AccountF not valid.")
 	}
-	GenOTP := util.GenerateNumber(6)
+	GenOTP := util.GenerateNumber(4)
 	// send generate password
 	mailservice := &useemailauth.Forgot{
 		Email: DataUser.Email,
@@ -153,8 +153,13 @@ func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotF
 		OTP:   GenOTP,
 	}
 
+	// check data redis
+	data := redisdb.GetSession(dataForgot.Account + "_Forgot")
+	if data != "" {
+		redisdb.TurncateList(dataForgot.Account + "_Forgot")
+	}
 	//store to redis
-	err = redisdb.AddSession(GenOTP, dataForgot.Account, 1440*time.Minute)
+	err = redisdb.AddSession(dataForgot.Account+"_Forgot", GenOTP, 1440*time.Minute)
 	if err != nil {
 		return "", err
 	}
@@ -175,12 +180,16 @@ func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPass
 	defer cancel()
 
 	if dataReset.Passwd != dataReset.ConfirmPasswd {
-		return errors.New("Password and Confirm Password not same.")
+		return errors.New("Password dan Confirm Password tidak boleh sama.")
 	}
 
 	DataUser, err := u.repoAuth.GetByAccount(dataReset.Account)
 	if err != nil {
 		return err
+	}
+
+	if util.ComparePassword(DataUser.Password, util.GetPassword(dataReset.Passwd)) {
+		return errors.New("Password baru tidak boleh sama dengan yang lama.")
 	}
 
 	DataUser.Password, _ = util.Hash(dataReset.Passwd)
@@ -263,18 +272,19 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	return out, nil
 }
 
-func (u *useAuht) Verify(ctx context.Context, dataVeriry models.VerifyForm) (err error) {
+func (u *useAuht) Verify(ctx context.Context, dataVerify models.VerifyForm) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	data := redisdb.GetSession(dataVeriry.VerifyCode)
+	data := redisdb.GetSession(dataVerify.Account + "_Forgot")
 	if data == "" {
 		return errors.New("Please Resend Code")
 	}
 
-	if data != dataVeriry.Account {
-		return errors.New("Invalid Account.")
+	if data != dataVerify.VerifyCode {
+		return errors.New("Invalid Code.")
 	}
+	redisdb.TurncateList(dataVerify.Account + "_Forgot")
 
 	return nil
 }

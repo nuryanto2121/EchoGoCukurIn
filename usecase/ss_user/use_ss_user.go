@@ -47,11 +47,15 @@ func (u *useSysUser) ChangePassword(ctx context.Context, Claims util.Claims, Dat
 
 	// DataChangePwd.OldPassword, _ = util.Hash(DataChangePwd.OldPassword)
 	if !util.ComparePassword(dataUser.Password, util.GetPassword(DataChangePwd.OldPassword)) {
-		return errors.New("Your Password not valid.")
+		return errors.New("Password and salah.")
 	}
 
 	if DataChangePwd.NewPassword != DataChangePwd.ConfirmPassword {
-		return errors.New("Password and Confirm Password not same.")
+		return errors.New("Password dan confirm password tidak boleh sama.")
+	}
+
+	if util.ComparePassword(dataUser.Password, util.GetPassword(DataChangePwd.NewPassword)) {
+		return errors.New("Password baru tidak boleh sama dengan yang lama.")
 	}
 
 	DataChangePwd.NewPassword, _ = util.Hash(DataChangePwd.NewPassword)

@@ -86,9 +86,13 @@ func (db *repoCapsterCollection) GetList(queryparam models.ParamList) (result []
 	// end where
 
 	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	query := db.Conn.Table("ss_user").Select(`ss_user.user_id as capster_id,ss_user.user_name,ss_user.name,ss_user.is_active,
-	sa_file_upload.file_id,sa_file_upload.file_name,sa_file_upload.file_path,sa_file_upload.file_type, 0 as rating`).Joins(`
-	left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	query := db.Conn.Table("ss_user").Select(`ss_user.user_id as capster_id,ss_user.user_name,ss_user.name,
+								ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,
+								sa_file_upload.file_path,sa_file_upload.file_type, 0 as rating,
+								ss_user
+	`).Joins(`
+	left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id
+	`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 
