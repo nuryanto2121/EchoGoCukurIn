@@ -85,7 +85,7 @@ func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, QueryParam m
 	}
 
 	// queryParam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
-	if QueryParam.BarberId != 0 {
+	if QueryParam.BarberId > 0 {
 		filterBarber = fmt.Sprintf("AND barber_id = %d", QueryParam.BarberId)
 	}
 	if queryParam.InitSearch != "" {
@@ -133,7 +133,7 @@ func (u *useOrder) GetSumPrice(ctx context.Context, Claims util.Claims, QueryPar
 	}
 
 	// queryParam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
-	if QueryParam.BarberId != 0 {
+	if QueryParam.BarberId > 0 {
 		filterBarber = fmt.Sprintf("AND barber_id = %d", QueryParam.BarberId)
 	}
 	if queryParam.InitSearch != "" {

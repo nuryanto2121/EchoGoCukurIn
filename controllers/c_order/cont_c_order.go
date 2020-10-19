@@ -101,16 +101,17 @@ func (u *ContOrder) GetList(e echo.Context) error {
 	idUser := e.QueryParam("barber_id")
 	fmt.Printf(idUser)
 	var (
-		// logger = logging.Logger{}
-		appE = tool.Res{R: e} // wajib
+		logger = logging.Logger{}
+		appE   = tool.Res{R: e} // wajib
 		//valid      validation.Validation // wajib
 		paramquery   = models.ParamListOrder{} // ini untuk list
 		responseList = models.ResponseModelList{}
 		err          error
+		dataBarber   interface{}
 	)
 
 	httpCode, errMsg := app.BindAndValid(e, &paramquery)
-	// logger.Info(util.Stringify(paramquery))
+	logger.Info(util.Stringify(paramquery))
 	if httpCode != 200 {
 		return appE.ResponseErrorList(http.StatusBadRequest, errMsg, responseList)
 	}
@@ -121,17 +122,17 @@ func (u *ContOrder) GetList(e echo.Context) error {
 	if err != nil {
 		return appE.ResponseErrorList(http.StatusBadRequest, fmt.Sprintf("%v", err), responseList)
 	}
-	// if !claims.IsAdmin {
-	// 	paramquery.InitSearch = " id_created = " + strconv.Itoa(claims.OrderID)
-	// }
-	dataBarber, err := u.useBarber.GetDataFirst(ctx, claims, paramquery.BarberId)
 
-	fmt.Println(dataBarber)
-	if paramquery.BarberId == 0 {
-		myMap := dataBarber.(map[string]interface{})
-		// fmt.Println(myMap["barber_id"])
-		paramquery.BarberId, _ = strconv.Atoi(fmt.Sprintf("%v", myMap["barber_id"]))
+	if paramquery.BarberId > 0 {
+		dataBarber, err = u.useBarber.GetDataFirst(ctx, claims, paramquery.BarberId)
 	}
+
+	// fmt.Println(dataBarber)
+	// if paramquery.BarberId == 0 {
+	// 	myMap := dataBarber.(map[string]interface{})
+	// 	// fmt.Println(myMap["barber_id"])
+	// 	paramquery.BarberId, _ = strconv.Atoi(fmt.Sprintf("%v", myMap["barber_id"]))
+	// }
 	responseList, err = u.useOrder.GetList(ctx, claims, paramquery)
 	if err != nil {
 		// return e.JSON(http.StatusBadRequest, err.Error())
