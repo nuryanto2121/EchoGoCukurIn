@@ -73,6 +73,7 @@ func (u *ContBerandaBarber) GetStatusOrder(e echo.Context) error {
 // @Param search query string false "Search"
 // @Param initsearch query string false "InitSearch"
 // @Param sortfield query string false "SortField"
+// @Param paramview query string false "ParamView"
 // @Success 200 {object} models.ResponseModelList
 // @Router /barber/beranda [get]
 func (u *ContBerandaBarber) GetList(e echo.Context) error {
@@ -85,7 +86,7 @@ func (u *ContBerandaBarber) GetList(e echo.Context) error {
 		// logger = logging.Logger{}
 		appE = tool.Res{R: e} // wajib
 		//valid      validation.Validation // wajib
-		paramquery = models.ParamList{} // ini untuk list
+		paramquery = models.ParamDynamicList{} // ini untuk list
 		// responseList = models.ResponseModelList{}
 		// err          error
 	)
@@ -102,7 +103,7 @@ func (u *ContBerandaBarber) GetList(e echo.Context) error {
 	// if !claims.IsAdmin {
 	// 	paramquery.InitSearch = " id_created = " + strconv.Itoa(claims.BarberID)
 	// }
-	data, err := u.useBeranda.GetStatusOrder(ctx, claims)
+	data, err := u.useBeranda.GetStatusOrder(ctx, claims, paramquery)
 	if err != nil {
 		return appE.Response(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
 	}

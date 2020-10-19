@@ -142,6 +142,10 @@ func (u *useSysUser) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	// DataOwner.Telp = data.Telp
 	// DataOwner.Email = data.Email
 	// DataOwner.UserEdit = Claims.UserID
+	dataUser, err := u.repoUser.GetByAccount(data.Email)
+	if dataUser.UserID != ID {
+		return errors.New("Email sudah terdaftar.")
+	}
 	var datas = map[string]interface{}{
 		"name":    data.Name,
 		"telp":    data.Telp,

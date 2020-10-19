@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"strconv"
+	"strings"
 
 	iberandabarber "nuryanto2121/dynamic_rest_api_go/interface/beranda_barber"
 	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
@@ -26,7 +27,7 @@ func NewUserMBarber(a iberandabarber.Repository, c ifileupload.Repository, timeo
 		contextTimeOut: timeout}
 }
 
-func (u *useBarber) GetStatusOrder(ctx context.Context, Claims util.Claims) (interface{}, error) {
+func (u *useBarber) GetStatusOrder(ctx context.Context, Claims util.Claims, queryparam models.ParamDynamicList) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
@@ -34,14 +35,14 @@ func (u *useBarber) GetStatusOrder(ctx context.Context, Claims util.Claims) (int
 	if err != nil {
 		return nil, err
 	}
-	result, err := u.repoBeranda.GetStatusOrder(ID)
+	result, err := u.repoBeranda.GetStatusOrder(queryparam.ParamView, ID)
 	if err != nil {
 		return nil, err
 	}
 
 	return result, nil
 }
-func (u *useBarber) GetListOrder(ctx context.Context, Claims util.Claims, queryparam models.ParamList) (interface{}, error) {
+func (u *useBarber) GetListOrder(ctx context.Context, Claims util.Claims, queryparam models.ParamDynamicList) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 	var (
@@ -51,10 +52,11 @@ func (u *useBarber) GetListOrder(ctx context.Context, Claims util.Claims, queryp
 	// var tUser = models.Barber{}
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
+		queryparam.Search = strings.ReplaceAll(queryparam.Search, "'", "")
 		queryparam.Search = fmt.Sprintf("lower(barber_name) LIKE '%%%s%%' ", queryparam.Search)
 	}
 
-	queryparam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
+	queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
 	result.Data, err = u.repoBeranda.GetListOrder(queryparam)
 	if err != nil {
 		return result, err

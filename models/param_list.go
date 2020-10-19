@@ -20,8 +20,6 @@ type ParamListOrder struct {
 
 type ParamDynamicList struct {
 	ParamList
-	MenuUrl   string `json:"menu_url" valid:"Required"`
-	LineNo    int    `json:"line_no,omitempty"`
 	ParamView string `json:"param_view,omitempty"`
 }
 

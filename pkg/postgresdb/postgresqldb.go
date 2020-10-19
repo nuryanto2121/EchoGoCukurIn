@@ -87,26 +87,121 @@ func autoMigrate() {
 		END
 	  $$ LANGUAGE 'sql' IMMUTABLE;
 	  
+	  CREATE OR REPLACE FUNCTION public.fbarber_beranda_s(p_status varchar, p_date varchar)
+	  RETURNS 
+	  TABLE(
+		  owner_id integer,
+		  barber_id integer,
+		  barber_name varchar,
+		  file_id integer,
+		  file_name varchar,
+		  file_path varchar,
+		  file_type varchar,
+		  price numeric
+	  )
+	  LANGUAGE plpgsql
+	 AS $function$
+	 DECLARE v_id INTEGER; 
+	 BEGIN 	
+		   RETURN QUERY                
+			   select 	barber.owner_id ,
+						 barber.barber_id ,
+						 barber.barber_name ,
+						 barber.file_id ,
+						 sa_file_upload.file_name ,
+						 sa_file_upload.file_path ,
+						 sa_file_upload.file_type ,
+						 (
+							 select coalesce(sum(od.price),0) from order_d od join order_h oh
+								 on oh.order_id = od.order_id 
+							 where oh.barber_id = barber.barber_id 
+							 and oh.order_date::date = p_date::date 
+							 and oh.status =p_status
+						 ) as price
+						 from barber
+						 left join sa_file_upload  on sa_file_upload.file_id = barber.file_id
+	 ;
+				
+	 END;
+	 $function$
+	 ;
+
 	 
-	  create or replace view v_order_h
-	  as 
-	  SELECT 	barber.owner_id,barber.barber_id ,
-			  barber.barber_name ,order_h.order_id ,
-			  order_h.status ,order_h.from_apps ,
-			  order_h.capster_id ,order_h.order_date ,
-			  ss_user."name" as capster_name,
-			  ss_user.file_id ,sa_file_upload.file_name,
-			  sa_file_upload.file_path ,
-			  (select sum(order_d.price ) from order_d where order_d.order_id = order_h.order_id ) as price ,
-			  week_of_month(order_h.order_date::date,1) as weeks,
-			  extract (year from order_h.order_date ) as years,
-			  extract (month from order_h.order_date ) as months
-	  FROM "barber" inner join order_h 
-			  on order_h.barber_id = barber.barber_id 
-		  inner join ss_user 
-			  on ss_user.user_id = order_h.capster_id 
-		  left join sa_file_upload 
-			  on sa_file_upload.file_id = ss_user.file_id ;
+		CREATE OR replace FUNCTION public.fbarber_beranda_status(p_status varchar, p_date varchar)
+		RETURNS 
+		TABLE(
+			owner_id integer,
+			progress_status integer,
+			finish_status integer,
+			cancel_status integer
+			,income_price numeric
+		)
+		LANGUAGE plpgsql
+		AS $function$
+		DECLARE v_id INTEGER; 
+		BEGIN 	
+			RETURN QUERY                
+			select 
+				ss.owner_id ,
+				ss.progress_status,
+				ss.finish_status,
+				ss.cancel_status
+				,
+				(
+						select coalesce(sum(od.price ),0)::numeric 
+					from order_h oh join order_d od
+					on oh.order_id = od.order_id 
+					where oh.order_date::date= p_date::date 
+					and oh.status = p_status
+					and oh.barber_id in(
+						select b2.barber_id from barber b2 
+						where b2.owner_id = ss.owner_id
+					)
+				)::numeric as income_price
+			from (
+				select b.owner_id,
+				count(case a.status when 'P' then 1 else null end)::integer as progress_status,
+							count(case a.status when 'F' then 1 else null end)::integer  as finish_status,
+							count(case a.status when 'C' then 1 else null end)::integer  as cancel_status
+				from order_h a join barber b
+				on a.barber_id = b.barber_id 
+				where a.order_date::date=p_date::date
+				group by b.owner_id
+			) ss		
+
+		;
+				
+		END;
+		$function$
+		;
+
+	  
+
+		CREATE OR REPLACE VIEW public.v_order_h
+		AS SELECT barber.owner_id,
+			barber.barber_id,
+			barber.barber_name,
+			order_h.order_id,
+			order_h.status,
+			order_h.from_apps,
+			order_h.capster_id,
+			order_h.order_date,
+			ss_user.name AS capster_name,
+			ss_user.file_id,
+			sa_file_upload.file_name,
+			sa_file_upload.file_path,
+			( SELECT sum(order_d.price) AS sum
+				FROM order_d
+				WHERE order_d.order_id = order_h.order_id) AS price,
+			week_of_month(order_h.order_date::date, 1) AS weeks,
+			date_part('year'::text, order_h.order_date) AS years,
+			date_part('month'::text, order_h.order_date) AS months,
+			order_h.customer_name,
+			order_h.order_no
+		FROM barber
+			JOIN order_h ON order_h.barber_id = barber.barber_id
+			JOIN ss_user ON ss_user.user_id = order_h.capster_id
+			LEFT JOIN sa_file_upload ON sa_file_upload.file_id = ss_user.file_id;
 	 
 	  `)
 

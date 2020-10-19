@@ -18,21 +18,22 @@ func NewRepoBerandaBarber(Conn *gorm.DB) iberanda_barber.Repository {
 	return &repoBerandaBarber{Conn}
 }
 
-func (db *repoBerandaBarber) GetStatusOrder(ID int) (result models.Beranda, err error) {
+func (db *repoBerandaBarber) GetStatusOrder(ParamView string, ID int) (result models.Beranda, err error) {
 	var (
 		logger = logging.Logger{}
 		data   models.Beranda
 	)
 
-	query := db.Conn.Raw(`select 
-			count(case a.status when 'P' then 1 else null end) as progress_status,
-			count(case a.status when 'F' then 1 else null end) as finish_status,
-			count(case a.status when 'C' then 1 else null end) as cancel_status,
-			sum(d.price ) as income_price
-		from order_h a inner join barber b on a.barber_id = b.barber_id 
-		inner join order_d d on d.order_id = a.order_id 
-			and d.barber_id = b.barber_id 
-		where b.owner_id = ?`, ID).Scan(&data) //Find(&result)
+	sQuery := fmt.Sprintf(`
+		SELECT *
+		FROM fbarber_beranda_status(%s)
+		WHERE owner_id = ?
+	`, ParamView)
+	query := db.Conn.Raw(sQuery, ID).Scan(&data) //Find(&result)
+	// sSourceFrom := fmt.Sprintf("fbarber_beranda_status(%s)", ParamView)
+	// query := db.Conn.Table(sSourceFrom).Select(`
+	// *
+	// `).Where("owner_id = ?", ID).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error
 	if err != nil {
@@ -45,7 +46,7 @@ func (db *repoBerandaBarber) GetStatusOrder(ID int) (result models.Beranda, err 
 	return data, nil
 }
 
-func (db *repoBerandaBarber) GetListOrder(queryparam models.ParamList) (result []*models.BerandaList, err error) {
+func (db *repoBerandaBarber) GetListOrder(queryparam models.ParamDynamicList) (result []*models.BerandaList, err error) {
 	var (
 		pageNum  = 0
 		pageSize = setting.FileConfigSetting.App.PageSize
@@ -81,15 +82,18 @@ func (db *repoBerandaBarber) GetListOrder(queryparam models.ParamList) (result [
 		}
 	}
 
-	// end where
+	sQuery := fmt.Sprintf(`
+		SELECT *
+		FROM fbarber_beranda_s(%s)
+		WHERE %s
+	`, queryparam.ParamView, sWhere)
+	query := db.Conn.Raw(sQuery).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result) //Find(&result)
 
-	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	query := db.Conn.Table("barber").Select(`barber.barber_id ,barber.barber_name ,barber.file_id ,
-											sa_file_upload.file_name ,sa_file_upload.file_path ,sa_file_upload.file_type ,
-											sum(order_d.price ) as price`).Joins(`
-											left join sa_file_upload  on sa_file_upload.file_id = barber.file_id`).Joins(`
-											left join order_d on order_d.barber_id = barber.barber_id`).Group(`barber.barber_id ,barber.barber_name ,barber.file_id ,
-											sa_file_upload.file_name ,sa_file_upload.file_path ,sa_file_upload.file_type`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	// sSourceFrom := fmt.Sprintf("fbarber_beranda_s(%s)", queryparam.ParamView)
+	// // end where
+	// query := db.Conn.Table(sSourceFrom).Select(`
+	// barber_id,barber_name,file_id,file_name,file_path,file_type,price
+	// `).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 
@@ -102,10 +106,16 @@ func (db *repoBerandaBarber) GetListOrder(queryparam models.ParamList) (result [
 	return result, nil
 }
 
-func (db *repoBerandaBarber) Count(queryparam models.ParamList) (result int, err error) {
+func (db *repoBerandaBarber) Count(queryparam models.ParamDynamicList) (result int, err error) {
+
+	type Results struct {
+		Cnt int `json:"cnt"`
+	}
+
 	var (
 		sWhere = ""
 		logger = logging.Logger{}
+		op     = &Results{}
 	)
 	result = 0
 
@@ -122,17 +132,36 @@ func (db *repoBerandaBarber) Count(queryparam models.ParamList) (result int, err
 	// end where
 
 	// query := db.Conn.Model(&models.Barber{}).Where(sWhere).Count(&result)
-	query := db.Conn.Table("barber").Select(`barber.barber_id ,barber.barber_name ,barber.file_id ,
-											sa_file_upload.file_name ,sa_file_upload.file_path ,sa_file_upload.file_type ,
-											sum(order_d.price ) as price`).Joins(`
-											left join sa_file_upload  on sa_file_upload.file_id = barber.file_id`).Joins(`
-											left join order_d on order_d.barber_id = barber.barber_id`).Group(`barber.barber_id ,barber.barber_name ,barber.file_id ,
-											sa_file_upload.file_name ,sa_file_upload.file_path ,sa_file_upload.file_type`).Where(sWhere).Count(&result)
+	// query := db.Conn.Table("barber").Select(`barber.barber_id ,barber.barber_name ,barber.file_id ,
+	// 										sa_file_upload.file_name ,sa_file_upload.file_path ,sa_file_upload.file_type ,
+	// 										sum(order_d.price ) as price`).Joins(`
+	// 										left join sa_file_upload  on sa_file_upload.file_id = barber.file_id`).Joins(`
+	// 										left join order_d on order_d.barber_id = barber.barber_id`).Group(`barber.barber_id ,barber.barber_name ,barber.file_id ,
+	// 										sa_file_upload.file_name ,sa_file_upload.file_path ,sa_file_upload.file_type`).Where(sWhere).Count(&result)
+
+	// sSourceFrom := fmt.Sprintf("fbarber_beranda_s(%s)", queryparam.ParamView)
+	// query := db.Conn.Table(sSourceFrom).Select(`
+	// barber_id,barber_name,file_id,file_name,file_path,file_type,price
+	// `).Where(sWhere).Count(&result)
+
+	sQuery := fmt.Sprintf(`
+		SELECT count(*) as cnt
+		FROM fbarber_beranda_s(%s)
+		WHERE %s
+	`, queryparam.ParamView, sWhere)
+	query := db.Conn.Raw(sQuery).First(&op)
+
+	// query := db.Conn.Table("v_order_h").Select(`
+	// coalesce(sum(order_d.price ),0) as price
+	// `).Joins(`inner join order_d
+	// on v_order_h.order_id = order_d.order_id
+	// `).Where(sWhere).First(&op)
+
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {
 		return 0, err
 	}
 
-	return result, nil
+	return op.Cnt, nil
 }

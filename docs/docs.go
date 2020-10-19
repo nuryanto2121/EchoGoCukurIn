@@ -631,6 +631,12 @@ var doc = `{
                         "description": "SortField",
                         "name": "sortfield",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "ParamView",
+                        "name": "paramview",
+                        "in": "query"
                     }
                 ],
                 "responses": {
