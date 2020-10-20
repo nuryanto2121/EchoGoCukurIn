@@ -37,6 +37,9 @@ func (u *useBarber) GetStatusOrder(ctx context.Context, Claims util.Claims, quer
 	}
 	result, err := u.repoBeranda.GetStatusOrder(queryparam.ParamView, ID)
 	if err != nil {
+		if err == models.ErrNotFound {
+			return result, nil
+		}
 		return nil, err
 	}
 

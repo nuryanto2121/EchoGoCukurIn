@@ -88,9 +88,7 @@ func (u *useBarber) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (
 func (u *useBarber) GetDataFirst(ctx context.Context, Claims util.Claims, ID int) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
-	// var (
-	// 	queryparam models.ParamList
-	// )
+
 	OwnerID, _ := strconv.Atoi(Claims.UserID)
 	result, err := u.repoBarber.GetDataFirs(OwnerID, ID)
 	if err != nil {

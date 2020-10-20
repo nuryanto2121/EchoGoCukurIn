@@ -38,7 +38,7 @@ func (db *repoBerandaBarber) GetStatusOrder(ParamView string, ID int) (result mo
 	err = query.Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return data, models.ErrNotFound
+			return data, nil
 		}
 		return data, err
 	}
@@ -160,6 +160,9 @@ func (db *repoBerandaBarber) Count(queryparam models.ParamDynamicList) (result i
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return 0, nil
+		}
 		return 0, err
 	}
 

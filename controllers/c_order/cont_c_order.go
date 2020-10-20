@@ -127,12 +127,6 @@ func (u *ContOrder) GetList(e echo.Context) error {
 		dataBarber, err = u.useBarber.GetDataFirst(ctx, claims, paramquery.BarberId)
 	}
 
-	// fmt.Println(dataBarber)
-	// if paramquery.BarberId == 0 {
-	// 	myMap := dataBarber.(map[string]interface{})
-	// 	// fmt.Println(myMap["barber_id"])
-	// 	paramquery.BarberId, _ = strconv.Atoi(fmt.Sprintf("%v", myMap["barber_id"]))
-	// }
 	responseList, err = u.useOrder.GetList(ctx, claims, paramquery)
 	if err != nil {
 		// return e.JSON(http.StatusBadRequest, err.Error())
