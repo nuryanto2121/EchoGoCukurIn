@@ -9,6 +9,7 @@ import (
 	"nuryanto2121/dynamic_rest_api_go/models"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/mitchellh/mapstructure"
@@ -81,7 +82,8 @@ func (u *useOrder) GetList(ctx context.Context, Claims util.Claims, QueryParam m
 	queryParam.SortField = QueryParam.SortField
 
 	if queryParam.Search != "" {
-		queryParam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", queryParam.Search)
+		// queryParam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", queryParam.Search)
+		queryParam.Search = strings.ToLower(fmt.Sprintf("%%%s%%", queryParam.Search))
 	}
 
 	// queryParam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)
@@ -129,7 +131,8 @@ func (u *useOrder) GetSumPrice(ctx context.Context, Claims util.Claims, QueryPar
 	// }
 
 	if queryParam.Search != "" {
-		queryParam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", QueryParam.Search)
+		// queryParam.Search = fmt.Sprintf("lower(order_name) iLIKE '%%%s%%' ", QueryParam.Search)
+		queryParam.Search = strings.ToLower(fmt.Sprintf("%%%s%%", queryParam.Search))
 	}
 
 	// queryParam.InitSearch = fmt.Sprintf("barber.owner_id = %s", Claims.UserID)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"strings"
 
 	repofunction "nuryanto2121/dynamic_rest_api_go/repository/function"
 
@@ -124,7 +125,8 @@ func (u *useBarber) GetList(ctx context.Context, Claims util.Claims, queryparam 
 	// var tUser = models.Barber{}
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
-		queryparam.Search = fmt.Sprintf("lower(barber_name) iLIKE '%%%s%%' ", queryparam.Search)
+		// queryparam.Search = fmt.Sprintf("lower(barber_name) iLIKE '%%%s%%' ", queryparam.Search)
+		queryparam.Search = strings.ToLower(fmt.Sprintf("%%%s%%", queryparam.Search))
 	}
 
 	if queryparam.InitSearch != "" {

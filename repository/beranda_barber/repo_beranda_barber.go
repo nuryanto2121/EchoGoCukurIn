@@ -53,6 +53,7 @@ func (db *repoBerandaBarber) GetListOrder(queryparam models.ParamDynamicList) (r
 		sWhere   = ""
 		logger   = logging.Logger{}
 		orderBy  = queryparam.SortField
+		query    *gorm.DB
 	)
 	// pagination
 	if queryparam.Page > 0 {
@@ -76,18 +77,30 @@ func (db *repoBerandaBarber) GetListOrder(queryparam models.ParamDynamicList) (r
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(barber_name) LIKE ?" //+ queryparam.Search
 		} else {
-			sWhere += queryparam.Search
+			sWhere += "lower(barber_name) LIKE ?" //queryparam.Search
 		}
-	}
-
-	sQuery := fmt.Sprintf(`
+		sQuery := fmt.Sprintf(`
 		SELECT *
 		FROM fbarber_beranda_s(%s)
 		WHERE %s
-	`, queryparam.ParamView, sWhere)
-	query := db.Conn.Raw(sQuery).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result) //Find(&result)
+		`, queryparam.ParamView, sWhere)
+		query = db.Conn.Raw(sQuery, queryparam.Search).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result) //Find(&result)
+	} else {
+		sQuery := fmt.Sprintf(`
+		SELECT *
+		FROM fbarber_beranda_s(%s)
+		WHERE %s
+		`, queryparam.ParamView, sWhere)
+		query = db.Conn.Raw(sQuery).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result) //Find(&result)
+	}
+
+	// sQuery := fmt.Sprintf(`
+	// 	SELECT *
+	// 	FROM fbarber_beranda_s(%s)
+	// 	WHERE %s
+	// `, queryparam.ParamView, sWhere)
 
 	// sSourceFrom := fmt.Sprintf("fbarber_beranda_s(%s)", queryparam.ParamView)
 	// // end where
@@ -116,6 +129,7 @@ func (db *repoBerandaBarber) Count(queryparam models.ParamDynamicList) (result i
 		sWhere = ""
 		logger = logging.Logger{}
 		op     = &Results{}
+		query  *gorm.DB
 	)
 	result = 0
 
@@ -126,36 +140,25 @@ func (db *repoBerandaBarber) Count(queryparam models.ParamDynamicList) (result i
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(barber_name) LIKE ?" //+ queryparam.Search
+		} else {
+			sWhere += "lower(barber_name) LIKE ?" //queryparam.Search
 		}
-	}
-	// end where
-
-	// query := db.Conn.Model(&models.Barber{}).Where(sWhere).Count(&result)
-	// query := db.Conn.Table("barber").Select(`barber.barber_id ,barber.barber_name ,barber.file_id ,
-	// 										sa_file_upload.file_name ,sa_file_upload.file_path ,sa_file_upload.file_type ,
-	// 										sum(order_d.price ) as price`).Joins(`
-	// 										left join sa_file_upload  on sa_file_upload.file_id = barber.file_id`).Joins(`
-	// 										left join order_d on order_d.barber_id = barber.barber_id`).Group(`barber.barber_id ,barber.barber_name ,barber.file_id ,
-	// 										sa_file_upload.file_name ,sa_file_upload.file_path ,sa_file_upload.file_type`).Where(sWhere).Count(&result)
-
-	// sSourceFrom := fmt.Sprintf("fbarber_beranda_s(%s)", queryparam.ParamView)
-	// query := db.Conn.Table(sSourceFrom).Select(`
-	// barber_id,barber_name,file_id,file_name,file_path,file_type,price
-	// `).Where(sWhere).Count(&result)
-
-	sQuery := fmt.Sprintf(`
+		sQuery := fmt.Sprintf(`
 		SELECT count(*) as cnt
 		FROM fbarber_beranda_s(%s)
 		WHERE %s
 	`, queryparam.ParamView, sWhere)
-	query := db.Conn.Raw(sQuery).First(&op)
-
-	// query := db.Conn.Table("v_order_h").Select(`
-	// coalesce(sum(order_d.price ),0) as price
-	// `).Joins(`inner join order_d
-	// on v_order_h.order_id = order_d.order_id
-	// `).Where(sWhere).First(&op)
+		query = db.Conn.Raw(sQuery, queryparam.Search).First(&op)
+	} else {
+		sQuery := fmt.Sprintf(`
+		SELECT count(*) as cnt
+		FROM fbarber_beranda_s(%s)
+		WHERE %s
+	`, queryparam.ParamView, sWhere)
+		query = db.Conn.Raw(sQuery).First(&op)
+	}
+	// end where
 
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error

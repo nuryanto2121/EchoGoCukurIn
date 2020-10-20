@@ -56,6 +56,7 @@ func (db *repoOrderH) GetList(queryparam models.ParamList) (result []*models.Ord
 		sWhere   = ""
 		logger   = logging.Logger{}
 		orderBy  = queryparam.SortField
+		query    *gorm.DB
 	)
 	// pagination
 	if queryparam.Page > 0 {
@@ -79,22 +80,22 @@ func (db *repoOrderH) GetList(queryparam models.ParamList) (result []*models.Ord
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(barber_name) LIKE ?" //+ queryparam.Search
 		} else {
-			sWhere += queryparam.Search
+			sWhere += "lower(barber_name) LIKE ?" //queryparam.Search
 		}
-	}
-
-	// end where
-
-	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	// query := db.Conn.Table("barber").Select(`barber.barber_id ,barber.barber_name ,order_h.order_id ,order_h.status ,order_h.from_apps ,
-	// 		order_h.capster_id ,order_h.order_date ,ss_user."name" as capster_name,ss_user.file_id ,sa_file_upload.file_name,sa_file_upload.file_path ,
-	// 		(select sum(order_d.price ) from order_d where order_d.order_id = order_h.order_id ) as price`).Joins(`inner join order_h
-	// 		on order_h.barber_id = barber.barber_id`).Joins(`inner join ss_user on ss_user.user_id = order_h.capster_id
-	// 		`).Joins(`left join sa_file_upload on sa_file_upload.file_id = ss_user.file_id
-	// 		`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	query := db.Conn.Table("v_order_h").Select(`
+		query = db.Conn.Table("v_order_h").Select(`
+		owner_id,barber_id ,
+		barber_name ,order_id ,
+		status ,from_apps ,
+		capster_id ,order_date ,
+		capster_name,
+		file_id ,file_name,
+		file_path , price ,
+		weeks,years,months
+	`).Where(sWhere, queryparam.Search).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	} else {
+		query = db.Conn.Table("v_order_h").Select(`
 		owner_id,barber_id ,
 		barber_name ,order_id ,
 		status ,from_apps ,
@@ -104,6 +105,10 @@ func (db *repoOrderH) GetList(queryparam models.ParamList) (result []*models.Ord
 		file_path , price ,
 		weeks,years,months
 	`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+
+	}
+
+	// end where
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 
@@ -159,6 +164,7 @@ func (db *repoOrderH) Count(queryparam models.ParamList) (result int, err error)
 	var (
 		sWhere = ""
 		logger = logging.Logger{}
+		query  *gorm.DB
 	)
 	result = 0
 
@@ -169,20 +175,34 @@ func (db *repoOrderH) Count(queryparam models.ParamList) (result int, err error)
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(barber_name) LIKE ?" //+ queryparam.Search
+		} else {
+			sWhere += "lower(barber_name) LIKE ?" //queryparam.Search
 		}
+		query = db.Conn.Table("v_order_h").Select(`
+		owner_id,barber_id ,
+		barber_name ,order_id ,
+		status ,from_apps ,
+		capster_id ,order_date ,
+		capster_name,
+		file_id ,file_name,
+		file_path , price ,
+		weeks,years,months
+	`).Where(sWhere, queryparam.Search).Count(&result)
+
+	} else {
+		query = db.Conn.Table("v_order_h").Select(`
+		owner_id,barber_id ,
+		barber_name ,order_id ,
+		status ,from_apps ,
+		capster_id ,order_date ,
+		capster_name,
+		file_id ,file_name,
+		file_path , price ,
+		weeks,years,months
+	`).Where(sWhere).Count(&result)
 	}
 
-	query := db.Conn.Table("v_order_h").Select(`
-	owner_id,barber_id ,
-	barber_name ,order_id ,
-	status ,from_apps ,
-	capster_id ,order_date ,
-	capster_name,
-	file_id ,file_name,
-	file_path , price ,
-	weeks,years,months
-`).Where(sWhere).Count(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {
@@ -200,28 +220,36 @@ func (db *repoOrderH) SumPriceDetail(queryparam models.ParamList) (result float3
 		sWhere = ""
 		logger = logging.Logger{}
 		op     = &Results{}
+		query  *gorm.DB
 	)
 
 	result = 0
 
 	// WHERE
+	sWhere = strings.ReplaceAll(sWhere, "barber_id", "v_order_h.barber_id")
 	if queryparam.InitSearch != "" {
 		sWhere = queryparam.InitSearch
 	}
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(barber_name) LIKE ?" //+ queryparam.Search
+		} else {
+			sWhere += "lower(barber_name) LIKE ?" //queryparam.Search
 		}
+		query = db.Conn.Table("v_order_h").Select(`
+		coalesce(sum(order_d.price ),0) as price
+		`).Joins(`inner join order_d 
+		on v_order_h.order_id = order_d.order_id
+		`).Where(sWhere, queryparam.Search).First(&op)
+	} else {
+		query = db.Conn.Table("v_order_h").Select(`
+		coalesce(sum(order_d.price ),0) as price
+		`).Joins(`inner join order_d 
+		on v_order_h.order_id = order_d.order_id
+		`).Where(sWhere).First(&op)
 	}
 
-	sWhere = strings.ReplaceAll(sWhere, "barber_id", "v_order_h.barber_id")
-
-	query := db.Conn.Table("v_order_h").Select(`
-	coalesce(sum(order_d.price ),0) as price
-	`).Joins(`inner join order_d 
-	on v_order_h.order_id = order_d.order_id
-	`).Where(sWhere).First(&op)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {

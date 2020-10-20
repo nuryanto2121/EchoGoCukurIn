@@ -80,6 +80,7 @@ func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.Bar
 		sWhere   = ""
 		logger   = logging.Logger{}
 		orderBy  = queryparam.SortField
+		query    *gorm.DB
 	)
 	// pagination
 	if queryparam.Page > 0 {
@@ -103,24 +104,31 @@ func (db *repoBarber) GetList(queryparam models.ParamList) (result []*models.Bar
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(barber_name) LIKE ?" //+ queryparam.Search
 		} else {
-			sWhere += queryparam.Search
+			sWhere += "lower(barber_name) LIKE ?" //queryparam.Search
 		}
+		query = db.Conn.Table("barber b ").Select(`
+		b.barber_id,b.barber_cd,b.barber_name,
+		b.address,b.latitude,b.longitude,
+		b.operation_start,b.operation_end,
+		b.is_active,c.file_id ,c.file_name ,c.file_path ,c.file_type
+		`).Joins(`
+		left join sa_file_upload c
+		on b.file_id = c.file_id 
+	`).Where(sWhere, queryparam.Search).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	} else {
+		query = db.Conn.Table("barber b ").Select(`
+		b.barber_id,b.barber_cd,b.barber_name,
+		b.address,b.latitude,b.longitude,
+		b.operation_start,b.operation_end,
+		b.is_active,c.file_id ,c.file_name ,c.file_path ,c.file_type
+		`).Joins(`
+		left join sa_file_upload c
+		on b.file_id = c.file_id 
+	`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	}
 
-	// end where
-
-	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	query := db.Conn.Table("barber b ").Select(`
-	b.barber_id,b.barber_cd,b.barber_name,
-	b.address,b.latitude,b.longitude,
-	b.operation_start,b.operation_end,
-	b.is_active,c.file_id ,c.file_name ,c.file_path ,c.file_type
-	`).Joins(`
-	left join sa_file_upload c
-	on b.file_id = c.file_id 
-	`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 
@@ -176,6 +184,7 @@ func (db *repoBarber) Count(queryparam models.ParamList) (result int, err error)
 	var (
 		sWhere = ""
 		logger = logging.Logger{}
+		query  *gorm.DB
 	)
 	result = 0
 
@@ -186,12 +195,17 @@ func (db *repoBarber) Count(queryparam models.ParamList) (result int, err error)
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(barber_name) LIKE ?" //+ queryparam.Search
+		} else {
+			sWhere += "lower(barber_name) LIKE ?" //queryparam.Search
 		}
+
+		query = db.Conn.Model(&models.Barber{}).Where(sWhere, queryparam.Search).Count(&result)
+	} else {
+		query = db.Conn.Model(&models.Barber{}).Where(sWhere).Count(&result)
 	}
 	// end where
 
-	query := db.Conn.Model(&models.Barber{}).Where(sWhere).Count(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"nuryanto2121/dynamic_rest_api_go/models"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/fatih/structs"
@@ -40,10 +41,8 @@ func (u *usePaket) GetList(ctx context.Context, Claims util.Claims, queryparam m
 	// var tUser = models.Paket{}
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
-		queryparam.Search = fmt.Sprintf("paket_name iLIKE '%%%s%%' OR descs iLIKE '%%%s%%'", queryparam.Search, queryparam.Search)
-		// value := reflect.ValueOf(tUser)
-		// types := reflect.TypeOf(&tUser)
-		// queryparam.Search = querywhere.GetWhereLikeStruct(value, types, queryparam.Search, "")
+		// queryparam.Search = fmt.Sprintf("paket_name iLIKE '%%%s%%' OR descs iLIKE '%%%s%%'", queryparam.Search, queryparam.Search)
+		queryparam.Search = strings.ToLower(fmt.Sprintf("%%%s%%", queryparam.Search))
 	}
 
 	if queryparam.InitSearch != "" {

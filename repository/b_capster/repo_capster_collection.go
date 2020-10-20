@@ -42,6 +42,9 @@ func (db *repoCapsterCollection) GetListFileCapter(ID int) (result []*models.SaF
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return result, models.ErrNotFound
+		}
 		return nil, err
 	}
 	return result, nil
@@ -54,6 +57,7 @@ func (db *repoCapsterCollection) GetList(queryparam models.ParamList) (result []
 		sWhere   = ""
 		logger   = logging.Logger{}
 		orderBy  = queryparam.SortField
+		query    *gorm.DB
 	)
 	// pagination
 	if queryparam.Page > 0 {
@@ -77,22 +81,28 @@ func (db *repoCapsterCollection) GetList(queryparam models.ParamList) (result []
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(ss_user.name) LIKE ?" //+ queryparam.Search
 		} else {
-			sWhere += queryparam.Search
+			sWhere += "lower(ss_user.name) LIKE ?" //queryparam.Search
 		}
+
+		query = db.Conn.Table("ss_user").Select(`
+				ss_user.user_id as capster_id,ss_user.user_name,ss_user.name,
+				ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,
+				sa_file_upload.file_path,sa_file_upload.file_type, 0 as rating
+		`).Joins(`
+		left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id
+		`).Where(sWhere, queryparam.Search).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+	} else {
+		query = db.Conn.Table("ss_user").Select(`
+			ss_user.user_id as capster_id,ss_user.user_name,ss_user.name,
+			ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,
+			sa_file_upload.file_path,sa_file_upload.file_type, 0 as rating
+		`).Joins(`
+			left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id
+		`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	}
 
-	// end where
-
-	// query := db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
-	query := db.Conn.Table("ss_user").Select(`ss_user.user_id as capster_id,ss_user.user_name,ss_user.name,
-								ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,
-								sa_file_upload.file_path,sa_file_upload.file_type, 0 as rating,
-								ss_user
-	`).Joins(`
-	left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id
-	`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 
@@ -148,6 +158,7 @@ func (db *repoCapsterCollection) Count(queryparam models.ParamList) (result int,
 	var (
 		sWhere = ""
 		logger = logging.Logger{}
+		query  *gorm.DB
 	)
 	result = 0
 
@@ -158,13 +169,19 @@ func (db *repoCapsterCollection) Count(queryparam models.ParamList) (result int,
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and " + queryparam.Search
+			sWhere += " and lower(ss_user.name) LIKE ?" //+ queryparam.Search
+		} else {
+			sWhere += "lower(ss_user.name) LIKE ?" //queryparam.Search
 		}
+		query = db.Conn.Table("ss_user").Select(`
+			ss_user.user_id as capster_id,ss_user.name,ss_user.is_active, 0 as rating
+		`).Where(sWhere, queryparam.Search).Count(&result)
+	} else {
+		query = db.Conn.Table("ss_user").Select(`
+			ss_user.user_id as capster_id,ss_user.name,ss_user.is_active, 0 as rating
+		`).Where(sWhere).Count(&result)
 	}
-	// end where
 
-	// query := db.Conn.Model(&models.CapsterCollection{}).Where(sWhere).Count(&result)
-	query := db.Conn.Table("ss_user").Select("ss_user.user_id as capster_id,ss_user.name,ss_user.is_active, 0 as rating").Where(sWhere).Count(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {

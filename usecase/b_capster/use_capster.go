@@ -50,12 +50,17 @@ func (u *useCapster) GetDataBy(ctx context.Context, Claims util.Claims, ID int) 
 
 	dataFile, err := u.repoFile.GetBySaFileUpload(ctx, dataCapster.FileID)
 	if err != nil {
-		return result, err
+		if err != models.ErrNotFound {
+			return result, err
+		}
 	}
 
 	dataCollection, err := u.repoCapster.GetListFileCapter(ID)
 	if err != nil {
-		return result, err
+		if err != models.ErrNotFound {
+			return result, err
+		}
+
 	}
 	response := map[string]interface{}{
 		"capster_id":     dataCapster.UserID,
@@ -80,7 +85,7 @@ func (u *useCapster) GetList(ctx context.Context, Claims util.Claims, queryparam
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
 
-		queryparam.Search = fmt.Sprintf("lower(ss_user.name) iLIKE '%%%s%%' ", queryparam.Search)
+		queryparam.Search = strings.ToLower(fmt.Sprintf("%%%s%%", queryparam.Search))
 	}
 
 	if queryparam.InitSearch != "" {

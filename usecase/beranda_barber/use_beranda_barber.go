@@ -55,8 +55,7 @@ func (u *useBarber) GetListOrder(ctx context.Context, Claims util.Claims, queryp
 	// var tUser = models.Barber{}
 	/*membuat Where like dari struct*/
 	if queryparam.Search != "" {
-		queryparam.Search = strings.ReplaceAll(queryparam.Search, "'", "")
-		queryparam.Search = fmt.Sprintf("lower(barber_name) LIKE '%%%s%%' ", queryparam.Search)
+		queryparam.Search = strings.ToLower(fmt.Sprintf("%%%s%%", queryparam.Search))
 	}
 
 	queryparam.InitSearch = fmt.Sprintf("owner_id = %s", Claims.UserID)
