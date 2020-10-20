@@ -81,25 +81,25 @@ func (db *repoCapsterCollection) GetList(queryparam models.ParamList) (result []
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and lower(ss_user.name) LIKE ?" //+ queryparam.Search
+			sWhere += " and lower(name) LIKE ?" //+ queryparam.Search
 		} else {
-			sWhere += "lower(ss_user.name) LIKE ?" //queryparam.Search
+			sWhere += "lower(name) LIKE ?" //queryparam.Search
 		}
 
-		query = db.Conn.Table("ss_user").Select(`
-				ss_user.user_id as capster_id,ss_user.user_name,ss_user.name,
-				ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,
-				sa_file_upload.file_path,sa_file_upload.file_type, 0 as rating
-		`).Joins(`
-		left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id
+		query = db.Conn.Table("v_capster").Select(`
+				capster_id,user_name,name,
+				is_active,file_id,file_name,
+				file_path,file_type,rating,
+				user_type,user_input,time_edit,
+				in_use
 		`).Where(sWhere, queryparam.Search).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	} else {
-		query = db.Conn.Table("ss_user").Select(`
-			ss_user.user_id as capster_id,ss_user.user_name,ss_user.name,
-			ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,
-			sa_file_upload.file_path,sa_file_upload.file_type, 0 as rating
-		`).Joins(`
-			left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id
+		query = db.Conn.Table("v_capster").Select(`
+			capster_id,user_name,name,
+			is_active,file_id,file_name,
+			file_path,file_type,rating,
+			user_type,user_input,time_edit,
+			in_use
 		`).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	}
 
@@ -169,16 +169,16 @@ func (db *repoCapsterCollection) Count(queryparam models.ParamList) (result int,
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and lower(ss_user.name) LIKE ?" //+ queryparam.Search
+			sWhere += " and lower(name) LIKE ?" //+ queryparam.Search
 		} else {
-			sWhere += "lower(ss_user.name) LIKE ?" //queryparam.Search
+			sWhere += "lower(name) LIKE ?" //queryparam.Search
 		}
-		query = db.Conn.Table("ss_user").Select(`
-			ss_user.user_id as capster_id,ss_user.name,ss_user.is_active, 0 as rating
+		query = db.Conn.Table("v_capster").Select(`
+			v_capster.capster_id,v_capster.name,v_capster.is_active, 0 as rating
 		`).Where(sWhere, queryparam.Search).Count(&result)
 	} else {
-		query = db.Conn.Table("ss_user").Select(`
-			ss_user.user_id as capster_id,ss_user.name,ss_user.is_active, 0 as rating
+		query = db.Conn.Table("v_capster").Select(`
+			v_capster.capster_id,v_capster.name,v_capster.is_active, 0 as rating
 		`).Where(sWhere).Count(&result)
 	}
 

@@ -48,5 +48,9 @@ type CapsterList struct {
 	Name      string `json:"name" valid:"Required"`
 	IsActive  bool   `json:"is_active" valid:"Required"`
 	SaFileOutput
-	Rating float32 `json:"rating,omitempty"`
+	Rating    float32   `json:"rating,omitempty"`
+	UserType  string    `json:"user_type"`
+	InUse     bool      `json:"in_user"`
+	UserInput string    `json:"user_input"`
+	TimeEdit  time.Time `json:"time_edit"`
 }

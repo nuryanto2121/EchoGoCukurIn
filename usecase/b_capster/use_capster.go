@@ -89,10 +89,10 @@ func (u *useCapster) GetList(ctx context.Context, Claims util.Claims, queryparam
 	}
 
 	if queryparam.InitSearch != "" {
-		queryparam.InitSearch = strings.ReplaceAll(queryparam.InitSearch, "capster_id", "ss_user.user_id")
-		queryparam.InitSearch += fmt.Sprintf(" AND ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
+		// queryparam.InitSearch = strings.ReplaceAll(queryparam.InitSearch, "capster_id", "ss_user.user_id")
+		queryparam.InitSearch += fmt.Sprintf(" AND user_type='capster' and user_input = '%s'", Claims.UserID)
 	} else {
-		queryparam.InitSearch = fmt.Sprintf("ss_user.user_type='capster' and ss_user.user_input = '%s'", Claims.UserID)
+		queryparam.InitSearch = fmt.Sprintf("user_type='capster' and user_input = '%s'", Claims.UserID)
 	}
 	result.Data, err = u.repoCapster.GetList(queryparam)
 	if err != nil {
