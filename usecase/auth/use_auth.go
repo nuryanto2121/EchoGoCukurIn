@@ -52,6 +52,10 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 			if DataCapster.BarberID == 0 {
 				return nil, errors.New("Anda belum terhubung dengan Barber, Silahkan hubungi pemilik Barber")
 			}
+
+			if !DataCapster.BarberIsActive {
+				return nil, errors.New("Saat ini barber anda sedang tidak aktif.")
+			}
 			isBarber = false
 		}
 

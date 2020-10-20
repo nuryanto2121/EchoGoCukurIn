@@ -41,7 +41,9 @@ func (db *repoSysUser) GetByCapster(Account string) (result models.LoginCapster,
 
 	// query := db.Conn.Where("email = ?", Account).Or("telp = ?", Account).First(&result)
 	query := db.Conn.Table("ss_user su").Select(`su.user_id as capster_id, su."name" as capster_name,su."password",su.email ,
-						su.telp ,su.file_id ,sf.file_name ,sf.file_path ,b.barber_id ,b.barber_name,su.user_input as owner_id ,so."name" as owner_name,su.is_active`).Joins(`
+						su.telp ,su.file_id ,sf.file_name ,sf.file_path ,b.barber_id ,b.barber_name,su.user_input as owner_id ,so."name" as owner_name,su.is_active,
+						b.is_active as barber_is_active
+						`).Joins(`
 						left join barber_capster bc on su.user_id = bc.capster_id`).Joins(`
 						left join barber b on b.barber_id = bc.barber_id `).Joins(`
 						left join sa_file_upload sf on sf.file_id =su.file_id`).Joins(`
