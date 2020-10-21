@@ -1,0 +1,83 @@
+{
+    "debug": true,
+    "jwt_secret": "don'tPanic",
+    "expire_jwt":72,
+    "server": {
+        "run_mode": "release",
+        "http_port": 9191,
+        "read_timeout": 600,
+        "write_timeout": 600,
+        "_comment": "debug or release"
+    },
+    "smtp":{
+        "server":"smtp.gmail.com",
+        "port":587,
+        "user":"cukur.in.adm@gmail.com",
+        "passwd":"!@#$%12345",
+        "Identity":"cukur-In",
+        "sender":"nuryanto@gmail.com"
+    },
+    "app": {
+        "jwt_secret": "don'tPanic",
+        "page_size": 10,
+        "prefix_url": "http://127.0.0.1:8000",
+        "runtime_root_path": "wwwroot/runtime/",
+        "image_save_path": "wwwroot/uploads/images",
+        "image_size": 5,
+        "image_allow_ext": ".jpg,.jpeg,.png",
+        "export_save_path": "wwwroot/export/",
+        "qr_code": "wwwroot/qr_code/",
+        "log_save_path": "logs/",
+        "log_save_name": "log",
+        "log_file_ext": "log",
+        "time_format": 20060102,
+        "issuer": "PropertyFramework",
+        "url_forgot_password":"http://localhost:8084"
+    },
+    "database_pa": {
+        "type": "postgres",
+        "host": "34.101.133.247",
+        "port": "1401",
+        "user": "postgres",
+        "password": "postgres_prod",
+        "name": "postgres",
+        "table_prefix": ""
+    },
+    "redisdb_pa":{
+        "host":"34.101.133.247",
+        "port":1201,
+        "db":1,
+        "key":"ka_email",
+        "password":"redis_prod"
+    },
+    "mongodb_pa":{
+        "host": "34.101.133.247",
+        "port": "1301",
+        "user": "mongoadmin_prod",
+        "password": "mongo_prod",
+        "name": "cukur_logs"
+    },
+    "database": {
+        "type": "postgres",
+        "host": "34.101.133.247",
+        "port": "1400",
+        "user": "postgres",
+        "password": "postgres_dev",
+        "name": "cukur_in",
+        "table_prefix": ""
+    },
+    "redisdb":{
+        "host":"34.101.133.247",
+        "port":1200,
+        "db":1,
+        "key":"ka_email",
+        "password":"redis_dev"
+    },
+    "mongodb":{
+        "host": "34.101.133.247",
+        "port": "1300",
+        "user": "mongoadmin_dev",
+        "password": "mongo_dev",
+        "name": "cukur_logs"
+    }
+}
