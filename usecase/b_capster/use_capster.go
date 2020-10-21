@@ -12,6 +12,8 @@ import (
 	"nuryanto2121/dynamic_rest_api_go/models"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 
+	repofunction "nuryanto2121/dynamic_rest_api_go/repository/function"
+
 	// useemailcapster "nuryanto2121/dynamic_rest_api_go/usecase/email_capster"
 	useemailauth "nuryanto2121/dynamic_rest_api_go/usecase/email_auth"
 	"strings"
@@ -193,12 +195,16 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	dataUser.JoinDate = data.JoinDate
 
 	//if status not active then delete relasi in barber_capster
-	// if !dataUser.IsActive {
-	// 	err = u.repoBarberCapster.DeleteByCapster(ID)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// }
+	if !dataUser.IsActive {
+		// err = u.repoBarberCapster.DeleteByCapster(ID)
+		fn := &repofunction.FN{
+			Claims: Claims,
+		}
+		cnt := fn.GetCountTrxCapster(ID)
+		if cnt > 0 {
+			return errors.New("Mohon maaf anda tidak dapat non-aktifkan Kapster, sedang ada transaksi yang berlangsung")
+		}
+	}
 
 	datas := structs.Map(dataUser)
 	datas["user_edit"] = Claims.UserID

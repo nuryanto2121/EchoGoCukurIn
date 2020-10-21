@@ -2,6 +2,7 @@ package usebarber
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"math"
 	"strings"
@@ -218,6 +219,17 @@ func (u *useBarber) Update(ctx context.Context, Claims util.Claims, ID int, data
 	err = mapstructure.Decode(data, &mBarber)
 	if err != nil {
 		return err
+	}
+
+	// check jika status tidak aktif
+	if !mBarber.IsActive {
+		fn := &repofunction.FN{
+			Claims: Claims,
+		}
+		cnt := fn.GetCountTrxBarber(ID)
+		if cnt > 0 {
+			return errors.New("Mohon maaf anda tidak dapat non-aktifkan Barber, sedang ada transaksi yang berlangsung")
+		}
 	}
 	mBarber.OperationStart = data.OperationStart
 	mBarber.OperationEnd = data.OperationEnd

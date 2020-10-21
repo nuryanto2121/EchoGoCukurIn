@@ -86,3 +86,58 @@ func (fn *FN) GenBarberCode() (string, error) {
 
 	return result, nil
 }
+
+func (fn *FN) GetCountTrxCapster(ID int) int {
+	var (
+		logger = logging.Logger{}
+		result = 0
+		conn   *gorm.DB
+	)
+	OwnerID, _ := strconv.Atoi(fn.Claims.UserID)
+
+	conn = postgresdb.Conn
+	query := conn.Table("order_h oh").Select(`
+		oh.order_id ,oh.order_no ,oh.barber_id ,b.barber_name ,b.owner_id ,oh.order_date ,oh.status ,oh.capster_id
+	`).Joins(`
+		join barber b on b.barber_id = oh.barber_id 
+	`).Where(`
+	oh.status in('P','N') AND b.owner_id = ? AND oh.capster_id = ?
+		`, OwnerID, ID).Count(&result)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err := query.Error
+	if err != nil {
+		if err == models.ErrNotFound {
+			return 0
+		}
+		logger.Error(err)
+	}
+	return result
+}
+
+func (fn *FN) GetCountTrxBarber(ID int) int {
+
+	var (
+		logger = logging.Logger{}
+		result = 0
+		conn   *gorm.DB
+	)
+	OwnerID, _ := strconv.Atoi(fn.Claims.UserID)
+
+	conn = postgresdb.Conn
+	query := conn.Table("order_h oh").Select(`
+		oh.order_id ,oh.order_no ,oh.barber_id ,b.barber_name ,b.owner_id ,oh.order_date ,oh.status ,oh.capster_id
+	`).Joins(`
+		join barber b on b.barber_id = oh.barber_id 
+	`).Where(`
+	oh.status in('P','N') AND b.owner_id = ? AND oh.barber_id = ?
+		`, OwnerID, ID).Count(&result)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err := query.Error
+	if err != nil {
+		if err == models.ErrNotFound {
+			return 0
+		}
+		logger.Error(err)
+	}
+	return result
+}

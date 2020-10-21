@@ -202,6 +202,23 @@ func autoMigrate() {
 			JOIN order_h ON order_h.barber_id = barber.barber_id
 			JOIN ss_user ON ss_user.user_id = order_h.capster_id
 			LEFT JOIN sa_file_upload ON sa_file_upload.file_id = ss_user.file_id;
+
+
+		CREATE OR REPLACE VIEW public.v_capster
+		AS
+		SELECT 
+			ss_user.user_id as capster_id,ss_user.user_name,ss_user.name,
+			ss_user.is_active,sa_file_upload.file_id,sa_file_upload.file_name,
+			sa_file_upload.file_path,sa_file_upload.file_type, 0 as rating,
+			(case when b.barber_id is not null then true else false end) as in_use,
+			ss_user.user_type,ss_user.user_input,ss_user.time_edit ,b.barber_id,
+			b.barber_name
+			
+		 FROM "ss_user" 
+			left join sa_file_upload ON sa_file_upload.file_id = ss_user.file_id
+			left join barber_capster bc on bc.capster_id = ss_user.user_id 
+			left join barber b on bc.barber_id =b.barber_id 
+			and b.owner_id::varchar = ss_user.user_input;
 	 
 	  `)
 
