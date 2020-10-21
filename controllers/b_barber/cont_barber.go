@@ -172,7 +172,7 @@ func (u *ContBarber) Create(e echo.Context) error {
 }
 
 // UpdateSaBarber :
-// @Summary Rubah Profile
+// @Summary Rubah Barber
 // @Security ApiKeyAuth
 // @Tags Barber
 // @Produce json

@@ -483,7 +483,7 @@ var doc = `{
                 "tags": [
                     "Barber"
                 ],
-                "summary": "Rubah Profile",
+                "summary": "Rubah Barber",
                 "parameters": [
                     {
                         "type": "string",
@@ -1098,7 +1098,7 @@ var doc = `{
                 "tags": [
                     "Order"
                 ],
-                "summary": "Rubah Profile",
+                "summary": "Rubah Trx",
                 "parameters": [
                     {
                         "type": "string",
@@ -1363,7 +1363,7 @@ var doc = `{
                 "tags": [
                     "Paket"
                 ],
-                "summary": "Rubah Profile",
+                "summary": "Rubah Paket",
                 "parameters": [
                     {
                         "type": "string",

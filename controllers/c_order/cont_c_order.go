@@ -191,7 +191,7 @@ func (u *ContOrder) Create(e echo.Context) error {
 }
 
 // UpdateSaOrder :
-// @Summary Rubah Profile
+// @Summary Rubah Trx
 // @Security ApiKeyAuth
 // @Tags Order
 // @Produce json

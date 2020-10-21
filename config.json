@@ -14,7 +14,7 @@
         "port":587,
         "user":"cukur.in.adm@gmail.com",
         "passwd":"!@#$%12345",
-        "Identity":"Cukur_In",
+        "Identity":"cukur-In",
         "sender":"nuryanto@gmail.com"
     },
     "app": {

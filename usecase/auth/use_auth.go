@@ -170,11 +170,11 @@ func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotF
 	// out := map[string]interface{}{
 	// 	"gen_password": GenPassword,
 	// }
-	// go mailservice.SendForgot().Error()
-	err = mailservice.SendForgot()
-	if err != nil {
-		return "", err
-	}
+	go mailservice.SendForgot().Error()
+	// err = mailservice.SendForgot()
+	// if err != nil {
+	// 	return "", err
+	// }
 
 	return GenOTP, nil
 }

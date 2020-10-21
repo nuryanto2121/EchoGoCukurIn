@@ -193,12 +193,12 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	dataUser.JoinDate = data.JoinDate
 
 	//if status not active then delete relasi in barber_capster
-	if !dataUser.IsActive {
-		err = u.repoBarberCapster.DeleteByCapster(ID)
-		if err != nil {
-			return err
-		}
-	}
+	// if !dataUser.IsActive {
+	// 	err = u.repoBarberCapster.DeleteByCapster(ID)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
 
 	datas := structs.Map(dataUser)
 	datas["user_edit"] = Claims.UserID

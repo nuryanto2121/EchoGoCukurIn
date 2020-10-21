@@ -226,10 +226,11 @@ func (db *repoOrderH) SumPriceDetail(queryparam models.ParamList) (result float3
 	result = 0
 
 	// WHERE
-	sWhere = strings.ReplaceAll(sWhere, "barber_id", "v_order_h.barber_id")
+
 	if queryparam.InitSearch != "" {
 		sWhere = queryparam.InitSearch
 	}
+	sWhere = strings.ReplaceAll(sWhere, "barber_id", "v_order_h.barber_id")
 
 	if queryparam.Search != "" {
 		if sWhere != "" {

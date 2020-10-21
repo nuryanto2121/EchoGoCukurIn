@@ -167,7 +167,7 @@ func (u *ContPaket) Create(e echo.Context) error {
 }
 
 // UpdateSaPaket :
-// @Summary Rubah Profile
+// @Summary Rubah Paket
 // @Security ApiKeyAuth
 // @Tags Paket
 // @Produce json

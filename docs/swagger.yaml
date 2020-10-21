@@ -574,7 +574,7 @@ paths:
             $ref: '#/definitions/tool.ResponseModel'
       security:
       - ApiKeyAuth: []
-      summary: Rubah Profile
+      summary: Rubah Barber
       tags:
       - Barber
   /barber/beranda:
@@ -972,7 +972,7 @@ paths:
             $ref: '#/definitions/tool.ResponseModel'
       security:
       - ApiKeyAuth: []
-      summary: Rubah Profile
+      summary: Rubah Trx
       tags:
       - Order
   /barber/paket:
@@ -1143,7 +1143,7 @@ paths:
             $ref: '#/definitions/tool.ResponseModel'
       security:
       - ApiKeyAuth: []
-      summary: Rubah Profile
+      summary: Rubah Paket
       tags:
       - Paket
   /barber/user:
