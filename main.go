@@ -40,13 +40,13 @@ func init() {
 func main() {
 
 	e := echo.New()
-
+	e.Debug = false
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	// e.Use(midd.MiddlewareOne)
 	// e.Use(jwt.JWT(e))
-
+	e.Debug = false
 	R := routes.EchoRoutes{E: e}
 
 	R.InitialRouter()
