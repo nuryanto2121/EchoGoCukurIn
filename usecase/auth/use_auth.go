@@ -38,15 +38,15 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 	// expireToken := setting.FileConfigSetting.JWTExpired
 	DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 	if DataOwner.UserType == "" && err == models.ErrNotFound {
-		return nil, errors.New("Your Account not valid.")
+		return nil, errors.New("Email anda belum terdaftar.")
 	} else {
 		if DataOwner.UserType == "capster" {
 			DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
 			if err != nil {
-				return nil, errors.New("Your Account not valid.")
+				return nil, errors.New("Email anda belum terdaftar.")
 			}
 			if !DataCapster.IsActive {
-				return nil, errors.New("Account and belum aktif. Silahkan hubungi pemilik Barber")
+				return nil, errors.New("Account anda belum aktif. Silahkan hubungi pemilik Barber")
 			}
 
 			if DataCapster.BarberID == 0 {
@@ -60,7 +60,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 		}
 
 		if !DataOwner.IsActive {
-			return nil, errors.New("Account and belum aktif. Silahkan hubungi pemilik Barber")
+			return nil, errors.New("Account andan belum aktif. Silahkan hubungi pemilik Barber")
 		}
 	}
 	// if err != nil {
@@ -77,7 +77,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 
 	if isBarber {
 		if !util.ComparePassword(DataOwner.Password, util.GetPassword(dataLogin.Password)) {
-			return nil, errors.New("Your Password not valid.")
+			return nil, errors.New("Password yang anda masukkan salah. Silahkan coba lagi.")
 		}
 		DataFile, err := u.repoFile.GetBySaFileUpload(ctx, DataOwner.FileID)
 
@@ -105,7 +105,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 
 	} else {
 		if !util.ComparePassword(DataCapster.Password, util.GetPassword(dataLogin.Password)) {
-			return nil, errors.New("Your Password not valid.")
+			return nil, errors.New("Password yang anda masukkan salah. Silahkan coba lagi.")
 		}
 
 		token, err := util.GenerateTokenCapster(DataCapster.CapsterID, DataCapster.OwnerID, DataCapster.BarberID)
