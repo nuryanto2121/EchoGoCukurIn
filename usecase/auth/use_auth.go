@@ -163,7 +163,7 @@ func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotF
 		redisdb.TurncateList(dataForgot.Account + "_Forgot")
 	}
 	//store to redis
-	err = redisdb.AddSession(dataForgot.Account+"_Forgot", GenOTP, 1440*time.Minute)
+	err = redisdb.AddSession(dataForgot.Account+"_Forgot", GenOTP, 24*time.Hour)
 	if err != nil {
 		return "", err
 	}
