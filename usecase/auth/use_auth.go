@@ -265,7 +265,7 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	// }
 
 	//store to redis
-	err = redisdb.AddSession(dataRegister.EmailAddr, GenPassword, 2)
+	err = redisdb.AddSession(dataRegister.EmailAddr, GenPassword, 24*time.Hour)
 	if err != nil {
 		u.repoAuth.Delete(User.UserID)
 		return output, err
