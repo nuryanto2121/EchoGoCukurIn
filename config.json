@@ -4,7 +4,7 @@
     "expire_jwt":72,
     "server": {
         "run_mode": "release",
-        "http_port": 9191,
+        "http_port": 9194,
         "read_timeout": 600,
         "write_timeout": 600,
         "_comment": "debug or release"
@@ -34,7 +34,7 @@
         "issuer": "PropertyFramework",
         "url_forgot_password":"http://localhost:8084"
     },
-    "database_pa": {
+    "database": {
         "type": "postgres",
         "host": "34.101.133.247",
         "port": "1401",
@@ -43,21 +43,21 @@
         "name": "postgres",
         "table_prefix": ""
     },
-    "redisdb_pa":{
+    "redisdb":{
         "host":"34.101.133.247",
         "port":1201,
         "db":1,
         "key":"ka_email",
         "password":"redis_prod"
     },
-    "mongodb_pa":{
+    "mongodb":{
         "host": "34.101.133.247",
         "port": "1301",
         "user": "mongoadmin_prod",
         "password": "mongo_prod",
         "name": "cukur_logs"
     },
-    "database": {
+    "database_dev": {
         "type": "postgres",
         "host": "34.101.133.247",
         "port": "1400",
@@ -66,14 +66,14 @@
         "name": "cukur_in",
         "table_prefix": ""
     },
-    "redisdb":{
+    "redisdb_dev":{
         "host":"34.101.133.247",
         "port":1200,
         "db":1,
         "key":"ka_email",
         "password":"redis_dev"
     },
-    "mongodb":{
+    "mongodb_dev":{
         "host": "34.101.133.247",
         "port": "1300",
         "user": "mongoadmin_dev",

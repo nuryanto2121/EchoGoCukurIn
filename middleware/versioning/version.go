@@ -9,7 +9,7 @@ type SsVersion struct {
 }
 
 func (V *SsVersion) GetVersion(Conn *gorm.DB) (result SsVersion, err error) {
-	err = Conn.Where("os = ? AND version = ?", V.OS, V.Version).First(&result).Error
+	err = Conn.Where("os = ? AND version <= ?", V.OS, V.Version).First(&result).Error
 	if err != nil {
 		return result, err
 	}
