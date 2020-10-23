@@ -1,6 +1,11 @@
 package version
 
-import "github.com/jinzhu/gorm"
+import (
+	"fmt"
+	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
+
+	"github.com/jinzhu/gorm"
+)
 
 type SsVersion struct {
 	VersionID int    `json:"version_id" gorm:"PRIMARY_KEY"`
@@ -9,7 +14,13 @@ type SsVersion struct {
 }
 
 func (V *SsVersion) GetVersion(Conn *gorm.DB) (result SsVersion, err error) {
-	err = Conn.Where("os = ? AND version <= ?", V.OS, V.Version).First(&result).Error
+	var logger = logging.Logger{}
+	query := Conn.Where("os = ? AND version <= ?", V.OS, V.Version).First(&result)
+
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+
+	err = query.Error
+
 	if err != nil {
 		return result, err
 	}
