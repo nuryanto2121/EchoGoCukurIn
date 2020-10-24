@@ -67,6 +67,20 @@ func autoMigrate() {
 	)
 
 	Conn.Exec(`
+	CREATE FUNCTION update_status_new_job() 
+	RETURNS void AS $$
+		#variable_conflict use_variable
+		DECLARE
+			curtime timestamp := now();
+		BEGIN
+			update order_h
+				set status = 'C'
+			where status ='N' 
+			and order_date < current_timestamp
+			and (EXTRACT(EPOCH FROM current_timestamp-order_date)/3600)::int >=2;
+		END;
+	$$ LANGUAGE plpgsql;
+
 	CREATE OR REPLACE FUNCTION public.last_day(date)
 	RETURNS date AS
 	$$
@@ -79,7 +93,11 @@ func autoMigrate() {
 	  ) RETURNS INT AS
 	  $$
 		SELECT CASE WHEN $2 >= 0 THEN
-		  CEIL(EXTRACT(DAY FROM $1) / 7)::int
+			case when CEIL(EXTRACT(DAY FROM $1) / 7)::int > 4 then
+				4 
+			else
+				CEIL(EXTRACT(DAY FROM $1) / 7)::int
+			END
 		ELSE 
 		  0 - CEIL(
 			(EXTRACT(DAY FROM last_day($1)) - EXTRACT(DAY FROM $1) + 1) / 7
