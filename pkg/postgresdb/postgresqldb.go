@@ -67,7 +67,7 @@ func autoMigrate() {
 	)
 
 	Conn.Exec(`
-	CREATE FUNCTION update_status_new_job() 
+	CREATE OR REPLACE FUNCTION update_status_new_job() 
 	RETURNS void AS $$
 		#variable_conflict use_variable
 		DECLARE

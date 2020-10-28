@@ -29,7 +29,7 @@ func (u *useSysUser) GetByEmailSaUser(ctx context.Context, email string) (result
 	defer cancel()
 
 	a := models.SsUser{}
-	result, err = u.repoUser.GetByAccount(email)
+	result, err = u.repoUser.GetByAccount(email, true)
 	if err != nil {
 		return a, err
 	}
@@ -142,7 +142,7 @@ func (u *useSysUser) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	// DataOwner.Telp = data.Telp
 	// DataOwner.Email = data.Email
 	// DataOwner.UserEdit = Claims.UserID
-	dataUser, err := u.repoUser.GetByAccount(data.Email)
+	dataUser, err := u.repoUser.GetByAccount(data.Email, true)
 	if dataUser.UserID != ID {
 		return errors.New("Email sudah terdaftar.")
 	}

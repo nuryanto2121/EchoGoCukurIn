@@ -21,8 +21,15 @@ func NewRepoSysUser(Conn *gorm.DB) iusers.Repository {
 	return &repoSysUser{Conn}
 }
 
-func (db *repoSysUser) GetByAccount(Account string) (result models.SsUser, err error) {
-	query := db.Conn.Where("(email iLIKE ? OR telp = ?)", Account, Account).First(&result)
+func (db *repoSysUser) GetByAccount(Account string, IsOwner bool) (result models.SsUser, err error) {
+	var query *gorm.DB
+
+	if IsOwner {
+		query = db.Conn.Where("(email iLIKE ? OR telp = ?) AND user_type = 'owner' ", Account, Account).First(&result)
+	} else {
+		query = db.Conn.Where("(email iLIKE ? OR telp = ?)", Account, Account).First(&result)
+	}
+
 	log.Info(fmt.Sprintf("%v", query.QueryExpr()))
 	// logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error
@@ -164,6 +171,24 @@ func (db *repoSysUser) Update(ID int, data map[string]interface{}) error {
 		tUser  models.SsUser
 	)
 	query := db.Conn.Model(&tUser).Where("user_id = ?", ID).Updates(data)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err = query.Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (db *repoSysUser) UpdatePasswordByEmail(Email string, Password string) error {
+	var (
+		logger = logging.Logger{}
+		err    error
+		// tUser  models.SsUser
+	)
+	// query := db.Conn.Model(&tUser).Where("user_id = ?", ID).Updates(data)
+	query := db.Conn.Exec(`UPDATE ss_user
+							set password = ?
+						  where user_type IN ('capster','owner')
+						  AND email = ?`, Password, Email)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {

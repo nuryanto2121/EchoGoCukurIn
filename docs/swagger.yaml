@@ -119,6 +119,8 @@ definitions:
         type: string
       pwd:
         type: string
+      type:
+        type: string
     type: object
   models.OrderDPost:
     properties:

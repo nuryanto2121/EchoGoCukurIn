@@ -9,6 +9,7 @@ import (
 type LoginForm struct {
 	Account  string `json:"account" valid:"Required"`
 	Password string `json:"pwd" valid:"Required"`
+	Type     string `json:"type,omitempty"`
 }
 
 // RegisterForm :

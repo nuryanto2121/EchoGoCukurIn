@@ -33,47 +33,61 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 		isBarber    bool = true
 		response         = map[string]interface{}{}
 		expireToken      = setting.FileConfigSetting.JWTExpired
+		canChange   bool = false
 	)
 
-	// expireToken := setting.FileConfigSetting.JWTExpired
-	DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
-	if DataOwner.UserType == "" && err == models.ErrNotFound {
-		return nil, errors.New("Email anda belum terdaftar.")
+	if dataLogin.Type == "owner" {
+		DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account, true) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
+		if DataOwner.UserType == "" && err == models.ErrNotFound {
+			return nil, errors.New("Email anda belum terdaftar.")
+		} else {
+			if DataOwner.UserType == "capster" {
+				DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
+				if err != nil {
+					return nil, errors.New("Email anda belum terdaftar.")
+				}
+				if !DataCapster.IsActive {
+					return nil, errors.New("Account anda belum aktif. Silahkan hubungi pemilik Barber")
+				}
+
+				if DataCapster.BarberID == 0 {
+					return nil, errors.New("Anda belum terhubung dengan Barber, Silahkan hubungi pemilik Barber")
+				}
+
+				if !DataCapster.BarberIsActive {
+					return nil, errors.New("Saat ini barber anda sedang tidak aktif.")
+				}
+				isBarber = false
+			} else {
+				DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
+				if DataCapster.Email != "" && DataCapster.Email == dataLogin.Account {
+					canChange = true
+				}
+
+			}
+
+			if !DataOwner.IsActive {
+				return nil, errors.New("Account andan belum aktif. Silahkan hubungi pemilik Barber")
+			}
+		}
 	} else {
-		if DataOwner.UserType == "capster" {
-			DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
-			if err != nil {
-				return nil, errors.New("Email anda belum terdaftar.")
-			}
-			if !DataCapster.IsActive {
-				return nil, errors.New("Account anda belum aktif. Silahkan hubungi pemilik Barber")
-			}
-
-			if DataCapster.BarberID == 0 {
-				return nil, errors.New("Anda belum terhubung dengan Barber, Silahkan hubungi pemilik Barber")
-			}
-
-			if !DataCapster.BarberIsActive {
-				return nil, errors.New("Saat ini barber anda sedang tidak aktif.")
-			}
-			isBarber = false
+		isBarber = false
+		DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
+		if err != nil {
+			return nil, errors.New("Email anda belum terdaftar.")
+		}
+		if !DataCapster.IsActive {
+			return nil, errors.New("Account anda belum aktif. Silahkan hubungi pemilik Barber")
 		}
 
-		if !DataOwner.IsActive {
-			return nil, errors.New("Account andan belum aktif. Silahkan hubungi pemilik Barber")
+		if DataCapster.BarberID == 0 {
+			return nil, errors.New("Anda belum terhubung dengan Barber, Silahkan hubungi pemilik Barber")
+		}
+
+		if !DataCapster.BarberIsActive {
+			return nil, errors.New("Saat ini barber anda sedang tidak aktif.")
 		}
 	}
-	// if err != nil {
-	// 	if err == models.ErrNotFound {
-	// 		DataCapster, err = u.repoAuth.GetByCapster(dataLogin.Account)
-	// 		if err != nil {
-	// 			return nil, errors.New("Your Account not valid.")
-	// 		}
-	// 		isBarber = false
-	// 	} else {
-	// 		return nil, errors.New("Your Account not valid.")
-	// 	}
-	// }
 
 	if isBarber {
 		if !util.ComparePassword(DataOwner.Password, util.GetPassword(dataLogin.Password)) {
@@ -101,6 +115,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 			"token":      token,
 			"data_owner": restUser,
 			"user_type":  "barber",
+			"can_change": canChange,
 		}
 
 	} else {
@@ -131,6 +146,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 			"token":        token,
 			"data_capster": restUser,
 			"user_type":    "capster",
+			"can_change":   canChange,
 		}
 	}
 
@@ -141,7 +157,7 @@ func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotF
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	DataUser, err := u.repoAuth.GetByAccount(dataForgot.Account) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
+	DataUser, err := u.repoAuth.GetByAccount(dataForgot.Account, true) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 	if err != nil {
 		// return util.GoutputErrCode(http.StatusUnauthorized, "Your User/Email not valid.") //appE.ResponseError(util.GetStatusCode(err), fmt.Sprintf("%v", err), nil)
 		return "", errors.New("Your Account not valid.")
@@ -187,7 +203,7 @@ func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPass
 		return errors.New("Password dan Confirm Password tidak boleh sama.")
 	}
 
-	DataUser, err := u.repoAuth.GetByAccount(dataReset.Account)
+	DataUser, err := u.repoAuth.GetByAccount(dataReset.Account, true)
 	if err != nil {
 		return err
 	}
@@ -205,11 +221,11 @@ func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPass
 	// dataUser, err := u.repoUser.GetByEmailSaUser(email)
 
 	// dataUser.Password, _ = util.Hash(dataReset.Passwd)
-	var data = map[string]interface{}{
-		"password": DataUser.Password,
-	}
+	// var data = map[string]interface{}{
+	// 	"password": DataUser.Password,
+	// }
 
-	err = u.repoAuth.Update(DataUser.UserID, data)
+	err = u.repoAuth.UpdatePasswordByEmail(dataReset.Account, DataUser.Password) //u.repoAuth.Update(DataUser.UserID, data)
 	if err != nil {
 		return err
 	}
@@ -221,7 +237,7 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
-	CekData, err := u.repoAuth.GetByAccount(dataRegister.EmailAddr)
+	CekData, err := u.repoAuth.GetByAccount(dataRegister.EmailAddr, true)
 
 	if CekData.Email == dataRegister.EmailAddr {
 		return output, errors.New("email sudah terdaftar.")
@@ -238,6 +254,7 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	User.UserInput = "cukur_in"
 	User.Email = dataRegister.EmailAddr
 	User.IsActive = true
+	User.JoinDate = time.Now()
 
 	User.Password, _ = util.Hash(GenPassword)
 	//check email or telp

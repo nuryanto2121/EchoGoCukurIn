@@ -10,6 +10,7 @@ import (
 	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
 	iuser "nuryanto2121/dynamic_rest_api_go/interface/user"
 	"nuryanto2121/dynamic_rest_api_go/models"
+	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 
 	repofunction "nuryanto2121/dynamic_rest_api_go/repository/function"
@@ -118,26 +119,52 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 	defer cancel()
 
 	var (
-		mUser = models.SsUser{}
+		mUser               = models.SsUser{}
+		logger              = logging.Logger{}
+		OwnerCapster bool   = true
+		GenPassword  string = ""
 	)
+	fn := &repofunction.FN{
+		Claims: Claims,
+	}
 	//insert user
 	err = mapstructure.Decode(data, &mUser)
 	if err != nil {
 		return err
 	}
-	dataCapster, err := u.repoUser.GetByAccount(data.Email)
-	if dataCapster.Email != "" {
-		return errors.New("Email Capster sudah terdaftar.")
+
+	dataOwner, err := fn.GetOwnerData()
+	if err != nil {
+		return err
+	}
+
+	if dataOwner.Email != data.Email {
+		OwnerCapster = false
+		// if Claims.UserType != "owner" {
+		dataCapster, err := u.repoUser.GetByAccount(data.Email, false)
+		if dataCapster.Email != "" {
+			return errors.New("Email Capster sudah terdaftar.")
+		}
+		if err != nil {
+			logger.Error(err)
+		}
+
+		// fmt.Printf("%v", err)
+		// }
+		GenPassword := util.GenerateCode(4)
+		mUser.Password, _ = util.Hash(GenPassword)
+	} else {
+		mUser.Password = dataOwner.Password
 	}
 
 	// gen Password
-	GenPassword := util.GenerateCode(4)
+
 	// mUser.UserName, err = u.repoUser.GenUserCapster()
 	// if err != nil {
 	// 	return err
 	// }
 	mUser.JoinDate = data.JoinDate
-	mUser.Password, _ = util.Hash(GenPassword)
+
 	mUser.UserEdit = Claims.UserID
 	mUser.UserInput = Claims.UserID
 	err = u.repoUser.Create(&mUser)
@@ -160,19 +187,17 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 
 	}
 
-	// send Password
-	mailService := &useemailauth.Register{
-		Email:      mUser.Email,
-		Name:       mUser.Name,
-		PasswordCd: GenPassword,
-	}
+	if !OwnerCapster {
+		// send Password
+		mailService := &useemailauth.Register{
+			Email:      mUser.Email,
+			Name:       mUser.Name,
+			PasswordCd: GenPassword,
+		}
 
-	go mailService.SendRegister()
-	// if err != nil {
-	// 	u.repoUser.Delete(mUser.UserID)
-	// 	u.repoCapster.Delete(mUser.UserID)
-	// 	return err
-	// }
+		go mailService.SendRegister()
+
+	}
 
 	return nil
 
@@ -180,16 +205,31 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, data *models.Capster) (err error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
-	var dataUser = &models.CapsterUpdate{}
+	var (
+		dataUser = &models.CapsterUpdate{}
+		logger   = logging.Logger{}
+	)
 
+	fn := &repofunction.FN{
+		Claims: Claims,
+	}
+
+	dataOwner, err := fn.GetOwnerData()
+	if err != nil {
+		return err
+	}
 	err = mapstructure.Decode(data, &dataUser)
 	if err != nil {
 		return err
 	}
-
-	dataCapster, err := u.repoUser.GetByAccount(dataUser.Email)
-	if dataCapster.UserID != ID {
-		return errors.New("Email Capster sudah terdaftar.")
+	if dataOwner.Email != data.Email {
+		dataCapster, err := u.repoUser.GetByAccount(dataUser.Email, false)
+		if dataCapster.UserID != ID {
+			return errors.New("Email Capster sudah terdaftar.")
+		}
+		if err != nil {
+			logger.Error(err)
+		}
 	}
 
 	dataUser.JoinDate = data.JoinDate
@@ -197,9 +237,9 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	//if status not active then delete relasi in barber_capster
 	if !dataUser.IsActive {
 		// err = u.repoBarberCapster.DeleteByCapster(ID)
-		fn := &repofunction.FN{
-			Claims: Claims,
-		}
+		// fn := &repofunction.FN{
+		// 	Claims: Claims,
+		// }
 		cnt := fn.GetCountTrxCapster(ID)
 		if cnt > 0 {
 			return errors.New("Mohon maaf anda tidak dapat non-aktifkan Kapster, sedang ada transaksi yang berlangsung")

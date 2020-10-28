@@ -141,3 +141,22 @@ func (fn *FN) GetCountTrxBarber(ID int) int {
 	}
 	return result
 }
+
+func (fn *FN) GetOwnerData() (result *models.SsUser, err error) {
+	var (
+		logger   = logging.Logger{}
+		mCapster = &models.SsUser{}
+		conn     *gorm.DB
+	)
+	conn = postgresdb.Conn
+	query := conn.Where("user_id = ? ", fn.Claims.UserID).Find(mCapster)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
+	err = query.Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, models.ErrNotFound
+		}
+		return nil, err
+	}
+	return mCapster, nil
+}
