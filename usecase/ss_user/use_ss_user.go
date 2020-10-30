@@ -59,11 +59,15 @@ func (u *useSysUser) ChangePassword(ctx context.Context, Claims util.Claims, Dat
 	}
 
 	DataChangePwd.NewPassword, _ = util.Hash(DataChangePwd.NewPassword)
-	var data = map[string]interface{}{
-		"password": DataChangePwd.NewPassword,
-	}
+	// var data = map[string]interface{}{
+	// 	"password": DataChangePwd.NewPassword,
+	// }
 
-	err = u.repoUser.Update(ID, data)
+	// err = u.repoUser.Update(ID, data)
+	err = u.repoUser.UpdatePasswordByEmail(dataUser.Email, DataChangePwd.NewPassword)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 func (u *useSysUser) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result interface{}, err error) {

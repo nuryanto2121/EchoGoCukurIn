@@ -37,7 +37,7 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 	)
 
 	if dataLogin.Type == "owner" {
-		DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account, true) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
+		DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account, false) //u.repoUser.GetByEmailSaUser(dataLogin.UserName)
 		if DataOwner.UserType == "" && err == models.ErrNotFound {
 			return nil, errors.New("Email anda belum terdaftar.")
 		} else {
