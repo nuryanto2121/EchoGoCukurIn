@@ -54,7 +54,7 @@ func (db *repoSysUser) GetByCapster(Account string) (result models.LoginCapster,
 						left join barber_capster bc on su.user_id = bc.capster_id`).Joins(`
 						left join barber b on b.barber_id = bc.barber_id `).Joins(`
 						left join sa_file_upload sf on sf.file_id =su.file_id`).Joins(`
-						left join ss_user so on so.user_id = su.user_input::integer `).Where(`
+						left join ss_user so on so.user_id::varchar = su.user_input `).Where(`
 						(su.email iLike ? OR su.telp = ?)`, Account, Account).First(&result)
 
 	// query := db.Conn.Table("ss_user su").Select(`su.user_id as capster_id, su."name" as capster_name,su."password",su.email ,
@@ -170,7 +170,7 @@ func (db *repoSysUser) Update(ID int, data map[string]interface{}) error {
 		err    error
 		tUser  models.SsUser
 	)
-	query := db.Conn.Model(&tUser).Where("user_id = ?", ID).Updates(data)
+	query := db.Conn.Model(&tUser).Where("user_id = ?", ID).Update(data)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {

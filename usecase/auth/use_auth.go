@@ -11,6 +11,7 @@ import (
 	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 	"nuryanto2121/dynamic_rest_api_go/redisdb"
 	useemailauth "nuryanto2121/dynamic_rest_api_go/usecase/email_auth"
+	"strconv"
 	"time"
 )
 
@@ -263,6 +264,17 @@ func (u *useAuht) Register(ctx context.Context, dataRegister models.RegisterForm
 	}
 
 	err = u.repoAuth.Create(&User)
+	if err != nil {
+		return output, err
+	}
+
+	// User.UserInput = strconv.Itoa(User.UserID)
+	// User.UserEdit = strconv.Itoa(User.UserID)
+	mUser := map[string]interface{}{
+		"user_input": strconv.Itoa(User.UserID),
+		"user_edit":  strconv.Itoa(User.UserID),
+	}
+	err = u.repoAuth.Update(User.UserID, mUser)
 	if err != nil {
 		return output, err
 	}
