@@ -55,7 +55,7 @@ func (db *repoSysUser) GetByCapster(Account string) (result models.LoginCapster,
 						left join barber b on b.barber_id = bc.barber_id `).Joins(`
 						left join sa_file_upload sf on sf.file_id =su.file_id`).Joins(`
 						left join ss_user so on so.user_id::varchar = su.user_input `).Where(`
-						(su.email iLike ? OR su.telp = ?)`, Account, Account).First(&result)
+						su.user_type = 'capster' AND (su.email iLike ? OR su.telp = ?)`, Account, Account).First(&result)
 
 	// query := db.Conn.Table("ss_user su").Select(`su.user_id as capster_id, su."name" as capster_name,su."password",su.email ,
 	// su.telp ,su.file_id ,sf.file_name ,sf.file_path ,b.barber_id ,b.barber_name,b.owner_id ,so."name" as owner_name`).Joins(`
