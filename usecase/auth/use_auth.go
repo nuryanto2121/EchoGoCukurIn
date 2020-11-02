@@ -88,6 +88,12 @@ func (u *useAuht) Login(ctx context.Context, dataLogin *models.LoginForm) (outpu
 		if !DataCapster.BarberIsActive {
 			return nil, errors.New("Saat ini barber anda sedang tidak aktif.")
 		}
+
+		DataOwner, err = u.repoAuth.GetByAccount(dataLogin.Account, true)
+		if DataOwner.Email != "" && DataOwner.Email == dataLogin.Account {
+			canChange = true
+		}
+
 	}
 
 	if isBarber {
