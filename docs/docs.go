@@ -2009,7 +2009,6 @@ var doc = `{
             "type": "object",
             "properties": {
                 "email": {
-                    "description": "PostCd           string    ` + "`" + `json:\"post_cd,omitempty\"` + "`" + `\nTelephoneNo      string    ` + "`" + `json:\"telephone_no,omitempty\"` + "`" + `",
                     "type": "string"
                 }
             }

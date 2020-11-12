@@ -15,7 +15,7 @@ type SsVersion struct {
 
 func (V *SsVersion) GetVersion(Conn *gorm.DB) (result SsVersion, err error) {
 	var logger = logging.Logger{}
-	query := Conn.Where("os = ?", V.OS).First(&result)
+	query := Conn.Where("os = ? and apps = 'barber' ", V.OS).First(&result)
 
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 

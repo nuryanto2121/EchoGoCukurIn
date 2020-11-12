@@ -124,7 +124,7 @@ func (u *ContOrder) GetList(e echo.Context) error {
 	}
 
 	if paramquery.BarberId > 0 {
-		dataBarber, err = u.useBarber.GetDataFirst(ctx, claims, paramquery.BarberId)
+		dataBarber, err = u.useBarber.GetDataFirstt(ctx, claims, paramquery.BarberId)
 	}
 
 	responseList, err = u.useOrder.GetList(ctx, claims, paramquery)

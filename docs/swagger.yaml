@@ -157,9 +157,6 @@ definitions:
   models.RegisterForm:
     properties:
       email:
-        description: |-
-          PostCd           string    `json:"post_cd,omitempty"`
-          TelephoneNo      string    `json:"telephone_no,omitempty"`
         type: string
     type: object
   models.ResetPasswd:

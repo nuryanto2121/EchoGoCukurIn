@@ -87,12 +87,12 @@ func (u *useBarber) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (
 
 	return response, nil
 }
-func (u *useBarber) GetDataFirst(ctx context.Context, Claims util.Claims, ID int) (interface{}, error) {
+func (u *useBarber) GetDataFirstt(ctx context.Context, Claims util.Claims, ID int) (interface{}, error) {
 	ctx, cancel := context.WithTimeout(ctx, u.contextTimeOut)
 	defer cancel()
 
 	OwnerID, _ := strconv.Atoi(Claims.UserID)
-	result, err := u.repoBarber.GetDataFirs(OwnerID, ID)
+	result, err := u.repoBarber.GetDataFirst(OwnerID, ID)
 	if err != nil {
 		return result, err
 	}

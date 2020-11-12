@@ -170,7 +170,7 @@ func (u *useAuht) ForgotPassword(ctx context.Context, dataForgot *models.ForgotF
 		return "", errors.New("Your Account not valid.")
 	}
 	if DataUser.Name == "" {
-		return "", errors.New("Your AccountF not valid.")
+		return "", errors.New("Your Account not valid.")
 	}
 	GenOTP := util.GenerateNumber(4)
 	// send generate password

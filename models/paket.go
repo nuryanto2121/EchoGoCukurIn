@@ -15,10 +15,7 @@ type Paket struct {
 	PromoPrice  float32    `json:"promo_price" gorm:"type:numeric(20,4)"`
 	PromoStart  *time.Time `json:"promo_start" gorm:"type:timestamp(0) without time zone"`
 	PromoEnd    *time.Time `json:"promo_end" gorm:"type:timestamp(0) without time zone"`
-	UserInput   string     `json:"user_input" gorm:"type:varchar(20)"`
-	UserEdit    string     `json:"user_edit" gorm:"type:varchar(20)"`
-	TimeInput   time.Time  `json:"time_input" gorm:"type:timestamp(0) without time zone;default:now()"`
-	TimeEdit    time.Time  `json:"time_Edit" gorm:"type:timestamp(0) without time zone;default:now()"`
+	Model
 }
 
 type DataPaket struct {

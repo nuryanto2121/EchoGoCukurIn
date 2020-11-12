@@ -5,5 +5,5 @@ type SsSequenceNo struct {
 	SequenceCd string `json:"sequence_cd" gorm:"type:varchar(20)"`
 	Prefix     string `json:"prefix" gorm:"type:varchar(10)"`
 	SeqNo      int    `json:"seq_no" gorm:"type:integer"`
-	LogUserTable
+	Model
 }

@@ -34,7 +34,7 @@ func (db *repoBarber) GetDataBy(ID int) (result *models.Barber, err error) {
 	}
 	return mBarber, nil
 }
-func (db *repoBarber) GetDataFirs(OwnerID int, BarberID int) (result *models.Barber, err error) {
+func (db *repoBarber) GetDataFirst(OwnerID int, BarberID int) (result *models.Barber, err error) {
 	var (
 		logger  = logging.Logger{}
 		mBarber = &models.Barber{}

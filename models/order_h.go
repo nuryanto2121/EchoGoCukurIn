@@ -13,10 +13,7 @@ type OrderH struct {
 	Telp         string    `json:"telp" gorm:"type:varchar(20)"`
 	Status       string    `json:"status" gorm:"type:varchar(1)"`
 	FromApps     bool      `json:"from_apps" gorm:"type:boolean"`
-	UserInput    string    `json:"user_input" gorm:"type:varchar(20)"`
-	UserEdit     string    `json:"user_edit" gorm:"type:varchar(20)"`
-	TimeInput    time.Time `json:"time_input" gorm:"type:timestamp(0) without time zone;default:now()"`
-	TimeEdit     time.Time `json:"time_Edit" gorm:"type:timestamp(0) without time zone;default:now()"`
+	Model
 }
 
 type OrderPost struct {
