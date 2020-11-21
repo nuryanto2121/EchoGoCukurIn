@@ -27,6 +27,7 @@ func NewContBarber(e *echo.Echo, a ibarbers.Usecase) {
 
 	r := e.Group("/barber/barber")
 	r.Use(midd.JWT)
+	r.Use(midd.Versioning)
 	r.GET("/:id", controller.GetDataBy)
 	r.GET("", controller.GetList)
 	r.POST("", controller.Create)

@@ -23,43 +23,10 @@ func NewContBeranda(e *echo.Echo, a iberandabarber.Usecase) {
 	}
 	r := e.Group("/barber/beranda")
 	r.Use(midd.JWT)
+	r.Use(midd.Versioning)
 	// r.GET("/status_order", controller.GetStatusOrder)
 	r.GET("", controller.GetList)
 }
-
-/*
-// GetStatusOrder :
-// @Summary GetStatusOrder
-// @Security ApiKeyAuth
-// @Tags Barber Beranda
-// @Produce  json
-// @Param OS header string true "OS Device"
-// @Param Version header string true "OS Device"
-// @Success 200 {object} tool.ResponseModel
-// @Router /barber/beranda/status_order [get]
-func (u *ContBerandaBarber) GetStatusOrder(e echo.Context) error {
-	ctx := e.Request().Context()
-	if ctx == nil {
-		ctx = context.Background()
-	}
-
-	var (
-		// logger = logging.Logger{}
-		appE = tool.Res{R: e} // wajib
-	)
-	claims, err := app.GetClaims(e)
-	if err != nil {
-		return appE.Response(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
-	}
-
-	data, err := u.useBeranda.GetStatusOrder(ctx, claims)
-	if err != nil {
-		return appE.Response(http.StatusInternalServerError, fmt.Sprintf("%v", err), nil)
-	}
-
-	return appE.Response(http.StatusOK, "Ok", data)
-}
-*/
 
 // GetList :
 // @Summary GetList Barber Beranda

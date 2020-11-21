@@ -52,7 +52,7 @@ func (u *useBarber) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (
 	}
 	queryparam.InitSearch = fmt.Sprintf("barber_paket.barber_id = %d", result.BarberID)
 	queryparam.Page = 1
-	queryparam.PerPage = 50
+	queryparam.PerPage = 100
 	dataFile, err := u.repoFile.GetBySaFileUpload(ctx, result.FileID)
 	if err != nil {
 		return result, err

@@ -32,6 +32,7 @@ func NewContUser(e *echo.Echo, a iusers.Usecase) {
 
 	r := e.Group("/barber/user")
 	r.Use(midd.JWT)
+	r.Use(midd.Versioning)
 	r.GET("/:id", controller.GetDataBy)
 	r.GET("", controller.GetList)
 	r.POST("", controller.Create)

@@ -30,6 +30,7 @@ func NewContOrder(e *echo.Echo, a icorder.Usecase, b ibarbers.Usecase) {
 
 	r := e.Group("/barber/order")
 	r.Use(midd.JWT)
+	r.Use(midd.Versioning)
 	r.GET("/:id", controller.GetDataBy)
 	r.GET("", controller.GetList)
 	r.POST("", controller.Create)

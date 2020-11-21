@@ -96,17 +96,6 @@ func (db *repoBerandaBarber) GetListOrder(queryparam models.ParamDynamicList) (r
 		query = db.Conn.Raw(sQuery).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result) //Find(&result)
 	}
 
-	// sQuery := fmt.Sprintf(`
-	// 	SELECT *
-	// 	FROM fbarber_beranda_s(%s)
-	// 	WHERE %s
-	// `, queryparam.ParamView, sWhere)
-
-	// sSourceFrom := fmt.Sprintf("fbarber_beranda_s(%s)", queryparam.ParamView)
-	// // end where
-	// query := db.Conn.Table(sSourceFrom).Select(`
-	// barber_id,barber_name,file_id,file_name,file_path,file_type,price
-	// `).Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 

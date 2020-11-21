@@ -27,6 +27,7 @@ func NewContCapster(e *echo.Echo, a icapsters.Usecase) {
 
 	r := e.Group("/barber/capster")
 	r.Use(midd.JWT)
+	r.Use(midd.Versioning)
 	r.GET("/:id", controller.GetDataBy)
 	r.GET("", controller.GetList)
 	r.POST("", controller.Create)
