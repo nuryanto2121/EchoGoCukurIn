@@ -207,7 +207,7 @@ func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPass
 	defer cancel()
 
 	if dataReset.Passwd != dataReset.ConfirmPasswd {
-		return errors.New("Password dan Confirm Password tidak boleh sama.")
+		return errors.New("Password dan Confirm Password harus sama.")
 	}
 
 	DataUser, err := u.repoAuth.GetByAccount(dataReset.Account, true)
@@ -220,17 +220,6 @@ func (u *useAuht) ResetPassword(ctx context.Context, dataReset *models.ResetPass
 	}
 
 	DataUser.Password, _ = util.Hash(dataReset.Passwd)
-	// email, err := util.ParseEmailToken(dataReset.TokenEmail)
-	// if err != nil {
-	// 	email = dataReset.TokenEmail
-	// }
-
-	// dataUser, err := u.repoUser.GetByEmailSaUser(email)
-
-	// dataUser.Password, _ = util.Hash(dataReset.Passwd)
-	// var data = map[string]interface{}{
-	// 	"password": DataUser.Password,
-	// }
 
 	err = u.repoAuth.UpdatePasswordByEmail(dataReset.Account, DataUser.Password) //u.repoAuth.Update(DataUser.UserID, data)
 	if err != nil {
