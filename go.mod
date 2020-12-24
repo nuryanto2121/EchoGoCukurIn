@@ -3,6 +3,7 @@ module nuryanto2121/dynamic_rest_api_go
 go 1.15
 
 require (
+	firebase.google.com/go v3.13.0+incompatible
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/astaxie/beego v1.12.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -28,6 +29,7 @@ require (
 	golang.org/x/net v0.0.0-20201016165138-7b1cca2348c0 // indirect
 	golang.org/x/sys v0.0.0-20201016160150-f659759dc4ca // indirect
 	golang.org/x/tools v0.0.0-20201017001424-6003fad69a88 // indirect
+	google.golang.org/api v0.13.0
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect

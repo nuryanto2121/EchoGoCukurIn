@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Backend REST API for golang nuryanto2121",
-        "title": "Starter",
+        "description": "REST API for Barber Cukur-in",
+        "title": "Barber Cukur-in",
         "contact": {
             "name": "Nuryanto",
             "url": "https://www.linkedin.com/in/nuryanto-1b2721156/",
@@ -189,6 +189,46 @@
                         "schema": {
                             "$ref": "#/definitions/models.LoginForm"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tool.ResponseModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/barber/auth/logout": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "logout",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "OS",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "OS Device",
+                        "name": "Version",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1929,6 +1969,9 @@
             "type": "object",
             "properties": {
                 "account": {
+                    "type": "string"
+                },
+                "fcm_token": {
                     "type": "string"
                 },
                 "pwd": {

@@ -3,6 +3,7 @@ package iauth
 import (
 	"context"
 	"nuryanto2121/dynamic_rest_api_go/models"
+	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
 )
 
 type Repository interface {
@@ -11,6 +12,7 @@ type Repository interface {
 	Register(ctx context.Context, dataUser models.SsUser) error
 }
 type Usecase interface {
+	Logout(ctx context.Context, Claims util.Claims, Token string) (err error)
 	Login(ctx context.Context, dataLogin *models.LoginForm) (output interface{}, err error)
 	ForgotPassword(ctx context.Context, dataForgot *models.ForgotForm) (result string, err error)
 	ResetPassword(ctx context.Context, dataReset *models.ResetPasswd) (err error)

@@ -25,9 +25,9 @@ func init() {
 
 }
 
-// @title Starter
+// @title Barber Cukur-in
 // @version 1.0
-// @description Backend REST API for golang nuryanto2121
+// @description REST API for Barber Cukur-in
 
 // @contact.name Nuryanto
 // @contact.url https://www.linkedin.com/in/nuryanto-1b2721156/
