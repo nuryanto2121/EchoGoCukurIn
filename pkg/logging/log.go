@@ -8,8 +8,6 @@ import (
 	"runtime"
 	"strings"
 	"time"
-
-	"nuryanto2121/dynamic_rest_api_go/pkg/file"
 )
 
 // Level :
@@ -44,14 +42,14 @@ const (
 // Setup :
 func Setup() {
 	now := time.Now()
-	var err error
-	filePath := getLogFilePath()
-	fileName := getLogFileName()
-	F, err = file.MustOpen(fileName, filePath)
+	// var err error
+	// filePath := getLogFilePath()
+	// fileName := getLogFileName()
+	// F, err = file.MustOpen(fileName, filePath)
 
-	if err != nil {
-		log.Fatalf("logging.Setup err: %v", err)
-	}
+	// if err != nil {
+	// 	log.Fatalf("logging.Setup err: %v", err)
+	// }
 
 	logger = log.New(F, DefaultPrefix, log.LstdFlags)
 	timeSpent := time.Since(now)
