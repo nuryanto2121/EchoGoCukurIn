@@ -3,7 +3,7 @@ package app
 import (
 	"fmt"
 	"net/http"
-	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+	util "nuryanto2121/cukur_in_barber/pkg/utils"
 
 	"github.com/astaxie/beego/validation"
 	"github.com/labstack/echo/v4"

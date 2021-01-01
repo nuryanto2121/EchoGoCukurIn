@@ -2,10 +2,10 @@ package repobarbercapster
 
 import (
 	"fmt"
-	ibarbercapster "nuryanto2121/dynamic_rest_api_go/interface/b_barber_capster"
-	"nuryanto2121/dynamic_rest_api_go/models"
-	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
-	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
+	ibarbercapster "nuryanto2121/cukur_in_barber/interface/b_barber_capster"
+	"nuryanto2121/cukur_in_barber/models"
+	"nuryanto2121/cukur_in_barber/pkg/logging"
+	"nuryanto2121/cukur_in_barber/pkg/setting"
 
 	"github.com/jinzhu/gorm"
 )

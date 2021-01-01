@@ -2,11 +2,11 @@ package repoauth
 
 import (
 	"context"
-	iauth "nuryanto2121/dynamic_rest_api_go/interface/auth"
-	"nuryanto2121/dynamic_rest_api_go/models"
+	iauth "nuryanto2121/cukur_in_barber/interface/auth"
+	"nuryanto2121/cukur_in_barber/models"
 
-	// "nuryanto2121/dynamic_rest_api_go/pkg/logging"
-	// queryauth "nuryanto2121/dynamic_rest_api_go/query/auth"
+	// "nuryanto2121/cukur_in_barber/pkg/logging"
+	// queryauth "nuryanto2121/cukur_in_barber/query/auth"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"

@@ -2,8 +2,8 @@ package usesafileupload
 
 import (
 	"context"
-	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
-	"nuryanto2121/dynamic_rest_api_go/models"
+	ifileupload "nuryanto2121/cukur_in_barber/interface/fileupload"
+	"nuryanto2121/cukur_in_barber/models"
 	"time"
 )
 

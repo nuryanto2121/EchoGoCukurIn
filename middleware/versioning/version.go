@@ -2,7 +2,7 @@ package version
 
 import (
 	"fmt"
-	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
+	"nuryanto2121/cukur_in_barber/pkg/logging"
 
 	"github.com/jinzhu/gorm"
 )

@@ -3,12 +3,12 @@ package midd
 import (
 	"fmt"
 	"net/http"
-	version "nuryanto2121/dynamic_rest_api_go/middleware/versioning"
-	"nuryanto2121/dynamic_rest_api_go/pkg/postgresdb"
-	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
-	tool "nuryanto2121/dynamic_rest_api_go/pkg/tools"
-	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
-	"nuryanto2121/dynamic_rest_api_go/redisdb"
+	version "nuryanto2121/cukur_in_barber/middleware/versioning"
+	"nuryanto2121/cukur_in_barber/pkg/postgresdb"
+	"nuryanto2121/cukur_in_barber/pkg/setting"
+	tool "nuryanto2121/cukur_in_barber/pkg/tools"
+	util "nuryanto2121/cukur_in_barber/pkg/utils"
+	"nuryanto2121/cukur_in_barber/redisdb"
 	"strconv"
 
 	"github.com/dgrijalva/jwt-go"

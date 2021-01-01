@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	iberandabarber "nuryanto2121/dynamic_rest_api_go/interface/beranda_barber"
-	midd "nuryanto2121/dynamic_rest_api_go/middleware"
-	"nuryanto2121/dynamic_rest_api_go/models"
-	app "nuryanto2121/dynamic_rest_api_go/pkg"
-	tool "nuryanto2121/dynamic_rest_api_go/pkg/tools"
+	iberandabarber "nuryanto2121/cukur_in_barber/interface/beranda_barber"
+	midd "nuryanto2121/cukur_in_barber/middleware"
+	"nuryanto2121/cukur_in_barber/models"
+	app "nuryanto2121/cukur_in_barber/pkg"
+	tool "nuryanto2121/cukur_in_barber/pkg/tools"
 
 	"github.com/labstack/echo/v4"
 )

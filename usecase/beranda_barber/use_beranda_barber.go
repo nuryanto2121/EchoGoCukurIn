@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"strings"
 
-	iberandabarber "nuryanto2121/dynamic_rest_api_go/interface/beranda_barber"
-	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
-	"nuryanto2121/dynamic_rest_api_go/models"
-	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+	iberandabarber "nuryanto2121/cukur_in_barber/interface/beranda_barber"
+	ifileupload "nuryanto2121/cukur_in_barber/interface/fileupload"
+	"nuryanto2121/cukur_in_barber/models"
+	util "nuryanto2121/cukur_in_barber/pkg/utils"
 	"time"
 )
 

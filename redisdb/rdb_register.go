@@ -2,7 +2,7 @@ package redisdb
 
 import (
 	"encoding/json"
-	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
+	"nuryanto2121/cukur_in_barber/pkg/setting"
 
 	"github.com/mitchellh/mapstructure"
 )

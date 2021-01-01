@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 	"log"
-	"nuryanto2121/dynamic_rest_api_go/pkg/logging"
-	"nuryanto2121/dynamic_rest_api_go/pkg/monggodb"
-	"nuryanto2121/dynamic_rest_api_go/pkg/postgresdb"
+	"nuryanto2121/cukur_in_barber/pkg/logging"
+	"nuryanto2121/cukur_in_barber/pkg/monggodb"
+	"nuryanto2121/cukur_in_barber/pkg/postgresdb"
 
-	// sqlxposgresdb "nuryanto2121/dynamic_rest_api_go/pkg/postgresqlxdb"
-	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
-	"nuryanto2121/dynamic_rest_api_go/redisdb"
-	"nuryanto2121/dynamic_rest_api_go/routes"
+	// sqlxposgresdb "nuryanto2121/cukur_in_barber/pkg/postgresqlxdb"
+	"nuryanto2121/cukur_in_barber/pkg/setting"
+	"nuryanto2121/cukur_in_barber/redisdb"
+	"nuryanto2121/cukur_in_barber/routes"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

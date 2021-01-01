@@ -2,8 +2,8 @@ package iberandabarber
 
 import (
 	"context"
-	"nuryanto2121/dynamic_rest_api_go/models"
-	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+	"nuryanto2121/cukur_in_barber/models"
+	util "nuryanto2121/cukur_in_barber/pkg/utils"
 )
 
 type Usecase interface {

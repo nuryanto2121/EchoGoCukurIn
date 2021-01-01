@@ -7,14 +7,14 @@ import (
 	"math"
 	"strings"
 
-	repofunction "nuryanto2121/dynamic_rest_api_go/repository/function"
+	repofunction "nuryanto2121/cukur_in_barber/repository/function"
 
-	ibarber "nuryanto2121/dynamic_rest_api_go/interface/b_barber"
-	ibarbercapster "nuryanto2121/dynamic_rest_api_go/interface/b_barber_capster"
-	ibarberpaket "nuryanto2121/dynamic_rest_api_go/interface/b_barber_paket"
-	ifileupload "nuryanto2121/dynamic_rest_api_go/interface/fileupload"
-	"nuryanto2121/dynamic_rest_api_go/models"
-	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+	ibarber "nuryanto2121/cukur_in_barber/interface/b_barber"
+	ibarbercapster "nuryanto2121/cukur_in_barber/interface/b_barber_capster"
+	ibarberpaket "nuryanto2121/cukur_in_barber/interface/b_barber_paket"
+	ifileupload "nuryanto2121/cukur_in_barber/interface/fileupload"
+	"nuryanto2121/cukur_in_barber/models"
+	util "nuryanto2121/cukur_in_barber/pkg/utils"
 	"strconv"
 	"time"
 

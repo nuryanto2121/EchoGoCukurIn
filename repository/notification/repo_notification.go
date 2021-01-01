@@ -1,8 +1,8 @@
-package repopaket
+package reponotification
 
 import (
 	"fmt"
-	ipaket "nuryanto2121/cukur_in_barber/interface/b_paket"
+	inotification "nuryanto2121/cukur_in_barber/interface/notification"
 	"nuryanto2121/cukur_in_barber/models"
 	"nuryanto2121/cukur_in_barber/pkg/logging"
 	"nuryanto2121/cukur_in_barber/pkg/setting"
@@ -10,20 +10,20 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type repoPaket struct {
+type repoNotification struct {
 	Conn *gorm.DB
 }
 
-func NewRepoPaket(Conn *gorm.DB) ipaket.Repository {
-	return &repoPaket{Conn}
+func NewRepoNotification(Conn *gorm.DB) inotification.Repository {
+	return &repoNotification{Conn}
 }
 
-func (db *repoPaket) GetDataBy(ID int) (result *models.Paket, err error) {
+func (db *repoNotification) GetDataBy(ID int) (result *models.Notification, err error) {
 	var (
-		logger = logging.Logger{}
-		mPaket = &models.Paket{}
+		logger        = logging.Logger{}
+		mNotification = &models.Notification{}
 	)
-	query := db.Conn.Where("paket_id = ? ", ID).Find(mPaket)
+	query := db.Conn.Where("notification_id = ? ", ID).Find(mNotification)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr()))
 	err = query.Error
 	if err != nil {
@@ -32,10 +32,10 @@ func (db *repoPaket) GetDataBy(ID int) (result *models.Paket, err error) {
 		}
 		return nil, err
 	}
-	return mPaket, nil
+	return mNotification, nil
 }
 
-func (db *repoPaket) GetList(queryparam models.ParamList) (result []*models.Paket, err error) {
+func (db *repoNotification) GetList(queryparam models.ParamList) (result []*models.Notification, err error) {
 
 	var (
 		pageNum  = 0
@@ -67,16 +67,14 @@ func (db *repoPaket) GetList(queryparam models.ParamList) (result []*models.Pake
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and (lower(paket_name) LIKE ? OR lower(descs) LIKE ?)" //+ queryparam.Search
+			sWhere += " and (lower(notification_status) LIKE ?)"
 		} else {
-			sWhere += "(lower(barber_name) LIKE ? OR lower(descs) LIKE ?)" //queryparam.Search
+			sWhere += "(lower(notification_status) LIKE ?)"
 		}
-		query = db.Conn.Where(sWhere, queryparam.Search, queryparam.Search).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
+		query = db.Conn.Where(sWhere, queryparam.Search).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	} else {
 		query = db.Conn.Where(sWhere).Offset(pageNum).Limit(pageSize).Order(orderBy).Find(&result)
 	}
-
-	// end where
 
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
@@ -89,7 +87,8 @@ func (db *repoPaket) GetList(queryparam models.ParamList) (result []*models.Pake
 	}
 	return result, nil
 }
-func (db *repoPaket) Create(data *models.Paket) error {
+
+func (db *repoNotification) Create(data *models.Notification) error {
 	var (
 		logger = logging.Logger{}
 		err    error
@@ -102,12 +101,12 @@ func (db *repoPaket) Create(data *models.Paket) error {
 	}
 	return nil
 }
-func (db *repoPaket) Update(ID int, data map[string]interface{}) error {
+func (db *repoNotification) Update(ID int, data map[string]interface{}) error {
 	var (
 		logger = logging.Logger{}
 		err    error
 	)
-	query := db.Conn.Model(models.Paket{}).Where("paket_id = ?", ID).Updates(data)
+	query := db.Conn.Model(models.Notification{}).Where("notification_id = ?", ID).Updates(data)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {
@@ -115,12 +114,13 @@ func (db *repoPaket) Update(ID int, data map[string]interface{}) error {
 	}
 	return nil
 }
-func (db *repoPaket) Delete(ID int) error {
+
+func (db *repoNotification) Delete(ID int) error {
 	var (
 		logger = logging.Logger{}
 		err    error
 	)
-	query := db.Conn.Where("paket_id = ?", ID).Delete(&models.Paket{})
+	query := db.Conn.Where("notification_id = ?", ID).Delete(&models.Notification{})
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err = query.Error
 	if err != nil {
@@ -128,7 +128,8 @@ func (db *repoPaket) Delete(ID int) error {
 	}
 	return nil
 }
-func (db *repoPaket) Count(queryparam models.ParamList) (result int, err error) {
+
+func (db *repoNotification) Count(queryparam models.ParamList) (result int, err error) {
 	var (
 		sWhere = ""
 		logger = logging.Logger{}
@@ -143,13 +144,13 @@ func (db *repoPaket) Count(queryparam models.ParamList) (result int, err error) 
 
 	if queryparam.Search != "" {
 		if sWhere != "" {
-			sWhere += " and (lower(paket_name) LIKE ? OR lower(descs) LIKE ?)" //+ queryparam.Search
+			sWhere += " and (lower(notification_status) LIKE ? )" //+ queryparam.Search
 		} else {
-			sWhere += "(lower(barber_name) LIKE ? OR lower(descs) LIKE ?)" //queryparam.Search
+			sWhere += "(lower(notification_status) LIKE ? )" //queryparam.Search
 		}
-		query = db.Conn.Model(&models.Paket{}).Where(sWhere, queryparam.Search, queryparam.Search).Count(&result)
+		query = db.Conn.Model(&models.Notification{}).Where(sWhere, queryparam.Search).Count(&result)
 	} else {
-		query = db.Conn.Model(&models.Paket{}).Where(sWhere).Count(&result)
+		query = db.Conn.Model(&models.Notification{}).Where(sWhere).Count(&result)
 	}
 	// end where
 

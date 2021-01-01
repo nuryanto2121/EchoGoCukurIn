@@ -1,6 +1,6 @@
 package icorderd
 
-import "nuryanto2121/dynamic_rest_api_go/models"
+import "nuryanto2121/cukur_in_barber/models"
 
 type Repository interface {
 	GetDataBy(ID int) (result *models.OrderD, err error)

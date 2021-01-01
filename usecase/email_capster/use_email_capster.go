@@ -2,8 +2,8 @@ package useemailcapster
 
 import (
 	"fmt"
-	templateemail "nuryanto2121/dynamic_rest_api_go/pkg/email"
-	util "nuryanto2121/dynamic_rest_api_go/pkg/utils"
+	templateemail "nuryanto2121/cukur_in_barber/pkg/email"
+	util "nuryanto2121/cukur_in_barber/pkg/utils"
 	"strings"
 )
 

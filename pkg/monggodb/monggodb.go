@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
+	"nuryanto2121/cukur_in_barber/pkg/setting"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

@@ -1,43 +1,43 @@
 package routes
 
 import (
-	"nuryanto2121/dynamic_rest_api_go/pkg/postgresdb"
-	// sqlxposgresdb "nuryanto2121/dynamic_rest_api_go/pkg/postgresqlxdb"
-	"nuryanto2121/dynamic_rest_api_go/pkg/setting"
+	"nuryanto2121/cukur_in_barber/pkg/postgresdb"
+	// sqlxposgresdb "nuryanto2121/cukur_in_barber/pkg/postgresqlxdb"
+	"nuryanto2121/cukur_in_barber/pkg/setting"
 
-	_saauthcont "nuryanto2121/dynamic_rest_api_go/controllers/auth"
-	_authuse "nuryanto2121/dynamic_rest_api_go/usecase/auth"
+	_saauthcont "nuryanto2121/cukur_in_barber/controllers/auth"
+	_authuse "nuryanto2121/cukur_in_barber/usecase/auth"
 
-	_saFilecont "nuryanto2121/dynamic_rest_api_go/controllers/fileupload"
-	_repoFile "nuryanto2121/dynamic_rest_api_go/repository/ss_fileupload"
-	_useFile "nuryanto2121/dynamic_rest_api_go/usecase/ss_fileupload"
+	_saFilecont "nuryanto2121/cukur_in_barber/controllers/fileupload"
+	_repoFile "nuryanto2121/cukur_in_barber/repository/ss_fileupload"
+	_useFile "nuryanto2121/cukur_in_barber/usecase/ss_fileupload"
 
-	_contUser "nuryanto2121/dynamic_rest_api_go/controllers/user"
-	_repoUser "nuryanto2121/dynamic_rest_api_go/repository/ss_user"
-	_useUser "nuryanto2121/dynamic_rest_api_go/usecase/ss_user"
+	_contUser "nuryanto2121/cukur_in_barber/controllers/user"
+	_repoUser "nuryanto2121/cukur_in_barber/repository/ss_user"
+	_useUser "nuryanto2121/cukur_in_barber/usecase/ss_user"
 
-	_contPaket "nuryanto2121/dynamic_rest_api_go/controllers/b_paket"
-	_repoPaket "nuryanto2121/dynamic_rest_api_go/repository/b_paket"
-	_usePaket "nuryanto2121/dynamic_rest_api_go/usecase/b_paket"
+	_contPaket "nuryanto2121/cukur_in_barber/controllers/b_paket"
+	_repoPaket "nuryanto2121/cukur_in_barber/repository/b_paket"
+	_usePaket "nuryanto2121/cukur_in_barber/usecase/b_paket"
 
-	_contCapster "nuryanto2121/dynamic_rest_api_go/controllers/b_capster"
-	_repoCapster "nuryanto2121/dynamic_rest_api_go/repository/b_capster"
-	_useCapster "nuryanto2121/dynamic_rest_api_go/usecase/b_capster"
+	_contCapster "nuryanto2121/cukur_in_barber/controllers/b_capster"
+	_repoCapster "nuryanto2121/cukur_in_barber/repository/b_capster"
+	_useCapster "nuryanto2121/cukur_in_barber/usecase/b_capster"
 
-	_contBerandaBarber "nuryanto2121/dynamic_rest_api_go/controllers/beranda_barber"
-	_repoBerandaBarber "nuryanto2121/dynamic_rest_api_go/repository/beranda_barber"
-	_useBerandaBarber "nuryanto2121/dynamic_rest_api_go/usecase/beranda_barber"
+	_contBerandaBarber "nuryanto2121/cukur_in_barber/controllers/beranda_barber"
+	_repoBerandaBarber "nuryanto2121/cukur_in_barber/repository/beranda_barber"
+	_useBerandaBarber "nuryanto2121/cukur_in_barber/usecase/beranda_barber"
 
-	_contBarber "nuryanto2121/dynamic_rest_api_go/controllers/b_barber"
-	_repoBarber "nuryanto2121/dynamic_rest_api_go/repository/b_barber"
-	_repoBarberCapster "nuryanto2121/dynamic_rest_api_go/repository/b_barber_capster"
-	_repoBarberPaket "nuryanto2121/dynamic_rest_api_go/repository/b_barber_paket"
-	_useBarber "nuryanto2121/dynamic_rest_api_go/usecase/b_barber"
+	_contBarber "nuryanto2121/cukur_in_barber/controllers/b_barber"
+	_repoBarber "nuryanto2121/cukur_in_barber/repository/b_barber"
+	_repoBarberCapster "nuryanto2121/cukur_in_barber/repository/b_barber_capster"
+	_repoBarberPaket "nuryanto2121/cukur_in_barber/repository/b_barber_paket"
+	_useBarber "nuryanto2121/cukur_in_barber/usecase/b_barber"
 
-	_contOrder "nuryanto2121/dynamic_rest_api_go/controllers/c_order"
-	_repoOrderd "nuryanto2121/dynamic_rest_api_go/repository/c_order_d"
-	_repoOrder "nuryanto2121/dynamic_rest_api_go/repository/c_order_h"
-	_useOrder "nuryanto2121/dynamic_rest_api_go/usecase/c_order"
+	_contOrder "nuryanto2121/cukur_in_barber/controllers/c_order"
+	_repoOrderd "nuryanto2121/cukur_in_barber/repository/c_order_d"
+	_repoOrder "nuryanto2121/cukur_in_barber/repository/c_order_h"
+	_useOrder "nuryanto2121/cukur_in_barber/usecase/c_order"
 
 	"time"
 
