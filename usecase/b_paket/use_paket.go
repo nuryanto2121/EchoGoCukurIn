@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"math"
 	ipaket "nuryanto2121/cukur_in_barber/interface/b_paket"
+	inotification "nuryanto2121/cukur_in_barber/interface/notification"
 	"nuryanto2121/cukur_in_barber/models"
 	util "nuryanto2121/cukur_in_barber/pkg/utils"
+	repofunction "nuryanto2121/cukur_in_barber/repository/function"
 	"strconv"
 	"strings"
 	"time"
@@ -16,12 +18,13 @@ import (
 )
 
 type usePaket struct {
-	repoPaket      ipaket.Repository
-	contextTimeOut time.Duration
+	repoPaket        ipaket.Repository
+	repoNotification inotification.Repository
+	contextTimeOut   time.Duration
 }
 
-func NewUserMPaket(a ipaket.Repository, timeout time.Duration) ipaket.Usecase {
-	return &usePaket{repoPaket: a, contextTimeOut: timeout}
+func NewUserMPaket(a ipaket.Repository, b inotification.Repository, timeout time.Duration) ipaket.Usecase {
+	return &usePaket{repoPaket: a, repoNotification: b, contextTimeOut: timeout}
 }
 
 func (u *usePaket) GetDataBy(ctx context.Context, Claims util.Claims, ID int) (result *models.Paket, err error) {
@@ -101,6 +104,16 @@ func (u *usePaket) Update(ctx context.Context, Claims util.Claims, ID int, data 
 	err = u.repoPaket.Update(ID, myMap)
 	if err != nil {
 		return err
+	}
+
+	// if paket inactive
+	if !data.IsActive {
+		fn := &repofunction.FN{
+			Claims:    Claims,
+			RepoNotif: u.repoNotification,
+		}
+
+		go fn.SendNotifNonAktifPaket(ID)
 	}
 	return nil
 }

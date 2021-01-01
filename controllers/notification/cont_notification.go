@@ -24,7 +24,7 @@ func NewContNotification(e *echo.Echo, a inotification.Usecase) {
 		useNotification: a,
 	}
 
-	r := e.Group("/user/notification")
+	r := e.Group("/barber/notification")
 	// r.Use(midd.JWT)
 	r.GET("/:id", controller.GetDataBy)
 	r.GET("", controller.GetList)
@@ -44,7 +44,7 @@ func NewContNotification(e *echo.Echo, a inotification.Usecase) {
 // @Param language header string true "Language"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /user/notification/{id} [get]
+// @Router /barber/notification/{id} [get]
 func (u *contNotification) GetDataBy(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -82,7 +82,7 @@ func (u *contNotification) GetDataBy(e echo.Context) error {
 // @Param version header string true "Version Device"
 // @Param language header string true "Language"
 // @Success 200 {object} tool.ResponseModel
-// @Router /user/notification/beranda [get]
+// @Router /barber/notification/beranda [get]
 func (u *contNotification) Beranda(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -120,7 +120,7 @@ func (u *contNotification) Beranda(e echo.Context) error {
 // @Param initsearch query string false "InitSearch"
 // @Param sortfield query string false "SortField"
 // @Success 200 {object} models.ResponseModelList
-// @Router /user/notification [get]
+// @Router /barber/notification [get]
 func (u *contNotification) GetList(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -164,7 +164,7 @@ func (u *contNotification) GetList(e echo.Context) error {
 // @Param id path string true "ID"
 // @Param req body models.StatusNotification true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /user/notification/{id} [put]
+// @Router /barber/notification/{id} [put]
 func (u *contNotification) Update(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {

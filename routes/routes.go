@@ -39,6 +39,10 @@ import (
 	_repoOrder "nuryanto2121/cukur_in_barber/repository/c_order_h"
 	_useOrder "nuryanto2121/cukur_in_barber/usecase/c_order"
 
+	_contNotification "nuryanto2121/cukur_in_barber/controllers/notification"
+	_repoNotification "nuryanto2121/cukur_in_barber/repository/notification"
+	_useNotification "nuryanto2121/cukur_in_barber/usecase/notification"
+
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -52,6 +56,10 @@ type EchoRoutes struct {
 func (e *EchoRoutes) InitialRouter() {
 	timeoutContext := time.Duration(setting.FileConfigSetting.Server.ReadTimeout) * time.Second
 
+	repoNotif := _repoNotification.NewRepoNotification(postgresdb.Conn)
+	useNotif := _useNotification.NewUseNotification(repoNotif, timeoutContext)
+	_contNotification.NewContNotification(e.E, useNotif)
+
 	repoFile := _repoFile.NewRepoFileUpload(postgresdb.Conn)
 	useFile := _useFile.NewSaFileUpload(repoFile, timeoutContext)
 	_saFilecont.NewContFileUpload(e.E, useFile)
@@ -61,7 +69,7 @@ func (e *EchoRoutes) InitialRouter() {
 	_contUser.NewContUser(e.E, useUser)
 
 	repoPaket := _repoPaket.NewRepoPaket(postgresdb.Conn)
-	usePaket := _usePaket.NewUserMPaket(repoPaket, timeoutContext)
+	usePaket := _usePaket.NewUserMPaket(repoPaket, repoNotif, timeoutContext)
 	_contPaket.NewContPaket(e.E, usePaket)
 
 	repoBarberPaket := _repoBarberPaket.NewRepoBarberPaket(postgresdb.Conn)
@@ -71,7 +79,7 @@ func (e *EchoRoutes) InitialRouter() {
 	_contBarber.NewContBarber(e.E, useBarber)
 
 	repoCapster := _repoCapster.NewRepoCapsterCollection(postgresdb.Conn)
-	useCapster := _useCapster.NewUserMCapster(repoCapster, repoUser, repoBarberCapster, repoFile, timeoutContext)
+	useCapster := _useCapster.NewUserMCapster(repoCapster, repoUser, repoBarberCapster, repoFile, repoNotif, timeoutContext)
 	_contCapster.NewContCapster(e.E, useCapster)
 
 	repoOrderD := _repoOrderd.NewRepoOrderD(postgresdb.Conn)

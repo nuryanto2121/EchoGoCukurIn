@@ -8,6 +8,7 @@ import (
 	ibarbercapster "nuryanto2121/cukur_in_barber/interface/b_barber_capster"
 	icapster "nuryanto2121/cukur_in_barber/interface/b_capster"
 	ifileupload "nuryanto2121/cukur_in_barber/interface/fileupload"
+	inotification "nuryanto2121/cukur_in_barber/interface/notification"
 	iuser "nuryanto2121/cukur_in_barber/interface/user"
 	"nuryanto2121/cukur_in_barber/models"
 	"nuryanto2121/cukur_in_barber/pkg/logging"
@@ -29,15 +30,17 @@ type useCapster struct {
 	repoUser          iuser.Repository
 	repoBarberCapster ibarbercapster.Repository
 	repoFile          ifileupload.Repository
+	repoNotification  inotification.Repository
 	contextTimeOut    time.Duration
 }
 
-func NewUserMCapster(a icapster.Repository, b iuser.Repository, c ibarbercapster.Repository, d ifileupload.Repository, timeout time.Duration) icapster.Usecase {
+func NewUserMCapster(a icapster.Repository, b iuser.Repository, c ibarbercapster.Repository, d ifileupload.Repository, e inotification.Repository, timeout time.Duration) icapster.Usecase {
 	return &useCapster{
 		repoCapster:       a,
 		repoUser:          b,
 		repoBarberCapster: c,
 		repoFile:          d,
+		repoNotification:  e,
 		contextTimeOut:    timeout,
 	}
 }

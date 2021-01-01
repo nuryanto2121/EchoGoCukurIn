@@ -2,10 +2,16 @@ package repofunction
 
 import (
 	"fmt"
+	"log"
 	"nuryanto2121/cukur_in_barber/models"
 	"nuryanto2121/cukur_in_barber/pkg/logging"
 	"nuryanto2121/cukur_in_barber/pkg/postgresdb"
 	util "nuryanto2121/cukur_in_barber/pkg/utils"
+	"nuryanto2121/cukur_in_barber/redisdb"
+	"time"
+
+	inotification "nuryanto2121/cukur_in_barber/interface/notification"
+	fcmgetway "nuryanto2121/cukur_in_barber/pkg/fcm"
 	"strconv"
 	"strings"
 
@@ -13,7 +19,8 @@ import (
 )
 
 type FN struct {
-	Claims util.Claims
+	Claims    util.Claims
+	RepoNotif inotification.Repository
 }
 
 func (fn *FN) GenBarberCode() (string, error) {
@@ -159,4 +166,83 @@ func (fn *FN) GetOwnerData() (result *models.SsUser, err error) {
 		return nil, err
 	}
 	return mCapster, nil
+}
+
+func (fn *FN) SendNotifNonAktifPaket(PaketID int) {
+	type DataLoop struct {
+		OrderID int `json:"order_id"`
+		UserID  int `json:"user_id"`
+	}
+	var (
+		mNotif     = models.Notification{}
+		queryparam models.ParamList
+		logger     = logging.Logger{}
+		sDate      = time.Now().Format("2006-01-02")
+		dataLoop   = []DataLoop{}
+	)
+	conn := postgresdb.Conn
+
+	sSql := `
+	select distinct oh.order_id ,oh.user_id
+	from order_h oh join order_d od 
+		on oh.order_id = od.order_id 
+	join barber b2 
+		on b2.barber_id = oh.barber_id 
+	join barber_paket bp 
+		on bp.barber_id = b2.barber_id 
+		and bp.paket_id = od.paket_id 
+	where oh.user_id > 0
+	and oh.status = 'N'
+	and oh.order_date::date = ?
+	and bp.paket_id = ?
+	`
+	query := conn.Raw(sSql, sDate, PaketID).Find(&dataLoop)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err := query.Error
+	if err != nil {
+		log.Printf(" err : %v", err)
+		panic(err)
+	}
+
+	mNotif.Title = "Paket Tidak Tersedia"
+	mNotif.Descs = "Paket potong rambut kamu di nonaktifkan, silahkan ganti paket yang lain atau membatalkan pesanan"
+	mNotif.NotificationStatus = "N"
+	mNotif.NotificationType = "I"
+	mNotif.UserEdit = fn.Claims.UserID
+	mNotif.UserInput = fn.Claims.UserID
+	mNotif.NotificationDate = time.Now()
+	//Loping User yg booking dengan paket yg dibatalkan
+	for _, data := range dataLoop {
+
+		go func(dUser DataLoop) {
+
+			mNotif.UserId = dUser.UserID
+			mNotif.LinkId = dUser.OrderID
+
+			TokenFCM := fmt.Sprintf("%v", redisdb.GetSession(strconv.Itoa(dUser.UserID)+"_fcm"))
+			if TokenFCM != "" {
+				TokenFCMArr := []string{TokenFCM}
+
+				fcm := &fcmgetway.SendFCM{
+					Title:       mNotif.Title,
+					Body:        mNotif.Descs,
+					JumlahNotif: 0,
+					DeviceToken: TokenFCMArr,
+				}
+				go fcm.SendPushNotification()
+			}
+			queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d and title = 'Paket Tidak Tersedia' ", mNotif.UserId)
+			cnt, err := fn.RepoNotif.Count(queryparam)
+
+			if cnt == 0 {
+				err = fn.RepoNotif.Create(&mNotif)
+				if err != nil {
+					log.Printf(" err : %v", err)
+					panic(err)
+				}
+			}
+
+		}(data)
+	}
+
 }
