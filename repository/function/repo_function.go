@@ -98,6 +98,7 @@ func (fn *FN) GetCountTrxCapster(ID int) int {
 	var (
 		logger = logging.Logger{}
 		result = 0
+		sDate  = time.Now().Format("2006-01-02")
 		conn   *gorm.DB
 	)
 	OwnerID, _ := strconv.Atoi(fn.Claims.UserID)
@@ -108,8 +109,8 @@ func (fn *FN) GetCountTrxCapster(ID int) int {
 	`).Joins(`
 		join barber b on b.barber_id = oh.barber_id 
 	`).Where(`
-	oh.status in('P','N') AND b.owner_id = ? AND oh.capster_id = ?
-		`, OwnerID, ID).Count(&result)
+	oh.status in('P') AND b.owner_id = ? AND oh.capster_id = ? AND oh.order_date::date = ?
+		`, OwnerID, ID, sDate).Count(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err := query.Error
 	if err != nil {
@@ -127,6 +128,7 @@ func (fn *FN) GetCountTrxBarber(ID int) int {
 		logger = logging.Logger{}
 		result = 0
 		conn   *gorm.DB
+		sDate  = time.Now().Format("2006-01-02")
 	)
 	OwnerID, _ := strconv.Atoi(fn.Claims.UserID)
 
@@ -136,8 +138,8 @@ func (fn *FN) GetCountTrxBarber(ID int) int {
 	`).Joins(`
 		join barber b on b.barber_id = oh.barber_id 
 	`).Where(`
-	oh.status in('P','N') AND b.owner_id = ? AND oh.barber_id = ?
-		`, OwnerID, ID).Count(&result)
+	oh.status in('P') AND b.owner_id = ? AND oh.barber_id = ? AND oh.order_date::date = ?
+		`, OwnerID, ID, sDate).Count(&result)
 	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
 	err := query.Error
 	if err != nil {
@@ -244,5 +246,167 @@ func (fn *FN) SendNotifNonAktifPaket(PaketID int) {
 
 		}(data)
 	}
+}
 
+func (fn *FN) SendNotifNonAktifCapster(CapsterID int) {
+	type DataLoop struct {
+		OrderID int `json:"order_id"`
+		UserID  int `json:"user_id"`
+	}
+	var (
+		mNotif     = models.Notification{}
+		queryparam models.ParamList
+		logger     = logging.Logger{}
+		sDate      = time.Now().Format("2006-01-02")
+		dataLoop   = []DataLoop{}
+	)
+	conn := postgresdb.Conn
+
+	sSql := `
+	select distinct oh.order_id  ,oh.user_id 
+	 from order_h oh join barber b2 
+	 	on b2.barber_id = oh.barber_id 
+	 join barber_capster bc 
+	 	on bc.barber_id = b2.barber_id 
+	 	and bc.capster_id = oh.capster_id 
+	 where oh.user_id > 0
+	 and oh.from_apps = true
+	 and oh.status = 'N'
+	 and oh.capster_id = ?
+	and oh.order_date::date = ?
+
+	`
+	query := conn.Raw(sSql, CapsterID, sDate).Find(&dataLoop)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err := query.Error
+	if err != nil {
+		log.Printf(" err : %v", err)
+		panic(err)
+	}
+
+	mNotif.Title = "Kapster Tidak Tersedia"
+	mNotif.Descs = "Kapster kamu di nonaktifkan, silahkan ganti kaspter yang lain atau membatalkan pesanan"
+	mNotif.NotificationStatus = "N"
+	mNotif.NotificationType = "I"
+	mNotif.UserEdit = fn.Claims.UserID
+	mNotif.UserInput = fn.Claims.UserID
+	mNotif.NotificationDate = time.Now()
+	//Loping User yg booking dengan paket yg dibatalkan
+	for _, data := range dataLoop {
+
+		go func(dUser DataLoop) {
+
+			mNotif.UserId = dUser.UserID
+			mNotif.LinkId = dUser.OrderID
+
+			TokenFCM := fmt.Sprintf("%v", redisdb.GetSession(strconv.Itoa(dUser.UserID)+"_fcm"))
+			if TokenFCM != "" {
+				TokenFCMArr := []string{TokenFCM}
+
+				fcm := &fcmgetway.SendFCM{
+					Title:       mNotif.Title,
+					Body:        mNotif.Descs,
+					JumlahNotif: 0,
+					DeviceToken: TokenFCMArr,
+				}
+				go fcm.SendPushNotification()
+			}
+			queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d and title = 'Kapster Tidak Tersedia' ", mNotif.UserId)
+			cnt, err := fn.RepoNotif.Count(queryparam)
+
+			if cnt == 0 {
+				err = fn.RepoNotif.Create(&mNotif)
+				if err != nil {
+					log.Printf(" err : %v", err)
+					panic(err)
+				}
+			}
+
+		}(data)
+	}
+}
+
+func (fn *FN) SendNotifNonAktifBarber(BarberID int) {
+	type DataLoop struct {
+		OrderID int `json:"order_id"`
+		UserID  int `json:"user_id"`
+	}
+	var (
+		mNotif     = models.Notification{}
+		queryparam models.ParamList
+		logger     = logging.Logger{}
+		sDate      = time.Now().Format("2006-01-02")
+		dataLoop   = []DataLoop{}
+	)
+	conn := postgresdb.Conn
+
+	sSql := `
+	select distinct oh.order_id  ,oh.user_id 
+	 from order_h oh join barber b2 
+	 	on b2.barber_id = oh.barber_id 
+	 where oh.user_id > 0
+	 and oh.from_apps = true
+	 and oh.status = 'N'
+	 and oh.barber_id = ?
+	and oh.order_date::date = ?
+
+	`
+	query := conn.Raw(sSql, BarberID, sDate).Find(&dataLoop)
+	logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+	err := query.Error
+	if err != nil {
+		log.Printf(" err : %v", err)
+		panic(err)
+	}
+
+	mNotif.Title = "Barber Tidak tersedia"
+	mNotif.Descs = "Mohon maaf Pesanan anda telah di batalkan"
+	mNotif.NotificationStatus = "N"
+	mNotif.NotificationType = "I"
+	mNotif.UserEdit = fn.Claims.UserID
+	mNotif.UserInput = fn.Claims.UserID
+	mNotif.NotificationDate = time.Now()
+	//Loping User yg booking dengan paket yg dibatalkan
+	for _, data := range dataLoop {
+
+		go func(dUser DataLoop) {
+
+			mNotif.UserId = dUser.UserID
+			mNotif.LinkId = dUser.OrderID
+
+			TokenFCM := fmt.Sprintf("%v", redisdb.GetSession(strconv.Itoa(dUser.UserID)+"_fcm"))
+			if TokenFCM != "" {
+				TokenFCMArr := []string{TokenFCM}
+
+				fcm := &fcmgetway.SendFCM{
+					Title:       mNotif.Title,
+					Body:        mNotif.Descs,
+					JumlahNotif: 0,
+					DeviceToken: TokenFCMArr,
+				}
+				go fcm.SendPushNotification()
+			}
+			queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d and title = 'Barber Tidak tersedia' ", mNotif.UserId)
+			cnt, err := fn.RepoNotif.Count(queryparam)
+
+			if cnt == 0 {
+				err = fn.RepoNotif.Create(&mNotif)
+				if err != nil {
+					log.Printf(" err : %v", err)
+					panic(err)
+				}
+			}
+
+			query := conn.Exec(`UPDATE order_h
+							set status = 'C'
+						  where order_id = ?`, mNotif.LinkId)
+			logger.Query(fmt.Sprintf("%v", query.QueryExpr())) //cath to log query string
+			err = query.Error
+			if err != nil {
+				log.Printf(" err : %v", err)
+				panic(err)
+			}
+
+		}(data)
+	}
 }

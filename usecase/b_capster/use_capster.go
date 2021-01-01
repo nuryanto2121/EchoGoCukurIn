@@ -214,7 +214,8 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 	)
 
 	fn := &repofunction.FN{
-		Claims: Claims,
+		Claims:    Claims,
+		RepoNotif: u.repoNotification,
 	}
 
 	dataOwner, err := fn.GetOwnerData()
@@ -239,14 +240,13 @@ func (u *useCapster) Update(ctx context.Context, Claims util.Claims, ID int, dat
 
 	//if status not active then delete relasi in barber_capster
 	if !dataUser.IsActive {
-		// err = u.repoBarberCapster.DeleteByCapster(ID)
-		// fn := &repofunction.FN{
-		// 	Claims: Claims,
-		// }
 		cnt := fn.GetCountTrxCapster(ID)
 		if cnt > 0 {
 			return errors.New("Mohon maaf anda tidak dapat non-aktifkan Kapster, sedang ada transaksi yang berlangsung")
 		}
+
+		go fn.SendNotifNonAktifCapster(ID)
+
 	}
 
 	datas := structs.Map(dataUser)

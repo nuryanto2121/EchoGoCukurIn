@@ -13,6 +13,7 @@ import (
 	ibarbercapster "nuryanto2121/cukur_in_barber/interface/b_barber_capster"
 	ibarberpaket "nuryanto2121/cukur_in_barber/interface/b_barber_paket"
 	ifileupload "nuryanto2121/cukur_in_barber/interface/fileupload"
+	inotification "nuryanto2121/cukur_in_barber/interface/notification"
 	"nuryanto2121/cukur_in_barber/models"
 	util "nuryanto2121/cukur_in_barber/pkg/utils"
 	"strconv"
@@ -27,15 +28,17 @@ type useBarber struct {
 	repoBarberPaket   ibarberpaket.Repository
 	repoBarberCapster ibarbercapster.Repository
 	repoFile          ifileupload.Repository
+	repoNotification  inotification.Repository
 	contextTimeOut    time.Duration
 }
 
-func NewUserMBarber(a ibarber.Repository, b ibarberpaket.Repository, c ibarbercapster.Repository, d ifileupload.Repository, timeout time.Duration) ibarber.Usecase {
+func NewUserMBarber(a ibarber.Repository, b ibarberpaket.Repository, c ibarbercapster.Repository, d ifileupload.Repository, e inotification.Repository, timeout time.Duration) ibarber.Usecase {
 	return &useBarber{
 		repoBarber:        a,
 		repoBarberPaket:   b,
 		repoBarberCapster: c,
 		repoFile:          d,
+		repoNotification:  e,
 		contextTimeOut:    timeout}
 }
 
@@ -224,12 +227,15 @@ func (u *useBarber) Update(ctx context.Context, Claims util.Claims, ID int, data
 	// check jika status tidak aktif
 	if !mBarber.IsActive {
 		fn := &repofunction.FN{
-			Claims: Claims,
+			Claims:    Claims,
+			RepoNotif: u.repoNotification,
 		}
 		cnt := fn.GetCountTrxBarber(ID)
 		if cnt > 0 {
 			return errors.New("Mohon maaf anda tidak dapat non-aktifkan Barber, sedang ada transaksi yang berlangsung")
 		}
+
+		go fn.SendNotifNonAktifBarber(ID)
 	}
 	mBarber.OperationStart = data.OperationStart
 	mBarber.OperationEnd = data.OperationEnd
