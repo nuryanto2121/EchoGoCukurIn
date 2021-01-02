@@ -222,17 +222,7 @@ func (fn *FN) SendNotifNonAktifPaket(PaketID int) {
 			mNotif.LinkId = dUser.OrderID
 
 			TokenFCM := fmt.Sprintf("%v", redisdb.GetSession(strconv.Itoa(dUser.UserID)+"_fcm"))
-			if TokenFCM != "" {
-				TokenFCMArr := []string{TokenFCM}
 
-				fcm := &fcmgetway.SendFCM{
-					Title:       mNotif.Title,
-					Body:        mNotif.Descs,
-					JumlahNotif: 0,
-					DeviceToken: TokenFCMArr,
-				}
-				go fcm.SendPushNotification()
-			}
 			queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d and title = 'Paket Tidak Tersedia' ", mNotif.UserId)
 			cnt, err := fn.RepoNotif.Count(queryparam)
 
@@ -241,6 +231,18 @@ func (fn *FN) SendNotifNonAktifPaket(PaketID int) {
 				if err != nil {
 					log.Printf(" err : %v", err)
 					panic(err)
+				}
+				if TokenFCM != "" {
+					TokenFCMArr := []string{TokenFCM}
+					queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d ", mNotif.UserId)
+					cntN, _ := fn.RepoNotif.Count(queryparam)
+					fcm := &fcmgetway.SendFCM{
+						Title:       mNotif.Title,
+						Body:        mNotif.Descs,
+						JumlahNotif: cntN,
+						DeviceToken: TokenFCMArr,
+					}
+					go fcm.SendPushNotification()
 				}
 			}
 
@@ -300,17 +302,7 @@ func (fn *FN) SendNotifNonAktifCapster(CapsterID int) {
 			mNotif.LinkId = dUser.OrderID
 
 			TokenFCM := fmt.Sprintf("%v", redisdb.GetSession(strconv.Itoa(dUser.UserID)+"_fcm"))
-			if TokenFCM != "" {
-				TokenFCMArr := []string{TokenFCM}
 
-				fcm := &fcmgetway.SendFCM{
-					Title:       mNotif.Title,
-					Body:        mNotif.Descs,
-					JumlahNotif: 0,
-					DeviceToken: TokenFCMArr,
-				}
-				go fcm.SendPushNotification()
-			}
 			queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d and title = 'Kapster Tidak Tersedia' ", mNotif.UserId)
 			cnt, err := fn.RepoNotif.Count(queryparam)
 
@@ -319,6 +311,18 @@ func (fn *FN) SendNotifNonAktifCapster(CapsterID int) {
 				if err != nil {
 					log.Printf(" err : %v", err)
 					panic(err)
+				}
+				if TokenFCM != "" {
+					TokenFCMArr := []string{TokenFCM}
+					queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d ", mNotif.UserId)
+					cntN, _ := fn.RepoNotif.Count(queryparam)
+					fcm := &fcmgetway.SendFCM{
+						Title:       mNotif.Title,
+						Body:        mNotif.Descs,
+						JumlahNotif: cntN,
+						DeviceToken: TokenFCMArr,
+					}
+					go fcm.SendPushNotification()
 				}
 			}
 
@@ -375,17 +379,7 @@ func (fn *FN) SendNotifNonAktifBarber(BarberID int) {
 			mNotif.LinkId = dUser.OrderID
 
 			TokenFCM := fmt.Sprintf("%v", redisdb.GetSession(strconv.Itoa(dUser.UserID)+"_fcm"))
-			if TokenFCM != "" {
-				TokenFCMArr := []string{TokenFCM}
 
-				fcm := &fcmgetway.SendFCM{
-					Title:       mNotif.Title,
-					Body:        mNotif.Descs,
-					JumlahNotif: 0,
-					DeviceToken: TokenFCMArr,
-				}
-				go fcm.SendPushNotification()
-			}
 			queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d and title = 'Barber Tidak tersedia' ", mNotif.UserId)
 			cnt, err := fn.RepoNotif.Count(queryparam)
 
@@ -394,6 +388,19 @@ func (fn *FN) SendNotifNonAktifBarber(BarberID int) {
 				if err != nil {
 					log.Printf(" err : %v", err)
 					panic(err)
+				}
+				if TokenFCM != "" {
+					TokenFCMArr := []string{TokenFCM}
+					queryparam.InitSearch = fmt.Sprintf("notification_status = 'N' AND user_id = %d ", mNotif.UserId)
+					cntN, _ := fn.RepoNotif.Count(queryparam)
+
+					fcm := &fcmgetway.SendFCM{
+						Title:       mNotif.Title,
+						Body:        mNotif.Descs,
+						JumlahNotif: cntN,
+						DeviceToken: TokenFCMArr,
+					}
+					go fcm.SendPushNotification()
 				}
 			}
 
