@@ -62,9 +62,7 @@ func (u *useNotification) GetList(ctx context.Context, Claims util.Claims, query
 		queryparam.Search = strings.ToLower(fmt.Sprintf("%%%s%%", queryparam.Search))
 	}
 
-	if queryparam.InitSearch != "" {
-
-	}
+	queryparam.InitSearch = fmt.Sprintf(`user_id = %s`, Claims.UserID)
 	result.Data, err = u.repoNotification.GetList(queryparam)
 	if err != nil {
 		return result, err

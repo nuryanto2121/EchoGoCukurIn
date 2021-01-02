@@ -833,19 +833,14 @@ paths:
   /barber/notification:
     get:
       parameters:
-      - description: AppID Device
+      - description: OS Device
         in: header
-        name: app_id
+        name: OS
         required: true
         type: string
-      - description: Version Device
+      - description: OS Device
         in: header
-        name: version
-        required: true
-        type: string
-      - description: Language
-        in: header
-        name: language
+        name: Version
         required: true
         type: string
       - description: Page
@@ -885,19 +880,14 @@ paths:
   /barber/notification/{id}:
     get:
       parameters:
-      - description: AppID Device
+      - description: OS Device
         in: header
-        name: app_id
+        name: OS
         required: true
         type: string
-      - description: Version Device
+      - description: OS Device
         in: header
-        name: version
-        required: true
-        type: string
-      - description: Language
-        in: header
-        name: language
+        name: Version
         required: true
         type: string
       - description: ID
@@ -919,19 +909,14 @@ paths:
       - Notification
     put:
       parameters:
-      - description: AppID Device
+      - description: OS Device
         in: header
-        name: app_id
+        name: OS
         required: true
         type: string
-      - description: Version Device
+      - description: OS Device
         in: header
-        name: version
-        required: true
-        type: string
-      - description: Language
-        in: header
-        name: language
+        name: Version
         required: true
         type: string
       - description: ID
@@ -960,19 +945,14 @@ paths:
   /barber/notification/beranda:
     get:
       parameters:
-      - description: AppID Device
+      - description: OS Device
         in: header
-        name: app_id
+        name: OS
         required: true
         type: string
-      - description: Version Device
+      - description: OS Device
         in: header
-        name: version
-        required: true
-        type: string
-      - description: Language
-        in: header
-        name: language
+        name: Version
         required: true
         type: string
       produces:
