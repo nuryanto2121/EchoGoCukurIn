@@ -47,7 +47,7 @@ func (u *useSysUser) ChangePassword(ctx context.Context, Claims util.Claims, Dat
 
 	// DataChangePwd.OldPassword, _ = util.Hash(DataChangePwd.OldPassword)
 	if !util.ComparePassword(dataUser.Password, util.GetPassword(DataChangePwd.OldPassword)) {
-		return errors.New("Password and salah.")
+		return errors.New("Password lama anda salah.")
 	}
 
 	if DataChangePwd.NewPassword != DataChangePwd.ConfirmPassword {
