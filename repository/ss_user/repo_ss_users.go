@@ -27,7 +27,7 @@ func (db *repoSysUser) GetByAccount(Account string, IsOwner bool) (result models
 	if IsOwner {
 		query = db.Conn.Where("(email iLIKE ? OR telp = ?) AND user_type = 'owner' ", Account, Account).First(&result)
 	} else {
-		query = db.Conn.Where("(email iLIKE ? OR telp = ?)", Account, Account).First(&result)
+		query = db.Conn.Where("(email iLIKE ? OR telp = ?) and user_type <> 'user' ", Account, Account).First(&result)
 	}
 
 	log.Info(fmt.Sprintf("%v", query.QueryExpr()))
