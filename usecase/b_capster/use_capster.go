@@ -154,7 +154,7 @@ func (u *useCapster) Create(ctx context.Context, Claims util.Claims, data *model
 
 		// fmt.Printf("%v", err)
 		// }
-		GenPassword := util.GenerateCode(4)
+		GenPassword = util.GenerateCode(4)
 		mUser.Password, _ = util.Hash(GenPassword)
 	} else {
 		mUser.Password = dataOwner.Password

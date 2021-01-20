@@ -10,12 +10,12 @@
         "_comment": "debug or release"
     },
     "smtp":{
-        "server":"smtp.gmail.com",
+        "server":"cukur-in.com",
         "port":587,
-        "user":"cukur.in.adm@gmail.com",
-        "passwd":"!@#$%12345",
+        "user":"noreply@cukur-in.com",
+        "passwd":"noreply123!@",
         "Identity":"cukur-In",
-        "sender":"nuryanto@gmail.com"
+        "sender":"cukur-in@cukur-in.com"
     },
     "app": {
         "jwt_secret": "don'tPanic",
@@ -33,29 +33,6 @@
         "time_format": 20060102,
         "issuer": "PropertyFramework",
         "url_forgot_password":"http://localhost:8084"
-    },
-    "database_pa": {
-        "type": "postgres",
-        "host": "34.101.133.247",
-        "port": "1401",
-        "user": "postgres",
-        "password": "postgres_prod",
-        "name": "postgres",
-        "table_prefix": ""
-    },
-    "redisdb_pa":{
-        "host":"34.101.133.247",
-        "port":1201,
-        "db":1,
-        "key":"ka_email",
-        "password":"redis_prod"
-    },
-    "mongodb_pa":{
-        "host": "34.101.133.247",
-        "port": "1301",
-        "user": "mongoadmin_prod",
-        "password": "mongo_prod",
-        "name": "cukur_logs"
     },
     "database": {
         "type": "postgres",
