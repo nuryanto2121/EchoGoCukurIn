@@ -1,5 +1,5 @@
 {
-    "debug": false,
+    "debug": true,
     "jwt_secret": "don'tPanic",
     "expire_jwt":72,
     "server": {
@@ -36,23 +36,23 @@
     },
     "database": {
         "type": "postgres",
-        "host": "34.101.133.247",
-        "port": "1400",
+        "host": "34.101.185.57",
+        "port": "1002",
         "user": "postgres",
         "password": "postgres_dev",
         "name": "cukur_in",
         "table_prefix": ""
     },
     "redisdb":{
-        "host":"34.101.133.247",
-        "port":1200,
+        "host":"34.101.185.57",
+        "port":1001,
         "db":1,
         "key":"ka_email",
         "password":"redis_dev"
     },
     "mongodb":{
-        "host": "34.101.133.247",
-        "port": "1300",
+        "host": "34.101.185.57",
+        "port": "1003",
         "user": "mongoadmin_dev",
         "password": "mongo_dev",
         "name": "cukur_logs"

@@ -36,22 +36,22 @@
     },
     "database": {
         "type": "postgres",
-        "host": "34.101.133.247",
-        "port": "1401",
+        "host": "34.101.165.185",
+        "port": "1002",
         "user": "postgres",
         "password": "postgres_prod",
         "name": "postgres",
         "table_prefix": ""
     },
     "redisdb":{
-        "host":"34.101.133.247",
-        "port":1201,
+        "host":"34.101.165.185",
+        "port":1001,
         "db":1,
         "key":"ka_email",
         "password":"redis_prod"
     },
     "mongodb":{
-        "host": "34.101.133.247",
+        "host": "34.101.165.185",
         "port": "1301",
         "user": "mongoadmin_prod",
         "password": "mongo_prod",

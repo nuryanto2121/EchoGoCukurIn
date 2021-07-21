@@ -27,7 +27,7 @@ func Connect() (*mongo.Database, error) {
 		setting.FileConfigSetting.MongoDBSetting.Port)
 	clientOptions := options.Client()
 	fmt.Printf(connectionString)
-	// clientOptions.ApplyURI("mongodb://mongoadmin_dev:mongo_dev@34.101.133.247:1300")
+	// clientOptions.ApplyURI("mongodb://mongoadmin_dev:mongo_dev@34.101.185.57:1300")
 	clientOptions.ApplyURI(connectionString)
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
