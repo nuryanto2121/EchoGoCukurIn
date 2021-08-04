@@ -33,7 +33,7 @@ func NewContAuth(e *echo.Echo, useAuth iauth.Usecase) {
 
 	// e.POST("/barber/auth/register", cont.Register)
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
-	r := e.Group("/barber/auth")
+	r := e.Group("/barber-service/auth")
 	r.Use(midd.Versioning)
 	r.POST("/login", cont.Login)
 	r.POST("/forgot", cont.ForgotPassword)
@@ -41,7 +41,7 @@ func NewContAuth(e *echo.Echo, useAuth iauth.Usecase) {
 	r.POST("/verify", cont.Verify)
 	r.POST("/register", cont.Register)
 
-	L := e.Group("/barber/auth/logout")
+	L := e.Group("/barber-service/auth/logout")
 	L.Use(midd.JWT)
 	L.Use(midd.Versioning)
 	L.POST("", cont.Logout)
