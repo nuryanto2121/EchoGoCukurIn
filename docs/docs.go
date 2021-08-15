@@ -86,7 +86,7 @@ var doc = `{
                 }
             }
         },
-        "/barber-service/auth/change_password": {
+        "/barber/auth/change_password": {
             "post": {
                 "produces": [
                     "application/json"
@@ -130,7 +130,7 @@ var doc = `{
                 }
             }
         },
-        "/barber-service/auth/forgot": {
+        "/barber/auth/forgot": {
             "post": {
                 "produces": [
                     "application/json"
@@ -174,7 +174,7 @@ var doc = `{
                 }
             }
         },
-        "/barber-service/auth/login": {
+        "/barber/auth/login": {
             "post": {
                 "produces": [
                     "application/json"
@@ -218,7 +218,7 @@ var doc = `{
                 }
             }
         },
-        "/barber-service/auth/logout": {
+        "/barber/auth/logout": {
             "post": {
                 "security": [
                     {
@@ -258,7 +258,7 @@ var doc = `{
                 }
             }
         },
-        "/barber-service/auth/register": {
+        "/barber/auth/register": {
             "post": {
                 "produces": [
                     "application/json"
@@ -302,7 +302,7 @@ var doc = `{
                 }
             }
         },
-        "/barber-service/auth/verify": {
+        "/barber/auth/verify": {
             "post": {
                 "produces": [
                     "application/json"

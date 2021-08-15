@@ -267,7 +267,7 @@ paths:
       summary: File Upload
       tags:
       - FileUpload
-  /barber-service/auth/change_password:
+  /barber/auth/change_password:
     post:
       parameters:
       - description: OS Device
@@ -296,7 +296,7 @@ paths:
       summary: Change Password
       tags:
       - Auth
-  /barber-service/auth/forgot:
+  /barber/auth/forgot:
     post:
       parameters:
       - description: OS Device
@@ -325,7 +325,7 @@ paths:
       summary: Forgot Password
       tags:
       - Auth
-  /barber-service/auth/login:
+  /barber/auth/login:
     post:
       parameters:
       - description: OS Device
@@ -354,7 +354,7 @@ paths:
       summary: Login
       tags:
       - Auth
-  /barber-service/auth/logout:
+  /barber/auth/logout:
     post:
       parameters:
       - description: OS Device
@@ -379,7 +379,7 @@ paths:
       summary: logout
       tags:
       - Auth
-  /barber-service/auth/register:
+  /barber/auth/register:
     post:
       parameters:
       - description: OS Device
@@ -408,7 +408,7 @@ paths:
       summary: Register Owner
       tags:
       - Auth
-  /barber-service/auth/verify:
+  /barber/auth/verify:
     post:
       parameters:
       - description: OS Device
