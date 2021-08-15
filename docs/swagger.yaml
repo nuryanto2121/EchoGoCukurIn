@@ -229,7 +229,7 @@ info:
   title: Barber Cukur-in
   version: "1.0"
 paths:
-  /api/fileupload:
+  /barber-service/api/fileupload:
     post:
       consumes:
       - multipart/form-data
@@ -267,7 +267,7 @@ paths:
       summary: File Upload
       tags:
       - FileUpload
-  /barber/auth/change_password:
+  /barber-service/barber/auth/change_password:
     post:
       parameters:
       - description: OS Device
@@ -296,7 +296,7 @@ paths:
       summary: Change Password
       tags:
       - Auth
-  /barber/auth/forgot:
+  /barber-service/barber/auth/forgot:
     post:
       parameters:
       - description: OS Device
@@ -325,7 +325,7 @@ paths:
       summary: Forgot Password
       tags:
       - Auth
-  /barber/auth/login:
+  /barber-service/barber/auth/login:
     post:
       parameters:
       - description: OS Device
@@ -354,7 +354,7 @@ paths:
       summary: Login
       tags:
       - Auth
-  /barber/auth/logout:
+  /barber-service/barber/auth/logout:
     post:
       parameters:
       - description: OS Device
@@ -379,7 +379,7 @@ paths:
       summary: logout
       tags:
       - Auth
-  /barber/auth/register:
+  /barber-service/barber/auth/register:
     post:
       parameters:
       - description: OS Device
@@ -408,7 +408,7 @@ paths:
       summary: Register Owner
       tags:
       - Auth
-  /barber/auth/verify:
+  /barber-service/barber/auth/verify:
     post:
       parameters:
       - description: OS Device
@@ -437,7 +437,7 @@ paths:
       summary: Verify
       tags:
       - Auth
-  /barber/barber:
+  /barber-service/barber/barber:
     get:
       parameters:
       - description: OS Device
@@ -514,7 +514,7 @@ paths:
       summary: Add Barber
       tags:
       - Barber
-  /barber/barber/{id}:
+  /barber-service/barber/barber/{id}:
     delete:
       parameters:
       - description: OS Device
@@ -608,7 +608,7 @@ paths:
       summary: Rubah Barber
       tags:
       - Barber
-  /barber/beranda:
+  /barber-service/barber/beranda:
     get:
       parameters:
       - description: OS Device
@@ -659,7 +659,7 @@ paths:
       summary: GetList Barber Beranda
       tags:
       - Barber Beranda
-  /barber/capster:
+  /barber-service/barber/capster:
     get:
       parameters:
       - description: OS Device
@@ -736,7 +736,7 @@ paths:
       summary: Add Capster
       tags:
       - Capster
-  /barber/capster/{id}:
+  /barber-service/barber/capster/{id}:
     delete:
       parameters:
       - description: OS Device
@@ -830,7 +830,7 @@ paths:
       summary: Update Capster
       tags:
       - Capster
-  /barber/notification:
+  /barber-service/barber/notification:
     get:
       parameters:
       - description: OS Device
@@ -877,7 +877,7 @@ paths:
       summary: GetList Notification
       tags:
       - Notification
-  /barber/notification/{id}:
+  /barber-service/barber/notification/{id}:
     get:
       parameters:
       - description: OS Device
@@ -942,7 +942,7 @@ paths:
       summary: Rubah Status Notification
       tags:
       - Notification
-  /barber/notification/beranda:
+  /barber-service/barber/notification/beranda:
     get:
       parameters:
       - description: OS Device
@@ -967,7 +967,7 @@ paths:
       summary: Jumlah Notif yg belum dibuka
       tags:
       - Notification
-  /barber/order:
+  /barber-service/barber/order:
     get:
       parameters:
       - description: OS Device
@@ -1049,7 +1049,7 @@ paths:
       summary: Add Order
       tags:
       - Order
-  /barber/order/{id}:
+  /barber-service/barber/order/{id}:
     delete:
       parameters:
       - description: OS Device
@@ -1143,7 +1143,7 @@ paths:
       summary: Rubah Trx
       tags:
       - Order
-  /barber/paket:
+  /barber-service/barber/paket:
     get:
       parameters:
       - description: OS Device
@@ -1220,7 +1220,7 @@ paths:
       summary: Add Paket
       tags:
       - Paket
-  /barber/paket/{id}:
+  /barber-service/barber/paket/{id}:
     delete:
       parameters:
       - description: OS Device
@@ -1314,7 +1314,7 @@ paths:
       summary: Rubah Paket
       tags:
       - Paket
-  /barber/user:
+  /barber-service/barber/user:
     get:
       parameters:
       - description: OS Device
@@ -1391,7 +1391,7 @@ paths:
       summary: Add User
       tags:
       - User
-  /barber/user/{id}:
+  /barber-service/barber/user/{id}:
     delete:
       parameters:
       - description: OS Device
@@ -1485,7 +1485,7 @@ paths:
       summary: Rubah Profile
       tags:
       - User
-  /barber/user/change_password:
+  /barber-service/barber/user/change_password:
     post:
       parameters:
       - description: OS Device

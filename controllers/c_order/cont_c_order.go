@@ -47,7 +47,7 @@ func NewContOrder(e *echo.Echo, a icorder.Usecase, b ibarbers.Usecase) {
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/order/{id} [get]
+// @Router /barber-service/barber/order/{id} [get]
 func (u *ContOrder) GetDataBy(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -92,7 +92,7 @@ func (u *ContOrder) GetDataBy(e echo.Context) error {
 // @Param initsearch query string false "InitSearch"
 // @Param sortfield query string false "SortField"
 // @Success 200 {object} models.ResponseModelList
-// @Router /barber/order [get]
+// @Router /barber-service/barber/order [get]
 func (u *ContOrder) GetList(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -158,7 +158,7 @@ func (u *ContOrder) GetList(e echo.Context) error {
 // @Param Version header string true "OS Device"
 // @Param req body models.OrderPost true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/order [post]
+// @Router /barber-service/barber/order [post]
 func (u *ContOrder) Create(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -201,7 +201,7 @@ func (u *ContOrder) Create(e echo.Context) error {
 // @Param id path string true "ID"
 // @Param req body models.OrderPost true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/order/{id} [put]
+// @Router /barber-service/barber/order/{id} [put]
 func (u *ContOrder) Update(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -250,7 +250,7 @@ func (u *ContOrder) Update(e echo.Context) error {
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/order/{id} [delete]
+// @Router /barber-service/barber/order/{id} [delete]
 func (u *ContOrder) Delete(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {

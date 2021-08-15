@@ -45,7 +45,7 @@ func NewContNotification(e *echo.Echo, a inotification.Usecase) {
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/notification/{id} [get]
+// @Router /barber-service/barber/notification/{id} [get]
 func (u *contNotification) GetDataBy(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -82,7 +82,7 @@ func (u *contNotification) GetDataBy(e echo.Context) error {
 // @Param OS header string true "OS Device"
 // @Param Version header string true "OS Device"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/notification/beranda [get]
+// @Router /barber-service/barber/notification/beranda [get]
 func (u *contNotification) Beranda(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -119,7 +119,7 @@ func (u *contNotification) Beranda(e echo.Context) error {
 // @Param initsearch query string false "InitSearch"
 // @Param sortfield query string false "SortField"
 // @Success 200 {object} models.ResponseModelList
-// @Router /barber/notification [get]
+// @Router /barber-service/barber/notification [get]
 func (u *contNotification) GetList(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -162,7 +162,7 @@ func (u *contNotification) GetList(e echo.Context) error {
 // @Param id path string true "ID"
 // @Param req body models.StatusNotification true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/notification/{id} [put]
+// @Router /barber-service/barber/notification/{id} [put]
 func (u *contNotification) Update(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {

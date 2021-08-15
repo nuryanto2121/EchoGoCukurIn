@@ -11,7 +11,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/fileupload": {
+        "/barber-service/api/fileupload": {
             "post": {
                 "security": [
                     {
@@ -69,7 +69,7 @@
                 }
             }
         },
-        "/barber/auth/change_password": {
+        "/barber-service/barber/auth/change_password": {
             "post": {
                 "produces": [
                     "application/json"
@@ -113,7 +113,7 @@
                 }
             }
         },
-        "/barber/auth/forgot": {
+        "/barber-service/barber/auth/forgot": {
             "post": {
                 "produces": [
                     "application/json"
@@ -157,7 +157,7 @@
                 }
             }
         },
-        "/barber/auth/login": {
+        "/barber-service/barber/auth/login": {
             "post": {
                 "produces": [
                     "application/json"
@@ -201,7 +201,7 @@
                 }
             }
         },
-        "/barber/auth/logout": {
+        "/barber-service/barber/auth/logout": {
             "post": {
                 "security": [
                     {
@@ -241,7 +241,7 @@
                 }
             }
         },
-        "/barber/auth/register": {
+        "/barber-service/barber/auth/register": {
             "post": {
                 "produces": [
                     "application/json"
@@ -285,7 +285,7 @@
                 }
             }
         },
-        "/barber/auth/verify": {
+        "/barber-service/barber/auth/verify": {
             "post": {
                 "produces": [
                     "application/json"
@@ -329,7 +329,7 @@
                 }
             }
         },
-        "/barber/barber": {
+        "/barber-service/barber/barber": {
             "get": {
                 "security": [
                     {
@@ -448,7 +448,7 @@
                 }
             }
         },
-        "/barber/barber/{id}": {
+        "/barber-service/barber/barber/{id}": {
             "get": {
                 "security": [
                     {
@@ -594,7 +594,7 @@
                 }
             }
         },
-        "/barber/beranda": {
+        "/barber-service/barber/beranda": {
             "get": {
                 "security": [
                     {
@@ -672,7 +672,7 @@
                 }
             }
         },
-        "/barber/capster": {
+        "/barber-service/barber/capster": {
             "get": {
                 "security": [
                     {
@@ -791,7 +791,7 @@
                 }
             }
         },
-        "/barber/capster/{id}": {
+        "/barber-service/barber/capster/{id}": {
             "get": {
                 "security": [
                     {
@@ -937,7 +937,7 @@
                 }
             }
         },
-        "/barber/notification": {
+        "/barber-service/barber/notification": {
             "get": {
                 "security": [
                     {
@@ -1009,7 +1009,7 @@
                 }
             }
         },
-        "/barber/notification/beranda": {
+        "/barber-service/barber/notification/beranda": {
             "get": {
                 "security": [
                     {
@@ -1049,7 +1049,7 @@
                 }
             }
         },
-        "/barber/notification/{id}": {
+        "/barber-service/barber/notification/{id}": {
             "get": {
                 "security": [
                     {
@@ -1150,7 +1150,7 @@
                 }
             }
         },
-        "/barber/order": {
+        "/barber-service/barber/order": {
             "get": {
                 "security": [
                     {
@@ -1276,7 +1276,7 @@
                 }
             }
         },
-        "/barber/order/{id}": {
+        "/barber-service/barber/order/{id}": {
             "get": {
                 "security": [
                     {
@@ -1422,7 +1422,7 @@
                 }
             }
         },
-        "/barber/paket": {
+        "/barber-service/barber/paket": {
             "get": {
                 "security": [
                     {
@@ -1541,7 +1541,7 @@
                 }
             }
         },
-        "/barber/paket/{id}": {
+        "/barber-service/barber/paket/{id}": {
             "get": {
                 "security": [
                     {
@@ -1687,7 +1687,7 @@
                 }
             }
         },
-        "/barber/user": {
+        "/barber-service/barber/user": {
             "get": {
                 "security": [
                     {
@@ -1806,7 +1806,7 @@
                 }
             }
         },
-        "/barber/user/change_password": {
+        "/barber-service/barber/user/change_password": {
             "post": {
                 "security": [
                     {
@@ -1855,7 +1855,7 @@
                 }
             }
         },
-        "/barber/user/{id}": {
+        "/barber-service/barber/user/{id}": {
             "get": {
                 "security": [
                     {

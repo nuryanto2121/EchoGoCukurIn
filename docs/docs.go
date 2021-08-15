@@ -28,7 +28,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/fileupload": {
+        "/barber-service/api/fileupload": {
             "post": {
                 "security": [
                     {
@@ -86,7 +86,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/auth/change_password": {
+        "/barber-service/barber/auth/change_password": {
             "post": {
                 "produces": [
                     "application/json"
@@ -130,7 +130,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/auth/forgot": {
+        "/barber-service/barber/auth/forgot": {
             "post": {
                 "produces": [
                     "application/json"
@@ -174,7 +174,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/auth/login": {
+        "/barber-service/barber/auth/login": {
             "post": {
                 "produces": [
                     "application/json"
@@ -218,7 +218,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/auth/logout": {
+        "/barber-service/barber/auth/logout": {
             "post": {
                 "security": [
                     {
@@ -258,7 +258,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/auth/register": {
+        "/barber-service/barber/auth/register": {
             "post": {
                 "produces": [
                     "application/json"
@@ -302,7 +302,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/auth/verify": {
+        "/barber-service/barber/auth/verify": {
             "post": {
                 "produces": [
                     "application/json"
@@ -346,7 +346,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/barber": {
+        "/barber-service/barber/barber": {
             "get": {
                 "security": [
                     {
@@ -465,7 +465,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/barber/{id}": {
+        "/barber-service/barber/barber/{id}": {
             "get": {
                 "security": [
                     {
@@ -611,7 +611,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/beranda": {
+        "/barber-service/barber/beranda": {
             "get": {
                 "security": [
                     {
@@ -689,7 +689,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/capster": {
+        "/barber-service/barber/capster": {
             "get": {
                 "security": [
                     {
@@ -808,7 +808,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/capster/{id}": {
+        "/barber-service/barber/capster/{id}": {
             "get": {
                 "security": [
                     {
@@ -954,7 +954,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/notification": {
+        "/barber-service/barber/notification": {
             "get": {
                 "security": [
                     {
@@ -1026,7 +1026,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/notification/beranda": {
+        "/barber-service/barber/notification/beranda": {
             "get": {
                 "security": [
                     {
@@ -1066,7 +1066,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/notification/{id}": {
+        "/barber-service/barber/notification/{id}": {
             "get": {
                 "security": [
                     {
@@ -1167,7 +1167,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/order": {
+        "/barber-service/barber/order": {
             "get": {
                 "security": [
                     {
@@ -1293,7 +1293,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/order/{id}": {
+        "/barber-service/barber/order/{id}": {
             "get": {
                 "security": [
                     {
@@ -1439,7 +1439,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/paket": {
+        "/barber-service/barber/paket": {
             "get": {
                 "security": [
                     {
@@ -1558,7 +1558,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/paket/{id}": {
+        "/barber-service/barber/paket/{id}": {
             "get": {
                 "security": [
                     {
@@ -1704,7 +1704,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/user": {
+        "/barber-service/barber/user": {
             "get": {
                 "security": [
                     {
@@ -1823,7 +1823,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/user/change_password": {
+        "/barber-service/barber/user/change_password": {
             "post": {
                 "security": [
                     {
@@ -1872,7 +1872,7 @@ var doc = `{
                 }
             }
         },
-        "/barber/user/{id}": {
+        "/barber-service/barber/user/{id}": {
             "get": {
                 "security": [
                     {

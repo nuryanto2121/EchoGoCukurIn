@@ -44,7 +44,7 @@ func NewContPaket(e *echo.Echo, a ipakets.Usecase) {
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/paket/{id} [get]
+// @Router /barber-service/barber/paket/{id} [get]
 func (u *ContPaket) GetDataBy(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -86,7 +86,7 @@ func (u *ContPaket) GetDataBy(e echo.Context) error {
 // @Param initsearch query string false "InitSearch"
 // @Param sortfield query string false "SortField"
 // @Success 200 {object} models.ResponseModelList
-// @Router /barber/paket [get]
+// @Router /barber-service/barber/paket [get]
 func (u *ContPaket) GetList(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -131,7 +131,7 @@ func (u *ContPaket) GetList(e echo.Context) error {
 // @Param Version header string true "OS Device"
 // @Param req body models.DataPaket true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/paket [post]
+// @Router /barber-service/barber/paket [post]
 func (u *ContPaket) Create(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -177,7 +177,7 @@ func (u *ContPaket) Create(e echo.Context) error {
 // @Param id path string true "ID"
 // @Param req body models.DataPaket true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/paket/{id} [put]
+// @Router /barber-service/barber/paket/{id} [put]
 func (u *ContPaket) Update(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -230,7 +230,7 @@ func (u *ContPaket) Update(e echo.Context) error {
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/paket/{id} [delete]
+// @Router /barber-service/barber/paket/{id} [delete]
 func (u *ContPaket) Delete(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {

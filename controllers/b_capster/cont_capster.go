@@ -44,7 +44,7 @@ func NewContCapster(e *echo.Echo, a icapsters.Usecase) {
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/capster/{id} [get]
+// @Router /barber-service/barber/capster/{id} [get]
 func (u *ContCapster) GetDataBy(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -87,7 +87,7 @@ func (u *ContCapster) GetDataBy(e echo.Context) error {
 // @Param initsearch query string false "InitSearch"
 // @Param sortfield query string false "SortField"
 // @Success 200 {object} models.ResponseModelList
-// @Router /barber/capster [get]
+// @Router /barber-service/barber/capster [get]
 func (u *ContCapster) GetList(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -135,7 +135,7 @@ func (u *ContCapster) GetList(e echo.Context) error {
 // @Param Version header string true "OS Device"
 // @Param req body models.Capster true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/capster [post]
+// @Router /barber-service/barber/capster [post]
 func (u *ContCapster) Create(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -189,7 +189,7 @@ func (u *ContCapster) Create(e echo.Context) error {
 // @Param id path string true "ID"
 // @Param req body models.Capster true "req param #changes are possible to adjust the form of the registration form from frontend"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/capster/{id} [put]
+// @Router /barber-service/barber/capster/{id} [put]
 func (u *ContCapster) Update(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
@@ -242,7 +242,7 @@ func (u *ContCapster) Update(e echo.Context) error {
 // @Param Version header string true "OS Device"
 // @Param id path string true "ID"
 // @Success 200 {object} tool.ResponseModel
-// @Router /barber/capster/{id} [delete]
+// @Router /barber-service/barber/capster/{id} [delete]
 func (u *ContCapster) Delete(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {

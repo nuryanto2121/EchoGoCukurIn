@@ -42,7 +42,7 @@ func NewContBeranda(e *echo.Echo, a iberandabarber.Usecase) {
 // @Param sortfield query string false "SortField"
 // @Param paramview query string false "ParamView"
 // @Success 200 {object} models.ResponseModelList
-// @Router /barber/beranda [get]
+// @Router /barber-service/barber/beranda [get]
 func (u *ContBerandaBarber) GetList(e echo.Context) error {
 	ctx := e.Request().Context()
 	if ctx == nil {
